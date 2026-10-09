@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# reines Python – nichts zu bauen
+
+override_dh_auto_install:
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/prisma-desktop PREFIX=/usr SESSIONDIR=/usr/share/wayland-sessions
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	python3 -m pytest -q tests
+endif

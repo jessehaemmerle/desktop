@@ -1,0 +1,47 @@
+Source: prisma-desktop
+Section: x11
+Priority: optional
+Maintainer: Prisma-Projekt <prisma-desktop@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13), python3, python3-pytest
+Standards-Version: 4.6.2
+Homepage: https://github.com/jessehaemmerle/desktop
+Rules-Requires-Root: no
+
+Package: prisma-desktop
+Architecture: all
+Depends: ${misc:Depends},
+         python3 (>= 3.10),
+         python3-gi,
+         python3-gi-cairo,
+         python3-cairo,
+         gir1.2-gtk-3.0,
+         gir1.2-gtklayershell-0.1,
+         gir1.2-gtk-4.0,
+         gir1.2-adw-1 (>= 1.4),
+         labwc (>= 0.7),
+         dbus-user-session | dbus-x11
+Recommends: swaylock,
+            swayidle,
+            grim,
+            slurp,
+            wl-clipboard,
+            brightnessctl,
+            wireplumber,
+            network-manager,
+            fonts-inter,
+            papirus-icon-theme,
+            xdg-desktop-portal-wlr,
+            xdg-desktop-portal-gtk,
+            foot,
+            policykit-1-gnome | lxpolkit,
+            wlr-randr,
+            wlopm
+Suggests: wlsunset, wdisplays, kanshi, gnome-control-center
+Description: kontextbewusste Desktop-Umgebung für Wayland
+ Prisma ist eine moderne Desktop-Umgebung auf Basis des Wayland-Compositors
+ labwc. Statt nummerierter Arbeitsflächen gibt es Facetten (z. B. Arbeit,
+ Kreativ, Freizeit) mit eigener Farbe, eigenen Dock-Apps und eigenen
+ Benachrichtigungsregeln. Der Kompass vereint App-Start, Dateisuche,
+ Taschenrechner, Einheitenumrechnung, Befehle und Websuche in einer Eingabe.
+ Ein integrierter Fokus-Modus sammelt Benachrichtigungen und zeigt danach
+ einen Rückblick.

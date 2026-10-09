@@ -1,0 +1,37 @@
+#!/bin/sh
+# prisma-session – startet eine Prisma-Sitzung (labwc als Compositor + Prisma-Shell)
+set -e
+
+PRISMA_DATA="${PRISMA_DATA:-@DATADIR@}"
+[ -d "$PRISMA_DATA/labwc" ] || PRISMA_DATA="$(dirname "$(readlink -f "$0")")/../data"
+
+if ! command -v labwc >/dev/null 2>&1; then
+    echo "prisma-session: labwc ist nicht installiert (sudo apt install labwc)" >&2
+    exit 1
+fi
+
+# Benutzerkonfiguration beim ersten Start anlegen – vorhandene Dateien bleiben unangetastet.
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/prisma/labwc"
+mkdir -p "$CONF"
+for file in rc.xml menu.xml autostart environment; do
+    [ -e "$CONF/$file" ] || cp "$PRISMA_DATA/labwc/$file" "$CONF/$file"
+done
+
+# Tastaturlayout des Systems übernehmen (z. B. „de“ aus der Ubuntu-Installation).
+if [ -r /etc/default/keyboard ]; then
+    . /etc/default/keyboard
+    [ -n "$XKBLAYOUT" ] && export XKB_DEFAULT_LAYOUT="$XKBLAYOUT"
+    [ -n "$XKBVARIANT" ] && export XKB_DEFAULT_VARIANT="$XKBVARIANT"
+    [ -n "$XKBOPTIONS" ] && export XKB_DEFAULT_OPTIONS="$XKBOPTIONS"
+    [ -n "$XKBMODEL" ] && export XKB_DEFAULT_MODEL="$XKBMODEL"
+fi
+
+export XDG_CURRENT_DESKTOP=Prisma:wlroots
+export XDG_SESSION_DESKTOP=prisma
+export XDG_SESSION_TYPE=wayland
+
+# Ohne Sitzungsbus (z. B. Start von der Konsole) einen eigenen starten.
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && command -v dbus-run-session >/dev/null 2>&1; then
+    exec dbus-run-session -- labwc -C "$CONF" "$@"
+fi
+exec labwc -C "$CONF" "$@"

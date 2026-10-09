@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prisma – Menüs von labwc (Rechtsklick auf Titelleisten). Der Schreibtisch öffnet stattdessen den Kompass. -->
+<openbox_menu>
+  <menu id="client-menu">
+    <item label="Minimieren"><action name="Iconify" /></item>
+    <item label="Maximieren"><action name="ToggleMaximize" /></item>
+    <item label="Vollbild"><action name="ToggleFullscreen" /></item>
+    <item label="Immer im Vordergrund"><action name="ToggleAlwaysOnTop" /></item>
+    <separator />
+    <item label="Nach links andocken"><action name="SnapToEdge" direction="left" /></item>
+    <item label="Nach rechts andocken"><action name="SnapToEdge" direction="right" /></item>
+    <separator />
+    <item label="In Facette 1 verschieben"><action name="Execute" command="prisma-msg move-to-facet 1" /></item>
+    <item label="In Facette 2 verschieben"><action name="Execute" command="prisma-msg move-to-facet 2" /></item>
+    <item label="In Facette 3 verschieben"><action name="Execute" command="prisma-msg move-to-facet 3" /></item>
+    <separator />
+    <item label="Schließen"><action name="Close" /></item>
+  </menu>
+
+  <menu id="root-menu">
+    <item label="Kompass öffnen"><action name="Execute" command="prisma-msg kompass" /></item>
+    <item label="Terminal"><action name="Execute" command="prisma-launch terminal" /></item>
+    <item label="Dateien"><action name="Execute" command="prisma-launch files" /></item>
+    <separator />
+    <item label="Prisma-Einstellungen"><action name="Execute" command="prisma-settings" /></item>
+    <item label="Shell neu laden"><action name="Execute" command="prisma-msg reload" /></item>
+    <separator />
+    <item label="Abmelden"><action name="Exit" /></item>
+  </menu>
+</openbox_menu>

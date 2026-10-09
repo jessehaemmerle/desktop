@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Prisma – labwc-Konfiguration
+  Wird beim ersten Start nach ~/.config/prisma/labwc/rc.xml kopiert und kann dort angepasst werden.
+  Änderungen übernehmen: „labwc -r“ ausführen (oder ab- und wieder anmelden).
+-->
+<labwc_config>
+
+  <core>
+    <decoration>server</decoration>
+    <gap>8</gap>
+    <adaptiveSync>no</adaptiveSync>
+    <reuseOutputMode>yes</reuseOutputMode>
+  </core>
+
+  <placement>
+    <policy>center</policy>
+  </placement>
+
+  <!-- Das Thema „Prisma“ wird von der Shell bei jedem Facettenwechsel neu erzeugt. -->
+  <theme>
+    <name>Prisma</name>
+    <cornerRadius>12</cornerRadius>
+    <dropShadows>yes</dropShadows>
+    <font place="ActiveWindow"><name>Inter</name><size>10</size><weight>Bold</weight></font>
+    <font place="InactiveWindow"><name>Inter</name><size>10</size><weight>Normal</weight></font>
+    <font place="MenuItem"><name>Inter</name><size>10</size></font>
+    <font place="OnScreenDisplay"><name>Inter</name><size>11</size></font>
+  </theme>
+
+  <!-- Facetten ersetzen klassische Arbeitsflächen. -->
+  <desktops number="1" />
+
+  <windowSwitcher show="yes" preview="yes" outlines="yes">
+    <fields>
+      <field content="title" width="100%" />
+    </fields>
+  </windowSwitcher>
+
+  <focus>
+    <followMouse>no</followMouse>
+    <raiseOnFocus>no</raiseOnFocus>
+  </focus>
+
+  <snapping>
+    <range>12</range>
+    <topMaximize>yes</topMaximize>
+  </snapping>
+
+  <keyboard>
+    <default />
+    <repeatRate>30</repeatRate>
+    <repeatDelay>400</repeatDelay>
+
+    <!-- Kompass -->
+    <keybind key="W-space"><action name="Execute" command="prisma-msg kompass" /></keybind>
+    <keybind key="A-F2"><action name="Execute" command="prisma-msg kompass" /></keybind>
+    <keybind key="A-space"><action name="Execute" command="prisma-msg kompass" /></keybind>
+
+    <!-- Facetten -->
+    <keybind key="W-1"><action name="Execute" command="prisma-msg facet 1" /></keybind>
+    <keybind key="W-2"><action name="Execute" command="prisma-msg facet 2" /></keybind>
+    <keybind key="W-3"><action name="Execute" command="prisma-msg facet 3" /></keybind>
+    <keybind key="W-4"><action name="Execute" command="prisma-msg facet 4" /></keybind>
+    <keybind key="W-5"><action name="Execute" command="prisma-msg facet 5" /></keybind>
+    <keybind key="W-6"><action name="Execute" command="prisma-msg facet 6" /></keybind>
+    <keybind key="W-7"><action name="Execute" command="prisma-msg facet 7" /></keybind>
+    <keybind key="W-8"><action name="Execute" command="prisma-msg facet 8" /></keybind>
+    <keybind key="W-9"><action name="Execute" command="prisma-msg facet 9" /></keybind>
+    <keybind key="W-Tab"><action name="Execute" command="prisma-msg facet next" /></keybind>
+    <keybind key="W-S-Tab"><action name="Execute" command="prisma-msg facet prev" /></keybind>
+    <keybind key="W-C-Right"><action name="Execute" command="prisma-msg facet next" /></keybind>
+    <keybind key="W-C-Left"><action name="Execute" command="prisma-msg facet prev" /></keybind>
+    <keybind key="W-S-1"><action name="Execute" command="prisma-msg move-to-facet 1" /></keybind>
+    <keybind key="W-S-2"><action name="Execute" command="prisma-msg move-to-facet 2" /></keybind>
+    <keybind key="W-S-3"><action name="Execute" command="prisma-msg move-to-facet 3" /></keybind>
+    <keybind key="W-S-4"><action name="Execute" command="prisma-msg move-to-facet 4" /></keybind>
+
+    <!-- Panels, Fokus, Ruhe -->
+    <keybind key="W-a"><action name="Execute" command="prisma-msg quicksettings" /></keybind>
+    <keybind key="W-n"><action name="Execute" command="prisma-msg daypanel" /></keybind>
+    <keybind key="W-f"><action name="Execute" command="prisma-msg focus toggle" /></keybind>
+    <keybind key="W-d"><action name="Execute" command="prisma-msg dnd" /></keybind>
+    <keybind key="W-l"><action name="Execute" command="prisma-msg lock" /></keybind>
+    <keybind key="W-S-t"><action name="Execute" command="prisma-msg theme-cycle" /></keybind>
+
+    <!-- Programme -->
+    <keybind key="W-Return"><action name="Execute" command="prisma-launch terminal" /></keybind>
+    <keybind key="C-A-t"><action name="Execute" command="prisma-launch terminal" /></keybind>
+    <keybind key="W-e"><action name="Execute" command="prisma-launch files" /></keybind>
+    <keybind key="W-b"><action name="Execute" command="prisma-launch browser" /></keybind>
+    <keybind key="W-comma"><action name="Execute" command="prisma-settings" /></keybind>
+
+    <!-- Fenster -->
+    <keybind key="W-q"><action name="Close" /></keybind>
+    <keybind key="A-F4"><action name="Close" /></keybind>
+    <keybind key="W-Up"><action name="ToggleMaximize" /></keybind>
+    <keybind key="W-Down"><action name="Iconify" /></keybind>
+    <keybind key="W-Left"><action name="SnapToEdge" direction="left" /></keybind>
+    <keybind key="W-Right"><action name="SnapToEdge" direction="right" /></keybind>
+    <keybind key="F11"><action name="ToggleFullscreen" /></keybind>
+
+    <!-- Bildschirmfotos -->
+    <keybind key="Print"><action name="Execute" command="prisma-msg screenshot full" /></keybind>
+    <keybind key="S-Print"><action name="Execute" command="prisma-msg screenshot area" /></keybind>
+    <keybind key="W-S-s"><action name="Execute" command="prisma-msg screenshot area" /></keybind>
+
+    <!-- Hardware-Tasten (mit Bildschirmanzeige) -->
+    <keybind key="XF86AudioRaiseVolume"><action name="Execute" command="prisma-msg volume up" /></keybind>
+    <keybind key="XF86AudioLowerVolume"><action name="Execute" command="prisma-msg volume down" /></keybind>
+    <keybind key="XF86AudioMute"><action name="Execute" command="prisma-msg volume mute" /></keybind>
+    <keybind key="XF86MonBrightnessUp"><action name="Execute" command="prisma-msg brightness up" /></keybind>
+    <keybind key="XF86MonBrightnessDown"><action name="Execute" command="prisma-msg brightness down" /></keybind>
+    <keybind key="XF86AudioPlay"><action name="Execute" command="prisma-launch media PlayPause" /></keybind>
+    <keybind key="XF86AudioNext"><action name="Execute" command="prisma-launch media Next" /></keybind>
+    <keybind key="XF86AudioPrev"><action name="Execute" command="prisma-launch media Previous" /></keybind>
+  </keyboard>
+
+  <mouse>
+    <default />
+  </mouse>
+
+  <libinput>
+    <device category="touchpad">
+      <naturalScroll>yes</naturalScroll>
+      <tap>yes</tap>
+      <disableWhileTyping>yes</disableWhileTyping>
+    </device>
+  </libinput>
+
+</labwc_config>

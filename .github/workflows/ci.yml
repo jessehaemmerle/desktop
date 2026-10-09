@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: Unit-Tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: pytest installieren
+        run: sudo apt-get update && sudo apt-get install -y python3-pytest
+      - name: Tests
+        run: python3 -m pytest -q
+      - name: Syntax aller Module
+        run: python3 -m compileall -q prisma
+
+  smoke:
+    name: Rauchtest (labwc headless)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Abhängigkeiten
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y labwc python3-gi python3-gi-cairo python3-cairo gir1.2-gtk-3.0 \
+            gir1.2-gtklayershell-0.1 gir1.2-gtk-4.0 gir1.2-adw-1 grim foot fonts-inter \
+            adwaita-icon-theme dbus-daemon libnotify-bin
+      - name: Shell starten und Bildschirmfotos erstellen
+        run: tests/smoke.sh smoke-output
+      - name: Bildschirmfotos hochladen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-screenshots
+          path: smoke-output

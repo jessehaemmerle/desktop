@@ -1,0 +1,36 @@
+# Prisma – Autostart (wird von labwc beim Sitzungsstart ausgeführt)
+
+# Umgebung an D-Bus/systemd weitergeben, damit Portale und per D-Bus gestartete Apps Wayland nutzen.
+if command -v dbus-update-activation-environment >/dev/null; then
+    dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE \
+        XDG_SESSION_DESKTOP LABWC_PID 2>/dev/null \
+    || dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+fi
+
+# Die Shell: Leiste, Insel-Dock, Kompass, Benachrichtigungen, Hintergrund
+prisma-shell >"${XDG_RUNTIME_DIR:-/tmp}/prisma-shell.log" 2>&1 &
+
+# Polkit-Agent für Passwortabfragen (erster gefundener)
+for agent in \
+    /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 \
+    /usr/libexec/polkit-gnome-authentication-agent-1 \
+    /usr/lib/x86_64-linux-gnu/libexec/polkit-kde-authentication-agent-1 \
+    /usr/libexec/polkit-mate-authentication-agent-1 \
+    /usr/bin/lxpolkit; do
+    if [ -x "$agent" ]; then "$agent" & break; fi
+done
+
+# Bildschirme automatisch anordnen (falls kanshi eingerichtet ist)
+command -v kanshi >/dev/null && [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/kanshi/config" ] && kanshi &
+
+# Nach 5 Minuten sperren, nach 10 Minuten Bildschirm aus, vor dem Ruhezustand sperren
+if command -v swayidle >/dev/null; then
+    if command -v wlopm >/dev/null; then
+        swayidle -w \
+            timeout 300 'prisma-lock' \
+            timeout 600 'wlopm --off \*' resume 'wlopm --on \*' \
+            before-sleep 'prisma-lock' &
+    else
+        swayidle -w timeout 300 'prisma-lock' before-sleep 'prisma-lock' &
+    fi
+fi

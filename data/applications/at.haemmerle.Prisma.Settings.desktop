@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Prisma-Einstellungen
+Name[en]=Prisma Settings
+Comment=Facetten, Dock, Erscheinungsbild und Fokus anpassen
+Comment[en]=Configure facets, dock, appearance and focus
+Exec=prisma-settings
+Icon=prisma
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;GTK;
+Keywords=prisma;facetten;dock;theme;fokus;desktop;einstellungen;
+OnlyShowIn=Prisma;
+StartupNotify=true

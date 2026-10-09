@@ -1,0 +1,6 @@
+prisma-desktop (0.1.0) noble; urgency=medium
+
+  * Erste Version: Facetten, Kompass, Insel-Dock, Fokus-Modus,
+    Benachrichtigungsdienst, Tageslicht-Theme und Einstellungs-App.
+
+ -- Prisma-Projekt <prisma-desktop@users.noreply.github.com>  Fri, 09 Oct 2026 05:37:23 +0000

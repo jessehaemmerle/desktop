@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+smoke-output/
+debian/prisma-desktop/
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/*.substvars

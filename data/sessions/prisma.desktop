@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Prisma
+Comment=Kontextbewusste Desktop-Umgebung mit Facetten, Kompass und Fokus-Modus
+Comment[en]=Context-aware desktop with facets, Kompass launcher and focus mode
+Exec=prisma-session
+TryExec=prisma-session
+Type=Application
+DesktopNames=Prisma;wlroots
+Keywords=wayland;labwc;prisma;

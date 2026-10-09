@@ -1,0 +1,7 @@
+#!/bin/sh
+# prisma-msg – Steuert die laufende Prisma-Shell
+PRISMA_LIB="${PRISMA_LIB:-@LIBDIR@}"
+# Im Quellbaum (nicht installiert) das Repository selbst verwenden
+[ -d "$PRISMA_LIB/prisma" ] || PRISMA_LIB="$(dirname "$(readlink -f "$0")")/.."
+export PYTHONPATH="$PRISMA_LIB${PYTHONPATH:+:$PYTHONPATH}"
+exec /usr/bin/python3 -m prisma.msg "$@"
