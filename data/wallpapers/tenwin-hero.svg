@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <radialGradient id="bg" cx="0.62" cy="0.52" r="0.9">
+      <stop offset="0" stop-color="#1e8fff"/>
+      <stop offset="0.35" stop-color="#0a4fa8"/>
+      <stop offset="0.75" stop-color="#03204f"/>
+      <stop offset="1" stop-color="#010b1f"/>
+    </radialGradient>
+    <linearGradient id="ray" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#bfe3ff"/>
+      <stop offset="1" stop-color="#bfe3ff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#e6f4ff" stop-opacity="0.95"/>
+      <stop offset="0.25" stop-color="#7cc4ff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#1e8fff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="pane" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fd6ff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#2d8cf0" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <path d="M1150 600 L-200 -300 L-200 -230 Z" fill="url(#ray)" opacity="0.050" transform="rotate(-9.30 1150 600)"/><path d="M1150 600 L-200 -180 L-200 -110 Z" fill="url(#ray)" opacity="0.085" transform="rotate(-7.95 1150 600)"/><path d="M1150 600 L-200 -60 L-200 10 Z" fill="url(#ray)" opacity="0.120" transform="rotate(-6.60 1150 600)"/><path d="M1150 600 L-200 60 L-200 130 Z" fill="url(#ray)" opacity="0.155" transform="rotate(-5.25 1150 600)"/><path d="M1150 600 L-200 180 L-200 250 Z" fill="url(#ray)" opacity="0.050" transform="rotate(-3.90 1150 600)"/><path d="M1150 600 L-200 300 L-200 370 Z" fill="url(#ray)" opacity="0.085" transform="rotate(-2.55 1150 600)"/><path d="M1150 600 L-200 420 L-200 490 Z" fill="url(#ray)" opacity="0.120" transform="rotate(-1.20 1150 600)"/><path d="M1150 600 L-200 540 L-200 610 Z" fill="url(#ray)" opacity="0.155" transform="rotate(0.15 1150 600)"/><path d="M1150 600 L-200 660 L-200 730 Z" fill="url(#ray)" opacity="0.050" transform="rotate(1.50 1150 600)"/><path d="M1150 600 L-200 780 L-200 850 Z" fill="url(#ray)" opacity="0.085" transform="rotate(2.85 1150 600)"/><path d="M1150 600 L-200 900 L-200 970 Z" fill="url(#ray)" opacity="0.120" transform="rotate(4.20 1150 600)"/><path d="M1150 600 L-200 1020 L-200 1090 Z" fill="url(#ray)" opacity="0.155" transform="rotate(5.55 1150 600)"/><path d="M1150 600 L-200 1140 L-200 1210 Z" fill="url(#ray)" opacity="0.050" transform="rotate(6.90 1150 600)"/><path d="M1150 600 L-200 1260 L-200 1330 Z" fill="url(#ray)" opacity="0.085" transform="rotate(8.25 1150 600)"/>
+  <ellipse cx="1150" cy="600" rx="520" ry="420" fill="url(#glow)"/>
+  <g transform="translate(1150 600)" fill="none" stroke="url(#pane)">
+    <circle r="150" stroke-width="22" opacity="0.9"/>
+    <circle r="235" stroke-width="6" opacity="0.45"/>
+    <circle r="320" stroke-width="2" opacity="0.3"/>
+  </g>
+  <circle cx="1150" cy="600" r="95" fill="#e6f4ff" opacity="0.35"/>
+</svg>

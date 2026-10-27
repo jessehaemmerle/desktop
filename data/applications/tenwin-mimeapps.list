@@ -1,0 +1,4 @@
+# Default applications inside the Tenwin session only (XDG_CURRENT_DESKTOP=Tenwin).
+[Default Applications]
+inode/directory=org.tenwin.Explorer.desktop
+x-scheme-handler/trash=org.tenwin.Explorer.desktop

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Tenwin
+Comment=Windows 10 style desktop (labwc)
+Comment[de]=Desktop im Stil von Windows 10 (labwc)
+Exec=tenwin-session
+TryExec=tenwin-session
+Type=Application
+DesktopNames=Tenwin;wlroots
+Keywords=wayland;labwc;tenwin;windows;

@@ -1,0 +1,10 @@
+#!/bin/sh
+# Run python3 with the Tenwin package on the module path.
+BIN_DIR=$(dirname "$(readlink -f "$0")")
+if [ -d "$BIN_DIR/../src/tenwin" ]; then
+    PYTHONPATH="$BIN_DIR/../src${PYTHONPATH:+:$PYTHONPATH}"
+else
+    PYTHONPATH="/usr/share/tenwin/lib${PYTHONPATH:+:$PYTHONPATH}"
+fi
+export PYTHONPATH
+exec python3 "$@"

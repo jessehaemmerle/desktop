@@ -1,0 +1,2 @@
+# PAM configuration for the Tenwin lock screen
+@include common-auth

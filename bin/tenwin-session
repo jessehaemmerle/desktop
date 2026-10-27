@@ -1,0 +1,80 @@
+#!/bin/sh
+# Tenwin session launcher.
+#
+#   tenwin-session              start the session (called by the login manager)
+#   tenwin-session --autostart  start the session components (called by labwc)
+
+BIN_DIR=$(dirname "$(readlink -f "$0")")
+PATH="$BIN_DIR:$PATH"
+export PATH
+
+CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/tenwin"
+mkdir -p "$CACHE"
+
+# Restart a component when it crashes, but give up after 5 quick failures.
+supervise() {
+    fails=0
+    while [ "$fails" -lt 5 ]; do
+        started=$(date +%s)
+        "$@" >>"$CACHE/$1.log" 2>&1
+        status=$?
+        [ "$status" -eq 0 ] && return 0
+        if [ $(( $(date +%s) - started )) -gt 30 ]; then fails=0; else fails=$((fails + 1)); fi
+        sleep 1
+    done
+    echo "tenwin-session: $1 failed repeatedly, giving up" >&2
+}
+
+start_polkit_agent() {
+    for agent in /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 \
+                 /usr/libexec/policykit-1-gnome/polkit-gnome-authentication-agent-1 \
+                 /usr/bin/lxpolkit; do
+        if [ -x "$agent" ]; then
+            "$agent" >/dev/null 2>&1 &
+            return
+        fi
+    done
+}
+
+if [ "$1" = "--autostart" ]; then
+    exec >>"$CACHE/session.log" 2>&1
+    dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY \
+        XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE DCONF_PROFILE \
+        XCURSOR_THEME XCURSOR_SIZE LABWC_PID QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME \
+        MOZ_ENABLE_WAYLAND 2>/dev/null
+    # Portals read XDG_CURRENT_DESKTOP at start-up.
+    systemctl --user try-restart xdg-desktop-portal.service 2>/dev/null
+    start_polkit_agent
+    tenwin-python -m tenwin.session outputs
+    if command -v gnome-keyring-daemon >/dev/null 2>&1; then
+        gnome-keyring-daemon --start --components=secrets >/dev/null 2>&1
+    fi
+    supervise tenwin-desktop &
+    supervise tenwin-shell &
+    supervise tenwin-idle &
+    # XDG autostart entries (~/.config/autostart, /etc/xdg/autostart).
+    tenwin-xdg-autostart >>"$CACHE/session.log" 2>&1 &
+    wait
+    exit 0
+fi
+
+exec >>"$CACHE/session.log" 2>&1
+echo "=== Tenwin session started $(date) ==="
+
+export XDG_CURRENT_DESKTOP=Tenwin:wlroots
+export XDG_SESSION_DESKTOP=tenwin
+export XDG_SESSION_TYPE=wayland
+# Separate dconf database: Tenwin's GTK theme and fonts don't leak into GNOME.
+export DCONF_PROFILE=tenwin
+
+CONFIG_DIR=$(tenwin-python -m tenwin.session prepare | tail -n 1)
+[ -n "$CONFIG_DIR" ] || CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/tenwin/labwc"
+
+cleanup() {
+    systemctl --user unset-environment DCONF_PROFILE XDG_CURRENT_DESKTOP \
+        XDG_SESSION_DESKTOP LABWC_PID WAYLAND_DISPLAY 2>/dev/null
+    dbus-update-activation-environment --systemd DCONF_PROFILE= 2>/dev/null
+}
+trap cleanup EXIT
+
+labwc -C "$CONFIG_DIR"

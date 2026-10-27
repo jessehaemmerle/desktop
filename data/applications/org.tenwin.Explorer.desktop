@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Name=File Explorer
+Name[de]=Explorer
+GenericName=File Manager
+GenericName[de]=Dateimanager
+Comment=Browse files and folders
+Comment[de]=Dateien und Ordner durchsuchen
+Exec=tenwin-explorer %U
+Icon=org.tenwin.Explorer
+Terminal=false
+Categories=System;FileTools;FileManager;GTK;
+MimeType=inode/directory;x-scheme-handler/trash;
+StartupWMClass=org.tenwin.Explorer
+StartupNotify=true
+OnlyShowIn=Tenwin;
+Keywords=files;folder;explorer;dateien;ordner;
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New window
+Name[de]=Neues Fenster
+Exec=tenwin-explorer --new-window

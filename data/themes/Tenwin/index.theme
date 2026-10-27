@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Tenwin
+Comment=Tenwin – Windows 10 style theme
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Tenwin
+MetacityTheme=Tenwin
+IconTheme=Yaru
+CursorTheme=DMZ-White
+ButtonLayout=:minimize,maximize,close

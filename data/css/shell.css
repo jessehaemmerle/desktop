@@ -1,0 +1,233 @@
+/* Tenwin shell (taskbar, Start, Info-Center, flyouts). */
+
+window.tw-surface, .tw-popup { background-color: transparent; color: $sh_fg; }
+.tw-popup label, .tw-taskbar label { color: $sh_fg; }
+.tw-dim-text, .tw-popup .tw-dim-text { color: $sh_fg_dim; }
+.tw-popup button, .tw-taskbar button {
+  background: none; border: none; border-radius: 0; box-shadow: none; text-shadow: none;
+  color: $sh_fg; padding: 0; min-height: 0; min-width: 0; outline: none;
+  -gtk-icon-shadow: none;
+}
+.tw-popup button:hover { background-color: $sh_hover; }
+.tw-popup button:active { background-color: $sh_press; }
+.tw-popup image, .tw-taskbar image { color: $sh_fg; -gtk-icon-shadow: none; }
+.tw-popup scrollbar slider { background-color: $sh_fg_dim; min-width: 3px; border: 2px solid transparent; }
+.tw-popup scrollbar { background: transparent; border: none; }
+.tw-popup entry {
+  background: $sh_field; color: $sh_fg; border: 2px solid transparent; border-radius: 0;
+  box-shadow: none; min-height: 28px; padding: 0 8px; caret-color: $sh_fg;
+}
+.tw-popup entry:focus { border-color: $accent; }
+.tw-popup separator { background-color: $sh_divider; min-height: 1px; min-width: 1px; }
+
+/* ----------------------------------------------------------------- taskbar */
+.tw-taskbar { background-color: $taskbar_bg; }
+button.tw-tb-button { min-width: 48px; transition: background-color 80ms; }
+.tw-taskbar.small button.tw-tb-button { min-width: 40px; }
+button.tw-tb-button:hover { background-color: $sh_hover; }
+button.tw-tb-button:active { background-color: $sh_press; }
+button.tw-start-button:hover image { color: $accent_light2; }
+button.tw-start-button.open image { color: $accent_light2; }
+button.tw-start-button.open { background-color: $sh_hover; }
+
+button.tw-search-box {
+  background-color: $sh_field; color: $sh_fg_dim; min-width: 344px;
+  border: 1px solid $sh_border; margin: 0; padding: 0 10px;
+}
+button.tw-search-box:hover { background-color: $sh_field_hover; }
+button.tw-search-box label { color: $sh_fg_dim; }
+button.tw-search-box image { color: $sh_fg; }
+.tw-taskbar.small button.tw-search-box { min-width: 260px; }
+
+button.tw-app { min-width: 48px; }
+.tw-taskbar.small button.tw-app { min-width: 40px; }
+button.tw-app:hover { background-color: $sh_hover; }
+button.tw-app.active { background-color: $sh_press; }
+button.tw-app.active:hover { background-color: alpha($sh_fg, 0.22); }
+button.tw-app.attention { background-color: #ca5010; }
+.tw-app-indicator { background-color: transparent; min-height: 2px; min-width: 0; margin: 0 5px; }
+button.tw-app.running .tw-app-indicator { background-color: $accent_light2; min-width: 38px; }
+button.tw-app.active .tw-app-indicator { margin: 0; min-width: 48px; }
+button.tw-app.stacked { box-shadow: inset -2px 0 alpha($sh_fg, 0.25); }
+
+button.tw-tray-item { min-width: 24px; padding: 0 4px; }
+button.tw-tray-item:hover { background-color: $sh_hover; }
+button.tw-clock { padding: 0 8px; }
+button.tw-clock label { font-size: 12px; }
+button.tw-clock:hover { background-color: $sh_hover; }
+button.tw-ac-button { min-width: 40px; }
+button.tw-ac-button:hover { background-color: $sh_hover; }
+.tw-badge {
+  background-color: $accent; color: $accent_fg; font-size: 9px; font-weight: bold;
+  border-radius: 7px; min-width: 14px; min-height: 14px; padding: 0 2px; margin: 4px 4px 0 0;
+}
+button.tw-show-desktop { min-width: 5px; border-left: 1px solid alpha($sh_fg, 0.35); }
+button.tw-show-desktop:hover { background-color: $sh_hover; }
+.tw-lang { font-size: 12px; padding: 0 6px; }
+
+/* --------------------------------------------------------------- panels */
+.tw-panel {
+  background-color: $panel_bg;
+  border: 1px solid $sh_border;
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+.tw-panel-solid { background-color: $panel_solid; }
+
+/* ----------------------------------------------------------- Start menu */
+.tw-start { min-width: 0; }
+.tw-start-rail { background-color: transparent; }
+.tw-start-rail.expanded { background-color: $panel_solid; box-shadow: 4px 0 12px rgba(0,0,0,0.35); }
+button.tw-rail-button { min-height: 48px; min-width: 48px; }
+button.tw-rail-button label { font-size: 14px; }
+.tw-applist row, .tw-applist list { background-color: transparent; }
+.tw-applist row { padding: 0; }
+.tw-applist row:hover, .tw-applist row:selected { background-color: transparent; }
+button.tw-app-row { min-height: 36px; padding: 0 8px; }
+button.tw-app-row:hover { background-color: $sh_hover; }
+button.tw-app-row label { font-size: 14px; }
+button.tw-app-row .tw-app-icon { background-color: $accent; min-width: 32px; min-height: 32px; }
+button.tw-app-row .tw-app-icon.plain { background-color: transparent; }
+button.tw-letter { min-height: 36px; padding: 0 8px; font-size: 14px; }
+button.tw-letter:hover { background-color: $sh_hover; }
+.tw-section-title { font-size: 14px; padding: 12px 10px 6px 10px; color: $sh_fg; }
+.tw-start-header { font-size: 12px; font-weight: 600; padding: 12px 6px 8px 6px; }
+.tw-letter-grid button { min-width: 48px; min-height: 48px; font-size: 20px; }
+.tw-letter-grid button:disabled label { color: $sh_fg_disabled; }
+
+.tw-tile-group-title { font-size: 12px; padding: 12px 4px 8px 4px; }
+button.tw-tile { background-color: $tile_bg; border: 2px solid transparent; }
+button.tw-tile:hover { border-color: $tile_hover_border; }
+button.tw-tile:active { background-color: $accent_dark1; }
+button.tw-tile label { color: $accent_fg; font-size: 12px; }
+button.tw-tile image { color: $accent_fg; }
+button.tw-tile .tw-tile-big { font-size: 34px; font-weight: 300; }
+button.tw-tile.drop-target { border-color: $sh_fg; }
+
+/* ---------------------------------------------------------------- search */
+.tw-search-tabs button { padding: 10px 12px 8px 12px; border-bottom: 2px solid transparent; }
+.tw-search-tabs button.selected { border-bottom-color: $accent; }
+.tw-search-tabs button label { font-size: 13px; }
+button.tw-result { padding: 6px 12px; min-height: 36px; }
+button.tw-result:hover { background-color: $sh_hover; }
+button.tw-result.selected { background-color: $accent_a40; }
+.tw-result-title { font-size: 14px; }
+.tw-result-sub { font-size: 12px; color: $sh_fg_dim; }
+.tw-search-detail { background-color: alpha($sh_fg, 0.04); }
+.tw-search-detail .tw-detail-title { font-size: 20px; }
+button.tw-detail-action { padding: 8px 16px; }
+button.tw-detail-action label { font-size: 13px; }
+.tw-search-entry-bar { background-color: $sh_field; border-top: 1px solid $sh_border; }
+.tw-search-entry-bar entry { background: transparent; border: none; min-height: 38px; font-size: 14px; }
+.tw-search-entry-bar entry:focus { border: none; }
+.tw-search-empty { font-size: 14px; }
+
+/* ----------------------------------------------------------- Info-Center */
+.tw-actioncenter { min-width: 396px; }
+.tw-ac-header button label { font-size: 12px; }
+.tw-ac-title { font-size: 20px; padding: 14px 16px 6px 16px; }
+.tw-ac-empty { font-size: 14px; color: $sh_fg; padding: 16px; }
+.tw-ac-group-title { font-size: 12px; padding: 6px 16px; }
+.tw-notification { background-color: alpha($sh_fg, 0.06); margin: 0 12px 2px 12px; padding: 10px; }
+.tw-notification:hover { background-color: alpha($sh_fg, 0.12); }
+.tw-notification .tw-notif-summary { font-weight: 600; font-size: 13px; }
+.tw-notification .tw-notif-body { font-size: 13px; color: $sh_fg_dim; }
+button.tw-notif-close { min-width: 24px; min-height: 24px; }
+button.tw-quick-action { background-color: $sh_qa_off; min-height: 64px; min-width: 88px; padding: 6px 8px; }
+button.tw-quick-action:hover { background-color: $sh_qa_off_hover; }
+button.tw-quick-action.on { background-color: $accent; }
+button.tw-quick-action.on:hover { background-color: $accent_light1; }
+button.tw-quick-action.on label, button.tw-quick-action.on image { color: $accent_fg; }
+button.tw-quick-action label { font-size: 12px; }
+.tw-ac-link button label { font-size: 12px; color: $sh_fg; }
+.tw-ac-link button:hover label { text-decoration-line: underline; }
+.tw-slider-row { padding: 6px 16px 14px 16px; }
+
+scale.tw-slider trough { background-color: alpha($sh_fg, 0.45); min-height: 2px; border: none; border-radius: 0; }
+scale.tw-slider highlight { background-color: $accent_light2; border: none; border-radius: 0; min-height: 2px; }
+scale.tw-slider slider {
+  background-color: $accent_light2; border: none; border-radius: 4px; min-width: 8px; min-height: 22px;
+  margin: -10px 0; box-shadow: none;
+}
+scale.tw-slider slider:hover { background-color: $sh_fg; }
+
+/* --------------------------------------------------------------- toasts */
+.tw-toast {
+  background-color: $toast_bg; border: 1px solid $sh_border; padding: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+}
+.tw-toast .tw-toast-app { font-size: 12px; }
+.tw-toast .tw-notif-summary { font-weight: 600; font-size: 14px; }
+.tw-toast .tw-notif-body { font-size: 13px; color: $sh_fg_dim; }
+button.tw-toast-action { background-color: alpha($sh_fg, 0.12); padding: 6px 12px; }
+button.tw-toast-action:hover { background-color: alpha($sh_fg, 0.2); }
+
+/* -------------------------------------------------------------- flyouts */
+.tw-flyout { padding: 0; }
+.tw-flyout-title { font-size: 14px; padding: 12px 16px; }
+.tw-flyout-footer button { padding: 10px 16px; }
+.tw-flyout-footer button label { font-size: 12px; }
+.tw-big-time { font-size: 44px; font-weight: 300; padding: 14px 24px 0 24px; }
+.tw-big-date { font-size: 13px; color: $accent_light2; padding: 0 24px 10px 24px; }
+.tw-calendar { background: transparent; color: $sh_fg; font-size: 13px; padding: 8px 16px; border: none; }
+.tw-calendar button { min-width: 44px; min-height: 40px; border: 2px solid transparent; }
+.tw-calendar button:hover { border-color: alpha($sh_fg, 0.5); background: none; }
+.tw-calendar button.today { background-color: $accent; }
+.tw-calendar button.today label { color: $accent_fg; }
+.tw-calendar button.other-month label { color: $sh_fg_disabled; }
+.tw-calendar .tw-cal-weekday { font-size: 12px; min-height: 30px; }
+.tw-calendar .tw-cal-header { font-size: 14px; padding: 6px 8px; }
+button.tw-wifi-row { padding: 8px 16px; min-height: 44px; }
+button.tw-wifi-row:hover { background-color: $sh_hover; }
+button.tw-wifi-row.expanded { background-color: alpha($sh_fg, 0.12); }
+button.tw-wifi-row .tw-result-title { font-size: 14px; }
+button.tw-button-solid {
+  background-color: alpha($sh_fg, 0.2); padding: 5px 18px; min-height: 24px; border: 2px solid transparent;
+}
+.tw-popup button.tw-button-solid:hover { border-color: alpha($sh_fg, 0.5); background-color: alpha($sh_fg, 0.2); }
+.tw-popup button.tw-button-accent { background-color: $accent; padding: 5px 18px; min-height: 24px; }
+.tw-popup button.tw-button-accent:hover { background-color: $accent_light1; }
+.tw-popup button.tw-button-accent label { color: $accent_fg; }
+button.tw-device-row { padding: 10px 16px; }
+button.tw-device-row:hover { background-color: $sh_hover; }
+
+/* --------------------------------------------------- Alt+Tab, Task View */
+.tw-switcher { background-color: rgba(31,31,31,0.85); padding: 18px; }
+.tw-switcher label { color: #ffffff; }
+button.tw-switch-card { padding: 4px; border: 3px solid transparent; }
+button.tw-switch-card.selected { border-color: #ffffff; }
+button.tw-switch-card:hover { border-color: rgba(255,255,255,0.5); }
+.tw-switch-thumb { background-color: rgba(255,255,255,0.08); min-width: 200px; min-height: 130px; }
+.tw-switch-title { font-size: 13px; padding: 2px 4px 6px 4px; }
+.tw-taskview { background-color: rgba(20,20,20,0.72); }
+.tw-taskview label { color: #ffffff; }
+.tw-taskview .tw-switch-thumb { background-color: rgba(255,255,255,0.12); min-width: 280px; min-height: 180px; }
+.tw-taskview button.tw-card-close { background-color: transparent; min-width: 28px; min-height: 28px; }
+.tw-taskview button.tw-card-close:hover { background-color: #e81123; }
+.tw-taskview button.tw-card-close image { color: #ffffff; }
+.tw-taskview-hint { font-size: 13px; color: rgba(255,255,255,0.7); padding: 12px; }
+.tw-taskview-empty { font-size: 20px; font-weight: 300; }
+.tw-desktop-strip { background-color: rgba(0,0,0,0.25); padding: 10px; }
+.tw-desktop-strip label { font-size: 12px; }
+
+/* ------------------------------------------------------------------ OSD */
+.tw-osd { background-color: $panel_solid; padding: 12px 10px; min-width: 60px; }
+.tw-osd label { font-size: 15px; }
+.tw-osd levelbar trough { min-width: 4px; min-height: 100px; background-color: alpha($sh_fg, 0.3); border: none; border-radius: 0; }
+.tw-osd levelbar block.filled { background-color: $accent_light2; border: none; border-radius: 0; }
+.tw-osd levelbar block.empty { background-color: transparent; border: none; }
+
+/* ----------------------------------------------------------- Run dialog */
+.tw-run { background-color: $app_bg; color: $app_fg; border: 1px solid $accent; }
+.tw-run label { color: $app_fg; }
+.tw-run-title { background-color: $app_bg; padding: 6px 10px; }
+.tw-run entry { background: $app_field; color: $app_fg; border: 1px solid $app_field_border; border-radius: 0; box-shadow: none; }
+.tw-run button {
+  background: $app_button; color: $app_fg; border: 1px solid $app_button_border; border-radius: 0;
+  min-width: 74px; min-height: 22px; padding: 2px 8px; box-shadow: none;
+}
+.tw-run button:hover { background: $app_button_hover; border-color: $accent; }
+.tw-run .tw-run-footer { background-color: $app_bg_alt; padding: 12px; }
+.tw-run button.tw-run-close { background: transparent; border: none; min-width: 34px; }
+.tw-run button.tw-run-close:hover { background: #e81123; }
+.tw-run button.tw-run-close:hover image { color: #ffffff; }
+.tw-run image { color: $app_fg; }

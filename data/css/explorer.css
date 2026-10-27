@@ -1,0 +1,71 @@
+/* Tenwin File Explorer */
+.tw-explorer { background-color: $app_bg; color: $app_fg; }
+.tw-explorer label { color: $app_fg; }
+.tw-explorer .tw-dim, .tw-explorer label.tw-dim { color: $app_fg_dim; }
+
+/* Ribbon */
+.tw-ribbon { background-color: $app_bg; border-bottom: 1px solid $app_divider; }
+.tw-rb-tabs { background-color: $app_bg; }
+.tw-rb-tabs button { border: none; border-radius: 0; background: none; box-shadow: none; padding: 4px 14px; min-height: 18px; }
+.tw-rb-tabs button.tw-rb-tab:hover { background-color: $app_hover; }
+.tw-rb-tabs button.tw-rb-tab.selected { background-color: $app_ribbon; border: 1px solid $app_divider; border-bottom-color: $app_ribbon; }
+.tw-rb-tabs button.tw-rb-file { background-color: $accent; }
+.tw-rb-tabs button.tw-rb-file label { color: $accent_fg; }
+.tw-rb-tabs button.tw-rb-file:hover { background-color: $accent_light1; }
+.tw-rb-tabs button.tw-rb-toggle { padding: 4px 10px; }
+.tw-rb-panel { background-color: $app_ribbon; border-top: 1px solid $app_divider; padding: 3px 2px; }
+.tw-rb-group { border-right: 1px solid $app_divider; padding: 0 6px; }
+.tw-rb-group-title { color: $app_fg_dim; font-size: 11px; padding-top: 2px; }
+.tw-rb-panel button { background: none; border: 1px solid transparent; border-radius: 0; box-shadow: none; padding: 2px 4px; min-height: 0; }
+.tw-rb-panel button:hover { background-color: $app_hover; border-color: $app_select_border; }
+.tw-rb-panel button.selected { background-color: $app_select; border-color: $app_select_border; }
+.tw-rb-panel button image { color: $accent; }
+.tw-rb-panel button.tw-rb-big { min-width: 48px; padding: 4px 6px; }
+.tw-rb-panel button.tw-rb-big label { font-size: 12px; }
+.tw-rb-panel button.tw-rb-small label { font-size: 12px; }
+.tw-rb-check label { font-size: 12px; }
+
+/* Address bar */
+.tw-addressbar { padding: 6px 6px; background-color: $app_bg; }
+.tw-addressbar button.tw-nav-button { background: none; border: none; box-shadow: none; border-radius: 0; min-width: 28px; min-height: 24px; padding: 0; }
+.tw-addressbar button.tw-nav-button:hover { background-color: $app_hover; }
+.tw-addressbar button.tw-nav-button:disabled image { color: $app_fg_dim; opacity: 0.5; }
+.tw-address { border: 1px solid $app_field_border; background-color: $app_field; min-height: 24px; }
+.tw-address:hover { border-color: $accent; }
+.tw-address button.tw-crumb { background: none; border: none; box-shadow: none; border-radius: 0; padding: 0 4px; min-height: 22px; }
+.tw-address button.tw-crumb:hover { background-color: $app_hover; }
+.tw-crumb-sep { color: $app_fg_dim; padding: 0 2px; }
+entry.tw-address-entry, entry.tw-search { border-radius: 0; border: 1px solid $app_field_border; background: $app_field; color: $app_fg; box-shadow: none; min-height: 24px; }
+entry.tw-address-entry:focus, entry.tw-search:focus { border-color: $accent; }
+
+/* Navigation pane */
+.tw-navpane treeview.view { background-color: $app_nav_bg; color: $app_fg; padding: 3px 0; }
+.tw-navpane treeview.view:hover { background-color: $app_hover; }
+.tw-navpane treeview.view:selected { background-color: $app_select; color: $app_fg; }
+.tw-explorer paned > separator { background-color: $app_border; min-width: 1px; }
+
+/* Views */
+treeview.tw-details.view { background-color: $app_bg; color: $app_fg; }
+treeview.tw-details.view:hover { background-color: $app_hover; }
+treeview.tw-details.view:selected { background-color: $app_select; color: $app_fg; }
+treeview.tw-details.view header button { background: $app_bg; color: $app_fg_dim; border: none; border-right: 1px solid $app_border; box-shadow: none; border-radius: 0; padding: 4px 8px; }
+treeview.tw-details.view header button:hover { background-color: $app_hover; }
+iconview.tw-icons { background-color: $app_bg; color: $app_fg; }
+iconview.tw-icons:hover { background-color: $app_hover; }
+iconview.tw-icons:selected { background-color: $app_select; color: $app_fg; }
+.tw-tile-page { background-color: $app_bg; }
+.tw-section-head { color: $app_fg; font-size: 14px; }
+button.tw-pc-tile { background: none; border: 1px solid transparent; border-radius: 0; box-shadow: none; padding: 6px 10px; min-width: 260px; }
+button.tw-pc-tile:hover { background-color: $app_hover; border-color: $app_select_border; }
+button.tw-recent-row { background: none; border: 1px solid transparent; border-radius: 0; box-shadow: none; padding: 3px 8px; }
+button.tw-recent-row:hover { background-color: $app_hover; }
+levelbar.tw-drive-bar trough { background-color: $app_border; border: 1px solid $app_divider; border-radius: 0; min-height: 12px; padding: 0; }
+levelbar.tw-drive-bar block.filled { background-color: #26a0da; border: none; border-radius: 0; }
+levelbar.tw-drive-bar.full block.filled { background-color: #da2626; }
+levelbar.tw-drive-bar block.empty { background: none; border: none; }
+
+/* Status bar */
+.tw-statusbar { background-color: $app_bg; padding: 2px 10px; border-top: 1px solid $app_border; min-height: 22px; }
+.tw-statusbar label { font-size: 12px; }
+.tw-statusbar button.tw-status-button { background: none; border: 1px solid transparent; border-radius: 0; box-shadow: none; min-height: 18px; min-width: 22px; padding: 0; }
+.tw-statusbar button.tw-status-button:hover { border-color: $app_select_border; background-color: $app_hover; }

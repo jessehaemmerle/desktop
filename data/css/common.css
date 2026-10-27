@@ -1,0 +1,49 @@
+/* Tenwin common styles. $placeholders are filled by tenwin.theme. */
+
+* { font-family: $font; }
+
+/* Flat context menus in the style of Windows 10 */
+menu.tw-menu, .tw-menu {
+  background-color: $sh_menu_bg;
+  color: $sh_fg;
+  border: 1px solid $sh_divider;
+  border-radius: 0;
+  padding: 4px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.tw-menu menuitem { padding: 7px 28px 7px 12px; min-height: 16px; color: $sh_fg; border-radius: 0; }
+.tw-menu menuitem:hover { background-color: $sh_menu_hover; color: $sh_fg; }
+.tw-menu menuitem:disabled, .tw-menu menuitem:disabled label { color: $sh_fg_disabled; }
+.tw-menu menuitem label { color: inherit; }
+.tw-menu menuitem image { color: $sh_fg; }
+.tw-menu separator { background-color: $sh_divider; margin: 4px 0; min-height: 1px; }
+.tw-menu arrow { color: $sh_fg; }
+
+tooltip.background, tooltip {
+  background-color: $sh_menu_bg;
+  color: $sh_fg;
+  border: 1px solid $sh_divider;
+  border-radius: 0;
+  box-shadow: none;
+}
+tooltip label { color: $sh_fg; padding: 2px 4px; }
+
+/* App-styled controls (Explorer, Settings) */
+.tw-app-window { background-color: $app_bg; color: $app_fg; }
+.tw-link { color: $app_link; background: none; border: none; box-shadow: none; padding: 0; }
+.tw-link:hover { text-decoration: underline; }
+.tw-accent-button {
+  background: $accent; color: $accent_fg; border: 2px solid transparent; border-radius: 0;
+  padding: 4px 18px; min-height: 24px; box-shadow: none; text-shadow: none;
+}
+.tw-accent-button:hover { border-color: $accent_dark2; }
+.tw-accent-button:active { background: $accent_dark1; }
+.tw-gray-button {
+  background: $app_button; color: $app_fg; border: 2px solid transparent; border-radius: 0;
+  padding: 4px 18px; min-height: 24px; box-shadow: none; text-shadow: none;
+}
+.tw-gray-button:hover { border-color: $app_fg_dim; }
+.tw-dim { color: $app_fg_dim; }
+.tw-h1 { font-size: 28px; font-weight: 300; }
+.tw-h2 { font-size: 20px; font-weight: 400; }
+.tw-h3 { font-size: 15px; font-weight: 600; }

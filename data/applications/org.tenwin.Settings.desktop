@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Settings
+Name[de]=Einstellungen
+Comment=Change Tenwin settings
+Comment[de]=Tenwin-Einstellungen ändern
+Exec=tenwin-settings %u
+Icon=org.tenwin.Settings
+Terminal=false
+Categories=Settings;DesktopSettings;GTK;
+StartupWMClass=org.tenwin.Settings
+StartupNotify=true
+OnlyShowIn=Tenwin;
+Keywords=settings;preferences;control;einstellungen;systemsteuerung;

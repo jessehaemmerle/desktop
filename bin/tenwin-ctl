@@ -1,0 +1,24 @@
+#!/bin/sh
+# Send a command to the running tenwin-shell (used by labwc key bindings).
+# Kept in POSIX sh + gdbus so that key presses are handled without starting
+# a Python interpreter.
+#
+#   tenwin-ctl start-menu | super | search | action-center | alt-tab | ...
+
+[ $# -gt 0 ] || { echo "usage: tenwin-ctl COMMAND [ARGS]" >&2; exit 2; }
+
+if gdbus call --session --dest org.tenwin.Shell --object-path /org/tenwin/Shell \
+        --method org.tenwin.Shell.Command "$*" >/dev/null 2>&1; then
+    exit 0
+fi
+
+# The shell isn't running: handle what we can without it.
+BIN_DIR=$(dirname "$(readlink -f "$0")")
+PATH="$BIN_DIR:$PATH"
+case "$1" in
+    explorer) exec tenwin-explorer ;;
+    settings) exec tenwin-settings ;;
+    lock) exec tenwin-lock ;;
+    task-manager) exec gnome-system-monitor ;;
+    *) exit 1 ;;
+esac

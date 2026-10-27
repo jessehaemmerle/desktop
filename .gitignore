@@ -1,0 +1,14 @@
+build/
+__pycache__/
+*.pyc
+*.mo
+debian/.debhelper/
+debian/tenwin-desktop/
+debian/tenwin-greeter/
+debian/files
+debian/*.substvars
+debian/*.debhelper.log
+debian/debhelper-build-stamp
+*.deb
+*.buildinfo
+*.changes

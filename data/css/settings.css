@@ -1,0 +1,52 @@
+/* Tenwin Settings */
+.tw-settings, .tw-welcome { background-color: $app_settings_bg; color: $app_fg; }
+.tw-settings label, .tw-welcome label { color: $app_fg; }
+.tw-settings label.tw-dim, .tw-welcome label.tw-dim { color: $app_fg_dim; }
+.tw-settings button.tw-link label { color: $app_link; }
+.tw-settings button.tw-link:hover label { text-decoration-line: underline; }
+.tw-settings button.tw-accent-button label { color: $accent_fg; }
+.tw-settings scrolledwindow, .tw-settings viewport { background-color: $app_settings_bg; }
+
+entry.tw-set-search { border-radius: 0; border: 2px solid $app_field_border; background: $app_field; color: $app_fg; box-shadow: none; min-height: 28px; }
+entry.tw-set-search:focus { border-color: $accent; }
+
+button.tw-set-tile { background: none; border: 2px solid transparent; border-radius: 0; box-shadow: none; padding: 12px; }
+button.tw-set-tile:hover { border-color: $app_divider; background-color: $app_card; }
+.tw-set-tile-icon { color: $accent; }
+
+.tw-set-nav { background-color: $app_settings_nav; }
+.tw-set-nav button.tw-set-home { background: none; border: none; border-radius: 0; box-shadow: none; padding: 10px 16px; }
+.tw-set-nav button.tw-set-home:hover { background-color: $app_card_hover; }
+.tw-set-cat-title { font-weight: 600; padding: 6px 16px; font-size: 15px; }
+.tw-set-nav-list, .tw-set-nav-list row { background-color: transparent; }
+.tw-set-nav-list row { padding: 0; }
+.tw-set-nav-list row:hover { background-color: $app_card_hover; }
+.tw-set-nav-list row:selected { background-color: transparent; }
+.tw-set-nav-row { padding: 10px 16px; border-left: 4px solid transparent; }
+.tw-set-nav-row.selected { border-left-color: $accent; }
+.tw-set-nav-row image { color: $app_fg; }
+
+.tw-set-section { margin-top: 18px; }
+.tw-set-caption { font-size: 13px; margin-top: 6px; }
+.tw-set-page switch:checked { background-color: $accent; border-color: $accent; }
+.tw-set-page scale highlight, .tw-set-page scale slider { background-color: $accent; }
+.tw-set-page radio:checked { border-color: $accent; color: $accent; }
+.tw-set-page check:checked { background-color: $accent; border-color: $accent; }
+.tw-set-page combobox button { border-radius: 0; border: 2px solid $app_field_border; background: $app_field; color: $app_fg; }
+.tw-set-page combobox button:hover { border-color: $app_fg_dim; }
+button.tw-thumb { padding: 0; border: 2px solid transparent; border-radius: 0; background: none; box-shadow: none; }
+button.tw-thumb:hover { border-color: $app_fg_dim; }
+button.tw-thumb.selected { border-color: $accent; }
+button.tw-swatch { padding: 0; border: none; border-radius: 0; background: none; box-shadow: none; }
+.tw-preview { border: 1px solid $app_divider; }
+.tw-app-list, .tw-app-list row { background-color: transparent; }
+
+/* Welcome */
+button.tw-mode-card { background: none; border: 3px solid transparent; border-radius: 0; box-shadow: none; padding: 6px; }
+button.tw-mode-card:hover { border-color: $app_divider; }
+button.tw-mode-card.selected { border-color: $accent; }
+.tw-mode-preview { background-image: linear-gradient(135deg, #0a4fa8, #1e8fff); }
+.tw-mode-preview.light .tw-mode-window { background-color: #ffffff; border: 1px solid #cccccc; }
+.tw-mode-preview.dark .tw-mode-window { background-color: #1f1f1f; border: 1px solid #3a3a3a; }
+.tw-mode-preview.light .tw-mode-taskbar { background-color: #eeeeee; }
+.tw-mode-preview.dark .tw-mode-taskbar { background-color: #101010; }
