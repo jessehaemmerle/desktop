@@ -10,7 +10,7 @@ from pathlib import Path
 _PKG_DIR = Path(__file__).resolve().parent
 _SRC_ROOT = _PKG_DIR.parent.parent
 
-if (_SRC_ROOT / "data" / "labwc").is_dir():
+if (_SRC_ROOT / "data" / "css").is_dir() and (_SRC_ROOT / "bin").is_dir():
     # Running from a checkout.
     DEV_MODE = True
     DATA_DIR = _SRC_ROOT / "data"
@@ -34,7 +34,8 @@ def _xdg(var, fallback):
     return Path(value) if value else Path.home() / fallback
 
 
-CONFIG_DIR = _xdg("XDG_CONFIG_HOME", ".config") / "tenwin"
+CONFIG_DIR = Path(os.environ["TENWIN_CONFIG_DIR"]) if os.environ.get("TENWIN_CONFIG_DIR") \
+    else _xdg("XDG_CONFIG_HOME", ".config") / "tenwin"
 STATE_DIR = _xdg("XDG_STATE_HOME", ".local/state") / "tenwin"
 CACHE_DIR = _xdg("XDG_CACHE_HOME", ".cache") / "tenwin"
 SETTINGS_FILE = CONFIG_DIR / "settings.json"

@@ -4,7 +4,7 @@ from gi.repository import Gtk
 
 from tenwin.config import get_settings
 from tenwin.gtkutil import add_class, flat_button, icon_image, set_class
-from tenwin.i18n import _
+from tenwin.i18n import _, pgettext
 
 
 def big_button(icon, text, callback, tooltip=None):
@@ -71,7 +71,7 @@ class Ribbon(Gtk.Box):
         file_tab = flat_button(Gtk.Label(label=_("File")), "tw-rb-file")
         file_tab.connect("clicked", lambda b: window.show_file_menu(b))
         self.tabs.pack_start(file_tab, False, False, 0)
-        for key, text in (("home", _("Home")), ("share", _("Share")), ("view", _("View")),
+        for key, text in (("home", pgettext("ribbon", "Home")), ("share", _("Share")), ("view", _("View")),
                           ("trash", _("Recycle Bin Tools"))):
             button = flat_button(Gtk.Label(label=text), "tw-rb-tab")
             button.connect("clicked", lambda _b, k=key: self.select(k))

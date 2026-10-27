@@ -1,0 +1,2510 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the tenwin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: tenwin 0.1.0\n"
+"Report-Msgid-Bugs-To: jesse@haemmerle.at\n"
+"POT-Creation-Date: 2026-10-27 23:46+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: src/tenwin/desktop/app.py:238 src/tenwin/explorer/places.py:126
+#: src/tenwin/explorer/window.py:28 src/tenwin/explorer/window.py:380
+#: src/tenwin/settings/pages.py:618
+msgid "This PC"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:245 src/tenwin/explorer/places.py:133
+#: src/tenwin/explorer/window.py:30 src/tenwin/settings/pages.py:620
+msgid "Recycle Bin"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:349 src/tenwin/explorer/window.py:530
+#: src/tenwin/explorer/window.py:540
+msgid "Can't open this file"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:385 src/tenwin/desktop/app.py:433
+#: src/tenwin/explorer/ribbon.py:107 src/tenwin/explorer/window.py:657
+#: src/tenwin/explorer/window.py:972
+msgid "Rename"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:423 src/tenwin/explorer/ribbon.py:111
+#: src/tenwin/explorer/ribbon.py:113 src/tenwin/explorer/window.py:933
+#: src/tenwin/explorer/window.py:1023 src/tenwin/explorer/window.py:1032
+#: src/tenwin/shell/flyouts.py:272 src/tenwin/shell/search.py:248
+#: src/tenwin/shell/winx.py:132
+msgid "Open"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:426 src/tenwin/explorer/window.py:999
+msgid "Empty Recycle Bin"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:429 src/tenwin/explorer/ribbon.py:101
+#: src/tenwin/explorer/window.py:926 src/tenwin/explorer/window.py:967
+msgid "Cut"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:430 src/tenwin/explorer/ribbon.py:99
+#: src/tenwin/explorer/window.py:968 src/tenwin/settings/pages.py:270
+msgid "Copy"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:432 src/tenwin/explorer/ribbon.py:106
+#: src/tenwin/explorer/window.py:928 src/tenwin/explorer/window.py:971
+msgid "Delete"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:435 src/tenwin/desktop/app.py:438
+#: src/tenwin/explorer/ribbon.py:112 src/tenwin/explorer/window.py:930
+#: src/tenwin/explorer/window.py:974 src/tenwin/explorer/window.py:1015
+#: src/tenwin/explorer/window.py:1028 src/tenwin/explorer/window.py:1037
+msgid "Properties"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:446 src/tenwin/explorer/ribbon.py:74
+#: src/tenwin/explorer/window.py:979
+msgid "View"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:448 src/tenwin/explorer/ribbon.py:141
+#: src/tenwin/explorer/window.py:982 src/tenwin/settings/pages.py:622
+msgid "Large icons"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:448 src/tenwin/explorer/ribbon.py:141
+#: src/tenwin/explorer/window.py:982 src/tenwin/settings/pages.py:622
+msgid "Medium icons"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:448 src/tenwin/explorer/ribbon.py:142
+#: src/tenwin/explorer/window.py:983 src/tenwin/settings/pages.py:622
+msgid "Small icons"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:452 src/tenwin/settings/pages.py:621
+msgid "Show desktop icons"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:458 src/tenwin/explorer/window.py:988
+msgid "Sort by"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:460 src/tenwin/explorer/window.py:146
+#: src/tenwin/explorer/window.py:875 src/tenwin/explorer/window.py:991
+#: src/tenwin/fileops.py:444
+msgid "Name"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:460 src/tenwin/explorer/window.py:163
+#: src/tenwin/explorer/window.py:876 src/tenwin/explorer/window.py:992
+#: src/tenwin/session.py:189
+msgid "Size"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:460
+msgid "Item type"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:461 src/tenwin/explorer/window.py:161
+#: src/tenwin/explorer/window.py:308 src/tenwin/explorer/window.py:875
+#: src/tenwin/explorer/window.py:991
+msgid "Date modified"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:466 src/tenwin/explorer/window.py:996
+msgid "Refresh"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:468 src/tenwin/explorer/ribbon.py:100
+#: src/tenwin/explorer/window.py:1001
+msgid "Paste"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:473 src/tenwin/explorer/ribbon.py:108
+#: src/tenwin/explorer/window.py:1007
+msgid "New"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:475 src/tenwin/explorer/window.py:164
+#: src/tenwin/explorer/window.py:307 src/tenwin/explorer/window.py:849
+#: src/tenwin/explorer/window.py:1010
+msgid "Folder"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:476 src/tenwin/explorer/window.py:1011
+msgid "Text Document"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:481
+msgid "Display settings"
+msgstr ""
+
+#: src/tenwin/desktop/app.py:482
+msgid "Personalize"
+msgstr ""
+
+#: src/tenwin/explorer/app.py:23
+msgid "Open a new window"
+msgstr ""
+
+#: src/tenwin/explorer/app.py:25
+msgid "Show the properties of the given files"
+msgstr ""
+
+#: src/tenwin/explorer/app.py:27
+msgid "Empty the Recycle Bin"
+msgstr ""
+
+#: src/tenwin/explorer/app.py:32 src/tenwin/explorer/window.py:41
+#: src/tenwin/settings/pages.py:589 src/tenwin/shell/startmenu.py:181
+#: src/tenwin/shell/winx.py:40
+msgid "File Explorer"
+msgstr ""
+
+#: src/tenwin/explorer/app.py:54 src/tenwin/explorer/window.py:773
+msgid ""
+"Are you sure you want to permanently delete all items in the Recycle Bin?"
+msgstr ""
+
+#: src/tenwin/explorer/app.py:56 src/tenwin/explorer/window.py:774
+#: src/tenwin/fileops.py:176
+msgid "Delete Multiple Items"
+msgstr ""
+
+#: src/tenwin/explorer/model.py:42 src/tenwin/explorer/properties.py:113
+#: src/tenwin/shell/search.py:238
+msgid "File folder"
+msgstr ""
+
+#: src/tenwin/explorer/model.py:45 src/tenwin/explorer/properties.py:113
+#: src/tenwin/explorer/ribbon.py:71 src/tenwin/shell/search.py:237
+msgid "File"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:26 src/tenwin/settings/pages.py:276
+#: src/tenwin/shell/winx.py:45
+msgid "Desktop"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:46 src/tenwin/explorer/window.py:375
+msgid "Local Disk (/)"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:50
+#, python-format
+msgid "Home (%s)"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:123 src/tenwin/explorer/window.py:26
+msgid "Quick access"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:132 src/tenwin/explorer/window.py:32
+#: src/tenwin/shell/actioncenter.py:51
+msgid "Network"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:266 src/tenwin/shell/search.py:15
+#: src/tenwin/shell/search.py:185
+msgid "Folders"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:272
+msgid "Devices and drives"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:274
+#, python-format
+msgid "%s free of %s"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:302
+msgid "Frequent folders"
+msgstr ""
+
+#: src/tenwin/explorer/places.py:312
+msgid "Recent files"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:41 src/tenwin/explorer/window.py:440
+#, python-format
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/explorer/properties.py:42
+#, python-format
+msgid "%s Properties"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:49
+msgid "General"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:51
+msgid "Security"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:58
+msgid "Apply"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:58 src/tenwin/explorer/window.py:591
+#: src/tenwin/fileops.py:373 src/tenwin/fileops.py:428
+#: src/tenwin/settings/pages.py:284 src/tenwin/settings/pages.py:509
+#: src/tenwin/settings/pages.py:777 src/tenwin/shell/winx.py:112
+#: src/tenwin/shell/winx.py:132
+msgid "Cancel"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:58 src/tenwin/greeter/app.py:343
+#: src/tenwin/shell/winx.py:113
+msgid "OK"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:114
+msgid "Type of file:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:114
+msgid "Type:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:118
+msgid "(unknown)"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:120
+msgid "Change..."
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:123
+msgid "Opens with:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:126
+msgid "Location:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:127
+msgid "Calculating…"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:129
+msgid "Size:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:132
+msgid "Contains:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:139
+msgid "Created:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:142
+msgid "Modified:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:145
+msgid "Accessed:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:148
+msgid "Read-only"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:154 src/tenwin/settings/pages.py:607
+msgid "Hidden"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:157
+msgid "On Linux, files whose names start with a dot are hidden."
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:159
+msgid "Attributes:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:190
+#, python-format
+msgid "%s (%s bytes)"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:192
+#, python-format
+msgid "%s, %s"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:192
+#, python-format
+msgid "%d File"
+msgid_plural "%d Files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/explorer/properties.py:193
+#, python-format
+msgid "%d Folder"
+msgid_plural "%d Folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/explorer/properties.py:225
+msgid "Owner:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:226
+msgid "Group:"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:229
+msgid "Read"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:229
+msgid "Write"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:229
+msgid "Execute"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:232
+msgid "Owner"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:233
+msgid "Group"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:234
+msgid "Others"
+msgstr ""
+
+#: src/tenwin/explorer/properties.py:248
+msgid "Only the owner can change permissions."
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:74
+msgctxt "ribbon"
+msgid "Home"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:74
+msgid "Share"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:75
+msgid "Recycle Bin Tools"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:81 src/tenwin/explorer/ribbon.py:201
+msgid "Expand the Ribbon (Ctrl+F1)"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:97
+msgid "Clipboard"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:98
+msgid ""
+"Pin to Quick\n"
+"access"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:102
+msgid "Copy path"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:103
+msgid "Organize"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:104
+msgid ""
+"Move\n"
+"to"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:105
+msgid ""
+"Copy\n"
+"to"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:109
+msgid ""
+"New\n"
+"folder"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:110
+msgid "New item"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:114 src/tenwin/explorer/window.py:888
+#: src/tenwin/explorer/window.py:939 src/tenwin/explorer/window.py:1006
+msgid "Open in Terminal"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:116
+msgid "Select"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:117
+msgid "Select all"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:118
+msgid "Select none"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:119
+msgid "Invert selection"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:126
+msgid "Send"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:127 src/tenwin/settings/pages.py:671
+msgid "Email"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:128
+msgid "Zip"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:129
+msgid "Extract"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:130
+msgid ""
+"Extract\n"
+"all"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:137
+msgid "Panes"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:138
+msgid ""
+"Navigation\n"
+"pane"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:141 src/tenwin/explorer/window.py:982
+msgid "Extra large icons"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:142 src/tenwin/explorer/window.py:983
+msgid "List"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:142 src/tenwin/explorer/window.py:983
+msgid "Details"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:151
+msgid "Layout"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:152
+msgid ""
+"Sort\n"
+"by"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:153
+msgid "Current view"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:154
+msgid "File name extensions"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:156
+msgid "Hidden items"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:158
+msgid "Show/hide"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:165
+msgid "Manage"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:166
+msgid ""
+"Empty\n"
+"Recycle Bin"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:167
+msgid ""
+"Restore all\n"
+"items"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:168
+msgid ""
+"Restore the\n"
+"selected items"
+msgstr ""
+
+#: src/tenwin/explorer/ribbon.py:200
+msgid "Minimize the Ribbon (Ctrl+F1)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:101
+msgid "Back (Alt + Left Arrow)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:104
+msgid "Forward (Alt + Right Arrow)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:107
+msgid "Up (Alt + Up Arrow)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:120
+msgid "Refresh (F5)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:162 src/tenwin/explorer/window.py:875
+#: src/tenwin/explorer/window.py:991
+msgid "Type"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:213
+msgid "Displays information about each item in the window. (Ctrl+Shift+6)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:216
+msgid "Display items by using large thumbnails. (Ctrl+Shift+2)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:307
+msgid "Original Location"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:308
+msgid "Date Deleted"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:312
+#, python-format
+msgid "Search %s"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:404
+msgid "this pc"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:404
+msgid "recycle bin"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:405
+msgid "quick access"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:418
+#, python-format
+msgid "Tenwin can't find '%s'. Check the spelling and try again."
+msgstr ""
+
+#: src/tenwin/explorer/window.py:431
+msgid "This location can't be opened."
+msgstr ""
+
+#: src/tenwin/explorer/window.py:443
+#, python-format
+msgid "%d item selected"
+msgid_plural "%d items selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/explorer/window.py:591
+msgid "Select folder"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:599
+msgid "Move Items"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:606
+msgid "Copy Items"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:624 src/tenwin/fileops.py:176
+msgid "Delete File"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:667
+msgid "Can't create the folder"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:678
+msgid "Can't create the file"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:713
+msgid "No email app is installed."
+msgstr ""
+
+#: src/tenwin/explorer/window.py:738 src/tenwin/explorer/window.py:763
+msgid "Compressed (zipped) Folders Error"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:759
+#, python-format
+msgid "The archive contains unsafe paths: %s"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:797 src/tenwin/explorer/window.py:924
+#: src/tenwin/session.py:187
+msgid "Restore"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:816
+msgid "Searching…"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:850
+#, python-format
+msgid "Search Results in %s"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:880
+msgid "Ascending"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:881
+msgid "Descending"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:886
+msgid "Open new window"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:890
+msgid "Change folder and search options"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:892 src/tenwin/session.py:201
+#: src/tenwin/shell/switcher.py:138
+msgid "Close"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:937 src/tenwin/explorer/window.py:1024
+msgid "Open in new window"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:938
+msgid "Pin to Quick access"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:945
+msgid "Open with"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:952
+msgid "Choose another app"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:956
+msgid "Extract All..."
+msgstr ""
+
+#: src/tenwin/explorer/window.py:958
+msgid "Send to"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:961
+msgid "Compressed (zipped) folder"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:962
+msgid "Desktop (create shortcut)"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:963
+msgid "Mail recipient"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:970 src/tenwin/explorer/window.py:1075
+#: src/tenwin/explorer/window.py:1086
+msgid "Create shortcut"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:1026
+msgid "Unpin from Quick access"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:1034
+msgid "Eject"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:1047
+msgid "Problem Ejecting Device"
+msgstr ""
+
+#: src/tenwin/explorer/window.py:1071 src/tenwin/explorer/window.py:1082
+#, python-format
+msgid "%s - Shortcut"
+msgstr ""
+
+#: src/tenwin/fileops.py:101
+msgid "New folder"
+msgstr ""
+
+#: src/tenwin/fileops.py:107
+msgid "New Text Document"
+msgstr ""
+
+#: src/tenwin/fileops.py:121
+msgid "A file name can't contain the character /"
+msgstr ""
+
+#: src/tenwin/fileops.py:124
+msgid "There is already a file with the same name in this location."
+msgstr ""
+
+#: src/tenwin/fileops.py:140
+msgid "These items can't be moved to the Recycle Bin."
+msgstr ""
+
+#: src/tenwin/fileops.py:141
+msgid "Do you want to permanently delete them?"
+msgstr ""
+
+#: src/tenwin/fileops.py:170
+msgid "Are you sure you want to permanently delete this item?"
+msgstr ""
+
+#: src/tenwin/fileops.py:172
+#, python-format
+msgid "Are you sure you want to permanently delete %d item?"
+msgid_plural "Are you sure you want to permanently delete these %d items?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/fileops.py:233
+msgid "The destination folder is a subfolder of the source folder."
+msgstr ""
+
+#: src/tenwin/fileops.py:357
+msgid "Replace or Skip Files"
+msgstr ""
+
+#: src/tenwin/fileops.py:366
+#, python-format
+msgid "The destination already has a file named \"%s\""
+msgstr ""
+
+#: src/tenwin/fileops.py:369
+msgid "Do this for all conflicts"
+msgstr ""
+
+#: src/tenwin/fileops.py:371
+msgid "Skip this file"
+msgstr ""
+
+#: src/tenwin/fileops.py:372
+msgid "Replace the file in the destination"
+msgstr ""
+
+#: src/tenwin/fileops.py:389
+msgid "Some items could not be copied."
+msgstr ""
+
+#: src/tenwin/fileops.py:400
+msgid "Moving"
+msgstr ""
+
+#: src/tenwin/fileops.py:400
+msgid "Copying"
+msgstr ""
+
+#: src/tenwin/fileops.py:413
+#, python-format
+msgid "Moving %d item to"
+msgid_plural "Moving %d items to"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/fileops.py:414
+#, python-format
+msgid "Copying %d item to"
+msgid_plural "Copying %d items to"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/greeter/app.py:91
+msgid "Guest"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:326 src/tenwin/settings/pages.py:810
+msgid "Password"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:331
+msgid "Submit"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:336
+msgid "Welcome"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:339 src/tenwin/greeter/app.py:465
+msgid "The password is incorrect. Try again."
+msgstr ""
+
+#: src/tenwin/greeter/app.py:368
+msgid "Session"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:371 src/tenwin/shell/startmenu.py:188
+msgid "Power"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:399
+msgid "Other user"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:423 src/tenwin/settings/pages.py:201
+#: src/tenwin/shell/startmenu.py:496 src/tenwin/shell/winx.py:58
+msgid "Sleep"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:423 src/tenwin/shell/startmenu.py:497
+#: src/tenwin/shell/winx.py:59
+msgid "Shut down"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:424 src/tenwin/shell/startmenu.py:498
+#: src/tenwin/shell/winx.py:60
+msgid "Restart"
+msgstr ""
+
+#: src/tenwin/greeter/app.py:462
+msgid "The session could not be started."
+msgstr ""
+
+#: src/tenwin/gtkutil.py:127
+msgid "bytes"
+msgstr ""
+
+#: src/tenwin/session.py:129
+#, python-format
+msgid "Desktop %d"
+msgstr ""
+
+#: src/tenwin/session.py:188
+msgid "Move"
+msgstr ""
+
+#: src/tenwin/session.py:190
+msgid "Minimize"
+msgstr ""
+
+#: src/tenwin/session.py:191
+msgid "Maximize"
+msgstr ""
+
+#: src/tenwin/session.py:192
+msgid "Always on top"
+msgstr ""
+
+#: src/tenwin/session.py:193
+msgid "Move to next desktop"
+msgstr ""
+
+#: src/tenwin/settings/app.py:24 src/tenwin/settings/app.py:162
+#: src/tenwin/settings/app.py:175 src/tenwin/settings/pages.py:589
+#: src/tenwin/shell/search.py:14 src/tenwin/shell/search.py:133
+#: src/tenwin/shell/search.py:184 src/tenwin/shell/startmenu.py:182
+#: src/tenwin/shell/winx.py:39
+msgid "Settings"
+msgstr ""
+
+#: src/tenwin/settings/app.py:45
+msgid "Windows Settings"
+msgstr ""
+
+#: src/tenwin/settings/app.py:78
+msgid "Find a setting"
+msgstr ""
+
+#: src/tenwin/settings/app.py:112
+msgid "Home"
+msgstr ""
+
+#: src/tenwin/settings/app.py:157
+msgid "This page could not be loaded."
+msgstr ""
+
+#: src/tenwin/settings/app.py:198 src/tenwin/settings/app.py:211
+msgid "Welcome to Tenwin"
+msgstr ""
+
+#: src/tenwin/settings/app.py:212
+msgid ""
+"Choose how your desktop should look. You can change this later in Settings › "
+"Personalization › Colors."
+msgstr ""
+
+#: src/tenwin/settings/app.py:217 src/tenwin/settings/pages.py:532
+#: src/tenwin/settings/pages.py:535 src/tenwin/settings/pages.py:537
+msgid "Light"
+msgstr ""
+
+#: src/tenwin/settings/app.py:217 src/tenwin/settings/pages.py:532
+#: src/tenwin/settings/pages.py:535 src/tenwin/settings/pages.py:537
+msgid "Dark"
+msgstr ""
+
+#: src/tenwin/settings/app.py:238 src/tenwin/settings/pages.py:285
+#: src/tenwin/shell/flyouts.py:300
+msgid "Next"
+msgstr ""
+
+#: src/tenwin/settings/app.py:267
+msgid "Show the welcome dialog"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:38
+msgid "Never"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:40
+#, python-format
+msgid "%d minutes"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:40
+msgid "1 minute"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:42
+#, python-format
+msgid "%d hours"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:42
+msgid "1 hour"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:49 src/tenwin/settings/pages.py:69
+#: src/tenwin/settings/pages.py:923 src/tenwin/settings_index.py:20
+#: src/tenwin/settings_index.py:46
+msgid "Display"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:52
+msgid "Brightness and color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:53
+msgid "Change brightness"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:55
+msgid "Color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:56 src/tenwin/shell/actioncenter.py:58
+msgid "Night light"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:57
+msgid "Displays warmer colors to help you sleep."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:58
+msgid "Strength (color temperature in Kelvin)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:63
+msgid "No display information is available (wlr-randr missing?)."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:65
+msgid "Scale and layout"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:83
+msgid "Change the size of text, apps, and other items"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:95
+msgid "(Recommended)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:100
+msgid "Display resolution"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:102
+msgid "Landscape"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:102
+msgid "Portrait"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:102
+msgid "Landscape (flipped)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:103
+msgid "Portrait (flipped)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:104
+msgid "Display orientation"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:115
+msgid "The display settings could not be applied."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:135
+msgid "Advanced display settings"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:142
+msgid "Keep these display settings?"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:143
+msgid "Keep changes"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:144
+msgid "Revert"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:149 src/tenwin/settings/pages.py:155
+#, python-format
+msgid "Reverting to previous display settings in %d seconds."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:165 src/tenwin/settings_index.py:21
+msgid "Sound"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:168
+msgid "pactl is not installed, so sound devices can't be shown."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:170
+msgid "Output"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:171
+msgid "No output devices found"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:172
+msgid "Choose your output device"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:174
+msgid "Master volume"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:175
+msgid "Input"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:176
+msgid "No input devices found"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:177
+msgid "Choose your input device"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:180
+msgid "Microphone volume"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:182
+msgid "Related settings"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:183
+msgid "Sound Control Panel"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:188 src/tenwin/settings_index.py:22
+msgid "Notifications & actions"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:189
+msgid "Notifications"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:190
+msgid "Get notifications from apps and other senders"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:191
+msgid "Focus assist: only show priority notifications"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:192
+msgid "Quick actions"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:193
+msgid "Show all quick actions in the Action center"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:198 src/tenwin/settings_index.py:23
+msgid "Power & sleep"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:199
+msgid "Screen"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:200
+msgid "Lock the screen after"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:202
+msgid "PC goes to sleep after"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:203
+msgid "Lock the screen when the PC goes to sleep"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:207
+msgid "Power mode"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:208 src/tenwin/shell/actioncenter.py:73
+#: src/tenwin/shell/flyouts.py:385
+msgid "Battery saver"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:208
+msgid "Balanced"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:208 src/tenwin/shell/flyouts.py:360
+#: src/tenwin/shell/flyouts.py:386
+msgid "Best performance"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:212
+msgid "Battery"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:213
+#, python-format
+msgid "Battery level: %d %%"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:218 src/tenwin/settings_index.py:24
+msgid "Storage"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:220
+msgid "Local storage"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:232
+#, python-format
+msgid "%s used, %s free"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:235
+msgid "Disk Usage Analyzer"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:236
+msgid "Disks"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:254 src/tenwin/settings_index.py:25
+msgid "About"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:255
+msgid "Your PC is monitored and protected."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:256
+msgid "Device specifications"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:263
+msgid "Device name"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:264
+msgid "Processor"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:265
+msgid "Installed RAM"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:266
+msgid "System type"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:266
+#, python-format
+msgid "%s operating system"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:271
+msgid "Rename this PC"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:272
+msgid "Operating system specifications"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:274
+msgid "Edition"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:275
+msgid "Kernel"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:283
+msgid "Rename your PC"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:291
+msgid "You can use a combination of letters, hyphens, and numbers."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:306
+msgid "The PC could not be renamed."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:308
+msgid "The name is not valid."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:316 src/tenwin/settings_index.py:26
+msgid "Bluetooth & other devices"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:319 src/tenwin/shell/actioncenter.py:55
+msgid "Bluetooth"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:321
+msgid "No Bluetooth adapter was found."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:322
+msgid "Add Bluetooth or other device"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:327 src/tenwin/settings_index.py:27
+msgid "Printers & scanners"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:328
+msgid "Printers are managed by the system printing service (CUPS)."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:329
+msgid "Add a printer or scanner"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:330
+msgid "Open the CUPS web interface"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:335 src/tenwin/settings_index.py:28
+msgid "Mouse & touchpad"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:336
+msgid "Select your primary button"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:336
+msgid "Left"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:336
+msgid "Right"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:337
+msgid "Cursor speed"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:338
+msgid "Reverse scrolling direction (natural scrolling)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:339
+msgid "Touchpad"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:340
+msgid "Tap with a single finger to single-click"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:345 src/tenwin/settings_index.py:29
+msgid "Keyboard"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:346
+msgid "Repeat delay (ms)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:347
+msgid "Repeat rate (characters per second)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:348
+msgid "Turn on Num Lock at sign-in"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:349
+msgid "Keyboard layout and input languages"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:356 src/tenwin/settings_index.py:30
+msgid "Status"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:358
+msgid "Network status"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:361
+msgid "You're not connected to any networks."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:364
+msgid "You're connected to the Internet"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:365
+msgid "Change connection properties"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:366
+msgid "Advanced network settings"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:367
+msgid "Network and Sharing Center"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:372 src/tenwin/settings/pages.py:377
+#: src/tenwin/settings_index.py:31 src/tenwin/shell/flyouts.py:242
+msgid "Wi-Fi"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:375
+msgid "No Wi-Fi adapter was found."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:378
+msgid "Manage known networks"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:383 src/tenwin/settings_index.py:32
+#: src/tenwin/shell/actioncenter.py:65 src/tenwin/shell/flyouts.py:245
+msgid "Airplane mode"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:392
+msgid "Stop all wireless communication"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:397 src/tenwin/settings_index.py:33
+#: src/tenwin/shell/actioncenter.py:78
+msgid "VPN"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:398
+msgid "VPN connections are managed by NetworkManager."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:399
+msgid "Add a VPN connection"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:441 src/tenwin/settings/pages.py:456
+#: src/tenwin/settings_index.py:34
+msgid "Background"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:456
+msgid "Picture"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:456
+msgid "Solid color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:459 src/tenwin/settings/pages.py:574
+msgid "Choose your picture"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:463 src/tenwin/settings/pages.py:577
+#: src/tenwin/shell/winx.py:132
+msgid "Browse"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:464
+msgid "Choose a fit"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:464
+msgid "Fill"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:464
+msgid "Fit"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:464
+msgid "Stretch"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:465
+msgid "Tile"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:465
+msgid "Center"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:467
+msgid "Choose your background color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:508
+msgid "Choose a picture"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:509 src/tenwin/settings/pages.py:777
+msgid "Choose picture"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:511
+msgid "Images"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:522 src/tenwin/settings_index.py:35
+msgid "Colors"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:532
+msgid "Choose your color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:532
+msgid "Custom"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:535
+msgid "Choose your default Windows mode"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:537
+msgid "Choose your default app mode"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:539
+msgid "Transparency effects"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:540
+msgid "Choose your accent color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:545
+msgid "Choose a custom accent color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:556
+msgid "Custom color"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:557
+msgid "Show accent color on the following surfaces"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:558
+msgid "Start, taskbar, and action center"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:559
+msgid "Title bars and window borders"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:564 src/tenwin/settings_index.py:36
+msgid "Lock screen"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:572
+msgid "Use the desktop background on the lock screen"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:578
+msgid "Screen timeout settings"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:579
+msgid "Lock now (Win+L)"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:584 src/tenwin/settings_index.py:37
+#: src/tenwin/shell/taskbar.py:242
+msgid "Start"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:585
+msgid "Show most used apps"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:586
+msgid "Show recently added apps"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:587
+msgid "Choose which folders appear on Start"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:589 src/tenwin/shell/search.py:14
+#: src/tenwin/shell/search.py:184 src/tenwin/shell/startmenu.py:176
+msgid "Documents"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:590 src/tenwin/shell/startmenu.py:177
+msgid "Downloads"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:590 src/tenwin/shell/startmenu.py:178
+msgid "Music"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:590 src/tenwin/shell/startmenu.py:179
+msgid "Pictures"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:591 src/tenwin/shell/startmenu.py:180
+msgid "Videos"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:598
+msgid "Tiles"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:599
+msgid "Reset tiles to the default layout"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:604 src/tenwin/settings_index.py:38
+msgid "Taskbar"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:605
+msgid "Use small taskbar buttons"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:606
+msgid "Taskbar location on screen"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:606
+msgid "Bottom"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:606
+msgid "Top"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:607 src/tenwin/shell/taskbar.py:259
+#: src/tenwin/shell/winx.py:41
+msgid "Search"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:607
+msgid "Show search box"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:607
+msgid "Show search icon"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:609
+msgid "Show Task View button"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:610
+msgid "Notification area"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:611
+msgid "Always show all icons in the notification area"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:612
+msgid "Show seconds in the clock"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:617 src/tenwin/settings_index.py:48
+msgid "Desktop icons"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:619
+msgid "User's Files"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:622
+msgid "Icon size"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:630 src/tenwin/settings_index.py:39
+msgid "Apps & features"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:632
+msgid ""
+"Search, sort, and filter by drive. If you would like to uninstall or move an "
+"app, select it from the list."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:634
+msgid "Search this list"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:656 src/tenwin/shell/startmenu.py:449
+msgid "Uninstall"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:670
+msgid "Web browser"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:672
+msgid "Music player"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:673
+msgid "Video player"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:674
+msgid "Photo viewer"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:675
+msgid "Text editor"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:676
+msgid "PDF viewer"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:681 src/tenwin/settings_index.py:40
+msgid "Default apps"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:732 src/tenwin/settings_index.py:41
+msgid "Startup"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:733
+msgid "Apps can be configured to start when you sign in."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:761 src/tenwin/settings_index.py:42
+msgid "Your info"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:773
+msgid "Create your picture"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:776 src/tenwin/settings/pages.py:786
+msgid "Browse for one"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:787
+msgid "Manage my account"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:797
+msgid "The picture could not be used."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:809 src/tenwin/settings_index.py:43
+msgid "Sign-in options"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:811
+msgid "Change your account password."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:820
+msgid "Change"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:821
+msgid "Require sign-in"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:822
+msgid "Lock the screen when the PC wakes up from sleep"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:855 src/tenwin/settings_index.py:44
+msgid "Date & time"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:863
+msgid "The setting could not be changed."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:865
+msgid "Set time automatically"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:873
+msgid "The time zone could not be changed."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:875
+msgid "Time zone"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:877
+msgid "Formats"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:878
+msgid "Use 24-hour clock"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:890 src/tenwin/settings_index.py:45
+msgid "Region & language"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:891
+msgid "Windows display language"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:891
+msgid "Use system language"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:893
+msgid "Sign out and back in for the language change to take effect everywhere."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:894
+msgid "Keyboards"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:904
+msgid "Remove"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:912
+msgid "Add a keyboard"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:916
+msgid "Press Win+Space to switch between keyboards."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:924
+msgid "Make text bigger"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:925
+msgid "Show animations"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:926
+msgid "Show transparency"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:927
+msgid "Change pointer size"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:927
+msgid "Normal"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:927 src/tenwin/shell/startmenu.py:459
+msgid "Large"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:927
+msgid "Extra large"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:929
+msgid ""
+"Pointer size changes apply to new windows; sign out to apply them everywhere."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:936 src/tenwin/settings_index.py:47
+msgid "Software update"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:938
+msgid ""
+"Updates for the system and your apps are installed by the Ubuntu software "
+"updater."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:949
+msgid "Check for updates"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:950
+msgid "Reset"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:951
+msgid ""
+"Reset all Tenwin settings to their defaults. Your files are not affected."
+msgstr ""
+
+#: src/tenwin/settings/pages.py:955
+msgid "Reset all Tenwin settings?"
+msgstr ""
+
+#: src/tenwin/settings/pages.py:961
+msgid "Reset settings"
+msgstr ""
+
+#: src/tenwin/settings/widgets.py:59 src/tenwin/settings/widgets.py:63
+msgid "On"
+msgstr ""
+
+#: src/tenwin/settings/widgets.py:59 src/tenwin/settings/widgets.py:63
+msgid "Off"
+msgstr ""
+
+#: src/tenwin/settings_index.py:7 src/tenwin/shell/winx.py:32
+msgid "System"
+msgstr ""
+
+#: src/tenwin/settings_index.py:7
+msgid "Display, sound, notifications, power"
+msgstr ""
+
+#: src/tenwin/settings_index.py:8
+msgid "Devices"
+msgstr ""
+
+#: src/tenwin/settings_index.py:8
+msgid "Bluetooth, printers, mouse"
+msgstr ""
+
+#: src/tenwin/settings_index.py:9
+msgid "Network & Internet"
+msgstr ""
+
+#: src/tenwin/settings_index.py:9
+msgid "Wi-Fi, airplane mode, VPN"
+msgstr ""
+
+#: src/tenwin/settings_index.py:10
+msgid "Personalization"
+msgstr ""
+
+#: src/tenwin/settings_index.py:10
+msgid "Background, lock screen, colors"
+msgstr ""
+
+#: src/tenwin/settings_index.py:11 src/tenwin/shell/search.py:14
+#: src/tenwin/shell/search.py:184
+msgid "Apps"
+msgstr ""
+
+#: src/tenwin/settings_index.py:11
+msgid "Uninstall, defaults, optional features"
+msgstr ""
+
+#: src/tenwin/settings_index.py:12
+msgid "Accounts"
+msgstr ""
+
+#: src/tenwin/settings_index.py:12
+msgid "Your accounts, sign-in options"
+msgstr ""
+
+#: src/tenwin/settings_index.py:13
+msgid "Time & Language"
+msgstr ""
+
+#: src/tenwin/settings_index.py:13
+msgid "Date, region, keyboard"
+msgstr ""
+
+#: src/tenwin/settings_index.py:14
+msgid "Ease of Access"
+msgstr ""
+
+#: src/tenwin/settings_index.py:14
+msgid "Text size, cursor, animations"
+msgstr ""
+
+#: src/tenwin/settings_index.py:15
+msgid "Update & Security"
+msgstr ""
+
+#: src/tenwin/settings_index.py:15
+msgid "Software updates, backup"
+msgstr ""
+
+#: src/tenwin/settings_index.py:20
+msgid "resolution scale screen monitor brightness night light"
+msgstr ""
+
+#: src/tenwin/settings_index.py:21
+msgid "volume speaker microphone audio output input"
+msgstr ""
+
+#: src/tenwin/settings_index.py:22
+msgid "quick actions focus assist"
+msgstr ""
+
+#: src/tenwin/settings_index.py:23
+msgid "sleep lock screen timeout battery"
+msgstr ""
+
+#: src/tenwin/settings_index.py:24
+msgid "disk space drive"
+msgstr ""
+
+#: src/tenwin/settings_index.py:25
+msgid "pc name device specifications version"
+msgstr ""
+
+#: src/tenwin/settings_index.py:26
+msgid "pair devices"
+msgstr ""
+
+#: src/tenwin/settings_index.py:27
+msgid "printer scanner"
+msgstr ""
+
+#: src/tenwin/settings_index.py:28
+msgid "pointer speed scroll tap touchpad"
+msgstr ""
+
+#: src/tenwin/settings_index.py:29
+msgid "repeat delay typing keyboard"
+msgstr ""
+
+#: src/tenwin/settings_index.py:30
+msgid "network connection internet"
+msgstr ""
+
+#: src/tenwin/settings_index.py:31
+msgid "wireless wlan"
+msgstr ""
+
+#: src/tenwin/settings_index.py:32
+msgid "flight mode"
+msgstr ""
+
+#: src/tenwin/settings_index.py:33
+msgid "vpn proxy"
+msgstr ""
+
+#: src/tenwin/settings_index.py:34
+msgid "wallpaper picture desktop"
+msgstr ""
+
+#: src/tenwin/settings_index.py:35
+msgid "dark mode light mode accent color transparency theme"
+msgstr ""
+
+#: src/tenwin/settings_index.py:36
+msgid "lock screen picture"
+msgstr ""
+
+#: src/tenwin/settings_index.py:37
+msgid "start menu tiles folders"
+msgstr ""
+
+#: src/tenwin/settings_index.py:38
+msgid "taskbar search box small buttons position"
+msgstr ""
+
+#: src/tenwin/settings_index.py:39
+msgid "uninstall programs"
+msgstr ""
+
+#: src/tenwin/settings_index.py:40
+msgid "browser email music video photo"
+msgstr ""
+
+#: src/tenwin/settings_index.py:41
+msgid "autostart startup apps"
+msgstr ""
+
+#: src/tenwin/settings_index.py:42
+msgid "account picture name"
+msgstr ""
+
+#: src/tenwin/settings_index.py:43
+msgid "password"
+msgstr ""
+
+#: src/tenwin/settings_index.py:44
+msgid "clock time zone 24 hour"
+msgstr ""
+
+#: src/tenwin/settings_index.py:45
+msgid "language region keyboard layout"
+msgstr ""
+
+#: src/tenwin/settings_index.py:46
+msgid "text size bigger animations transparency cursor"
+msgstr ""
+
+#: src/tenwin/settings_index.py:47
+msgid "update upgrade packages"
+msgstr ""
+
+#: src/tenwin/settings_index.py:48
+msgid "this pc recycle bin desktop icons"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:17
+msgid "Now"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:20
+#, python-format
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/tenwin/shell/actioncenter.py:63
+msgid "All settings"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:68
+msgid "Focus assist"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:72 src/tenwin/shell/app.py:342
+#: src/tenwin/shell/app.py:346
+msgid "Screen snip"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:80 src/tenwin/shell/startmenu.py:490
+msgid "Lock"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:97
+msgid "Manage notifications"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:114
+msgid "Clear all notifications"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:164
+msgid "Collapse"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:164
+msgid "Expand"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:178
+msgid "No new notifications"
+msgstr ""
+
+#: src/tenwin/shell/actioncenter.py:194
+#, python-format
+msgid "Clear all %s notifications"
+msgstr ""
+
+#: src/tenwin/shell/app.py:342
+msgid "Screenshot saved"
+msgstr ""
+
+#: src/tenwin/shell/app.py:346
+msgid "Snip copied to clipboard"
+msgstr ""
+
+#: src/tenwin/shell/app.py:347
+#, python-format
+msgid "Saved to %s"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:65
+msgid "Date and time settings"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:160 src/tenwin/shell/taskbar.py:404
+msgid "No audio output device is installed"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:173
+msgid "Select playback device"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:205
+msgid "Network & Internet settings"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:226
+msgid "Connected"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:230
+msgid "NetworkManager is not running."
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:236
+msgid "Wi-Fi is turned off"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:270
+msgid "Connected, secured"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:270
+msgid "Connected, open"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:272
+msgid "Secured"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:287
+msgid "Disconnect"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:295
+msgid "Enter the network security key"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:300
+msgid "Connect"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:305
+msgid "Connecting…"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:308
+msgid "Can't connect to this network"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:359
+msgid "Best battery life"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:363
+msgid "Battery settings"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:372
+msgid "Fully charged"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:372
+msgid "Charging"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:375
+#, python-format
+msgid "%d h %02d min remaining"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:385
+msgid "Recommended"
+msgstr ""
+
+#: src/tenwin/shell/flyouts.py:387
+#, python-format
+msgid "Power mode: %s"
+msgstr ""
+
+#: src/tenwin/shell/notifications.py:72
+msgid "Notification"
+msgstr ""
+
+#: src/tenwin/shell/search.py:14
+msgid "All"
+msgstr ""
+
+#: src/tenwin/shell/search.py:72 src/tenwin/shell/taskbar.py:252
+msgid "Type here to search"
+msgstr ""
+
+#: src/tenwin/shell/search.py:126
+msgid "Top apps"
+msgstr ""
+
+#: src/tenwin/shell/search.py:142 src/tenwin/shell/search.py:237
+msgid "App"
+msgstr ""
+
+#: src/tenwin/shell/search.py:169
+#, python-format
+msgid "No results found for \"%s\""
+msgstr ""
+
+#: src/tenwin/shell/search.py:183
+msgid "Best match"
+msgstr ""
+
+#: src/tenwin/shell/search.py:237
+msgid "System settings"
+msgstr ""
+
+#: src/tenwin/shell/search.py:253 src/tenwin/shell/startmenu.py:433
+#: src/tenwin/shell/startmenu.py:455
+msgid "Unpin from Start"
+msgstr ""
+
+#: src/tenwin/shell/search.py:255 src/tenwin/shell/startmenu.py:435
+msgid "Pin to Start"
+msgstr ""
+
+#: src/tenwin/shell/search.py:257 src/tenwin/shell/startmenu.py:439
+#: src/tenwin/shell/startmenu.py:467 src/tenwin/shell/taskbar.py:125
+msgid "Unpin from taskbar"
+msgstr ""
+
+#: src/tenwin/shell/search.py:260 src/tenwin/shell/startmenu.py:441
+#: src/tenwin/shell/startmenu.py:469 src/tenwin/shell/taskbar.py:128
+msgid "Pin to taskbar"
+msgstr ""
+
+#: src/tenwin/shell/search.py:263 src/tenwin/shell/startmenu.py:443
+msgid "Open file location"
+msgstr ""
+
+#: src/tenwin/shell/search.py:265
+msgid "Copy full path"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:23
+msgid "Productivity"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:32
+msgid "Explore"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:168
+msgid "START"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:213
+msgid "Recently added"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:219
+msgid "Most used"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:294
+msgid "Right-click an app and choose \"Pin to Start\"."
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:310
+msgid "Name group"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:436
+msgid "More"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:456
+msgid "Resize"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:458
+msgid "Small"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:458
+msgid "Medium"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:458
+msgid "Wide"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:489
+msgid "Change account settings"
+msgstr ""
+
+#: src/tenwin/shell/startmenu.py:491 src/tenwin/shell/winx.py:57
+msgid "Sign out"
+msgstr ""
+
+#: src/tenwin/shell/switcher.py:257
+msgid "No open windows"
+msgstr ""
+
+#: src/tenwin/shell/switcher.py:260
+msgid ""
+"Switch desktops: Ctrl+Win+Left/Right · Move window: Ctrl+Win+Shift+Left/Right"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:131
+msgid "Close window"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:131
+msgid "Close all windows"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:264
+msgid "Task View"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:294
+msgid "Switch input language: Win+Space"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:300
+msgid "Action center"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:313
+msgid "Show desktop"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:386 src/tenwin/shell/winx.py:38
+msgid "Task Manager"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:388
+msgid "Show the desktop"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:390
+msgid "Taskbar settings"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:398
+msgid "Not connected"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:399
+msgid "Internet access"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:406
+msgid "Muted"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:423
+msgid "(charging)"
+msgstr ""
+
+#: src/tenwin/shell/taskbar.py:426
+#, python-format
+msgid "remaining: %d h %02d min"
+msgstr ""
+
+#: src/tenwin/shell/tray.py:267
+msgid "Show hidden icons"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:29
+msgid "Apps and Features"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:30
+msgid "Power Options"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:31
+msgid "Event Viewer"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:33
+msgid "Device Manager"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:34
+msgid "Network Connections"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:35
+msgid "Disk Management"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:36
+msgid "Terminal"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:42 src/tenwin/shell/winx.py:84
+msgid "Run"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:54
+msgid "Shut down or sign out"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:96
+msgid ""
+"Type the name of a program, folder, document, or Internet resource, and "
+"Tenwin will open it for you."
+msgstr ""
+
+#: src/tenwin/shell/winx.py:100
+msgid "Open:"
+msgstr ""
+
+#: src/tenwin/shell/winx.py:112
+msgid "Browse..."
+msgstr ""
+
+#: src/tenwin/shell/winx.py:150
+#, python-format
+msgid ""
+"Tenwin cannot find '%s'. Make sure you typed the name correctly, and then "
+"try again."
+msgstr ""

@@ -1,4 +1,4 @@
-/* Tenwin common styles. $placeholders are filled by tenwin.theme. */
+/* Tenwin common styles. Placeholders (dollar sign + name) are filled by tenwin.theme. */
 
 * { font-family: $font; }
 

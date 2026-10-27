@@ -213,8 +213,11 @@ static bool file_exists(const char *path)
 static void load_settings(void)
 {
 	const char *config = getenv("XDG_CONFIG_HOME");
+	const char *tenwin_dir = getenv("TENWIN_CONFIG_DIR");
 	char path[4096];
-	if (config && *config)
+	if (tenwin_dir && *tenwin_dir)
+		snprintf(path, sizeof(path), "%s/settings.json", tenwin_dir);
+	else if (config && *config)
 		snprintf(path, sizeof(path), "%s/tenwin/settings.json", config);
 	else
 		snprintf(path, sizeof(path), "%s/.config/tenwin/settings.json", getenv("HOME") ? getenv("HOME") : "");

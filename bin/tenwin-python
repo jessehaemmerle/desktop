@@ -7,4 +7,4 @@ else
     PYTHONPATH="/usr/share/tenwin/lib${PYTHONPATH:+:$PYTHONPATH}"
 fi
 export PYTHONPATH
-exec python3 "$@"
+exec "${TENWIN_PYTHON:-python3}" "$@"

@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ] && [ -z "$2" ]; then
+    current=$(cat /etc/X11/default-display-manager 2>/dev/null || true)
+    case "$current" in
+        */lightdm) ;;
+        *) echo "tenwin-greeter: LightDM is not the active display manager." \
+                "Run 'sudo dpkg-reconfigure lightdm' to use the Tenwin sign-in screen." ;;
+    esac
+fi
+#DEBHELPER#
+exit 0

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Tenwin Greeter
+Comment=Windows 10 style sign-in screen
+Comment[de]=Anmeldebildschirm im Stil von Windows 10
+Exec=tenwin-greeter
+Type=Application
+X-Ubuntu-Gettext-Domain=tenwin

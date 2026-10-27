@@ -80,6 +80,10 @@ def _(text):
     return gettext(text)
 
 
+def N_(text):
+    return text
+
+
 def ctl_path():
     path = paths.binary(CTL)
     return path
@@ -180,13 +184,13 @@ def rc_xml(settings):
 
 def menu_xml():
     items = [
-        ("Restore", '<action name="ToggleMaximize" />'),
-        ("Move", '<action name="Move" />'),
-        ("Size", '<action name="Resize" />'),
-        ("Minimize", '<action name="Iconify" />'),
-        ("Maximize", '<action name="ToggleMaximize" />'),
-        ("Always on top", '<action name="ToggleAlwaysOnTop" />'),
-        ("Move to next desktop", '<action name="SendToDesktop" to="right" follow="no" />'),
+        (N_("Restore"), '<action name="ToggleMaximize" />'),
+        (N_("Move"), '<action name="Move" />'),
+        (N_("Size"), '<action name="Resize" />'),
+        (N_("Minimize"), '<action name="Iconify" />'),
+        (N_("Maximize"), '<action name="ToggleMaximize" />'),
+        (N_("Always on top"), '<action name="ToggleAlwaysOnTop" />'),
+        (N_("Move to next desktop"), '<action name="SendToDesktop" to="right" follow="no" />'),
     ]
     out = ['<?xml version="1.0" encoding="UTF-8"?>', "<openbox_menu>",
            '  <menu id="client-menu">']

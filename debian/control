@@ -1,0 +1,88 @@
+Source: tenwin
+Section: x11
+Priority: optional
+Maintainer: Jesse Hämmerle <jesse@haemmerle.at>
+Build-Depends: debhelper-compat (= 13),
+               gettext,
+               libcairo2-dev,
+               libgdk-pixbuf-2.0-dev,
+               libpam0g-dev,
+               libpango1.0-dev,
+               libwayland-bin,
+               libwayland-dev,
+               libxkbcommon-dev,
+               pkgconf,
+               wayland-protocols
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+Homepage: https://github.com/jessehaemmerle/desktop
+Vcs-Git: https://github.com/jessehaemmerle/desktop.git
+
+Package: tenwin-desktop
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         dbus-user-session | dbus-x11,
+         dmz-cursor-theme,
+         fonts-noto-core,
+         gir1.2-gdkpixbuf-2.0,
+         gir1.2-gtk-3.0,
+         gir1.2-gtklayershell-0.1,
+         gir1.2-pango-1.0,
+         grim,
+         gvfs,
+         labwc (>= 0.7.1),
+         libglib2.0-bin,
+         librsvg2-common,
+         policykit-1-gnome | lxpolkit,
+         pulseaudio-utils,
+         python3 (>= 3.10),
+         python3-gi,
+         python3-gi-cairo,
+         slurp,
+         swayidle,
+         wl-clipboard,
+         wlr-randr,
+         xdg-desktop-portal-gtk,
+         xdg-desktop-portal-wlr,
+         xwayland
+Recommends: brightnessctl,
+            gammastep,
+            gir1.2-dbusmenu-gtk3-0.4,
+            gir1.2-nm-1.0,
+            gnome-keyring,
+            gnome-system-monitor,
+            network-manager-gnome,
+            power-profiles-daemon,
+            qt5-gtk-platformtheme,
+            tenwin-greeter,
+            upower,
+            xdg-utils,
+            yaru-theme-icon,
+            gnome-terminal | x-terminal-emulator
+Suggests: baobab, blueman, gnome-disks, pavucontrol, system-config-printer, wdisplays
+Description: Windows 10 style desktop environment (Wayland)
+ Tenwin is a desktop environment for Ubuntu that looks and works like the
+ Windows 10 desktop: taskbar with Start menu, live tiles and search, Action
+ Center with notifications and quick actions, Alt+Tab and Task View, Aero
+ Snap and the familiar Win key shortcuts, desktop icons, a File Explorer with
+ ribbon, a Settings app and a lock screen.
+ .
+ It is built on the labwc Wayland compositor. Light and dark mode and German
+ and English translations are included.
+
+Package: tenwin-greeter
+Architecture: all
+Depends: ${misc:Depends},
+         gir1.2-gtk-3.0,
+         gir1.2-lightdm-1,
+         lightdm,
+         python3-gi,
+         tenwin-desktop (>= ${source:Version})
+Description: Windows 10 style sign-in screen for LightDM
+ A LightDM greeter for the Tenwin desktop: lock screen style curtain with
+ clock and date, user picture, password field, user list, session and power
+ menus.
+ .
+ Installing this package does not switch the display manager. Select LightDM
+ with "sudo dpkg-reconfigure lightdm" or use Tenwin's install.sh.

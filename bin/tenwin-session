@@ -38,22 +38,26 @@ start_polkit_agent() {
 
 if [ "$1" = "--autostart" ]; then
     exec >>"$CACHE/session.log" 2>&1
-    dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY \
-        XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE DCONF_PROFILE \
-        XCURSOR_THEME XCURSOR_SIZE LABWC_PID QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME \
-        MOZ_ENABLE_WAYLAND 2>/dev/null
-    # Portals read XDG_CURRENT_DESKTOP at start-up.
-    systemctl --user try-restart xdg-desktop-portal.service 2>/dev/null
-    start_polkit_agent
+    # A nested development session (TENWIN_NESTED=1) must not change the
+    # environment of the desktop it runs in.
+    if [ -z "${TENWIN_NESTED:-}" ]; then
+        dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY \
+            XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE DCONF_PROFILE \
+            XCURSOR_THEME XCURSOR_SIZE LABWC_PID QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME \
+            MOZ_ENABLE_WAYLAND 2>/dev/null
+        # Portals read XDG_CURRENT_DESKTOP at start-up.
+        systemctl --user try-restart xdg-desktop-portal.service 2>/dev/null
+        start_polkit_agent
+    fi
     tenwin-python -m tenwin.session outputs
-    if command -v gnome-keyring-daemon >/dev/null 2>&1; then
+    if [ -z "${TENWIN_NESTED:-}" ] && command -v gnome-keyring-daemon >/dev/null 2>&1; then
         gnome-keyring-daemon --start --components=secrets >/dev/null 2>&1
     fi
     supervise tenwin-desktop &
     supervise tenwin-shell &
     supervise tenwin-idle &
     # XDG autostart entries (~/.config/autostart, /etc/xdg/autostart).
-    tenwin-xdg-autostart >>"$CACHE/session.log" 2>&1 &
+    [ -n "${TENWIN_NESTED:-}" ] || tenwin-xdg-autostart >>"$CACHE/session.log" 2>&1 &
     wait
     exit 0
 fi

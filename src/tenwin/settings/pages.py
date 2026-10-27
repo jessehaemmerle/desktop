@@ -11,7 +11,7 @@ from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango
 from tenwin import __version__, paths
 from tenwin.config import ACCENT_COLORS, DEFAULTS, get_settings
 from tenwin.gtkutil import add_class, clear_children, flat_button, human_size, icon_image, set_class
-from tenwin.i18n import _
+from tenwin.i18n import N_, _
 from tenwin.services import system
 from tenwin.services.audio import Audio
 from tenwin.services.bluetooth import Bluetooth
@@ -667,13 +667,13 @@ def page_apps_features(win):
 
 
 DEFAULT_TYPES = [
-    ("web", "Web browser", ["x-scheme-handler/http", "x-scheme-handler/https", "text/html"]),
-    ("mail", "Email", ["x-scheme-handler/mailto"]),
-    ("music", "Music player", ["audio/mpeg", "audio/flac", "audio/ogg", "audio/x-wav"]),
-    ("video", "Video player", ["video/mp4", "video/x-matroska", "video/webm"]),
-    ("photo", "Photo viewer", ["image/jpeg", "image/png", "image/gif", "image/webp"]),
-    ("text", "Text editor", ["text/plain"]),
-    ("pdf", "PDF viewer", ["application/pdf"]),
+    ("web", N_("Web browser"), ["x-scheme-handler/http", "x-scheme-handler/https", "text/html"]),
+    ("mail", N_("Email"), ["x-scheme-handler/mailto"]),
+    ("music", N_("Music player"), ["audio/mpeg", "audio/flac", "audio/ogg", "audio/x-wav"]),
+    ("video", N_("Video player"), ["video/mp4", "video/x-matroska", "video/webm"]),
+    ("photo", N_("Photo viewer"), ["image/jpeg", "image/png", "image/gif", "image/webp"]),
+    ("text", N_("Text editor"), ["text/plain"]),
+    ("pdf", N_("PDF viewer"), ["application/pdf"]),
 ]
 
 

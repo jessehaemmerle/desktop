@@ -30,6 +30,11 @@ _ = _translation.gettext
 ngettext = _translation.ngettext
 
 
+def N_(message):
+    """Mark a string for translation without translating it (xgettext keyword)."""
+    return message
+
+
 def pgettext(context, message):
     result = _translation.pgettext(context, message)
     return result

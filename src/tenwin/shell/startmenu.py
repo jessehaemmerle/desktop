@@ -10,7 +10,7 @@ from tenwin.apps import first_letter
 from tenwin.config import get_settings
 from tenwin.gtkutil import (add_class, clear_children, flat_button, icon_image, menu_item,
                             popup_menu, set_class)
-from tenwin.i18n import _
+from tenwin.i18n import N_, _
 from tenwin.services import system
 from tenwin.shell.layer import Edge, Popup, taskbar_edge
 
@@ -20,7 +20,7 @@ COLUMNS = 6  # small-tile columns per group (= 3 medium tiles)
 SIZES = {"small": (1, 1), "medium": (2, 2), "wide": (4, 2), "large": (4, 4)}
 
 DEFAULT_GROUPS = [
-    ("Productivity", [
+    (N_("Productivity"), [
         ("org.gnome.Calendar.desktop", "medium"),
         ("thunderbird.desktop", "wide"), ("thunderbird_thunderbird.desktop", "wide"),
         ("org.gnome.Evolution.desktop", "wide"),
@@ -29,7 +29,7 @@ DEFAULT_GROUPS = [
         ("libreoffice-impress.desktop", "small"), ("org.tenwin.Explorer.desktop", "small"),
         ("org.gnome.TextEditor.desktop", "medium"), ("org.gnome.gedit.desktop", "medium"),
     ]),
-    ("Explore", [
+    (N_("Explore"), [
         ("snap-store_snap-store.desktop", "wide"), ("org.gnome.Software.desktop", "wide"),
         ("org.gnome.Weather.desktop", "medium"), ("org.gnome.Calculator.desktop", "medium"),
         ("org.gnome.Loupe.desktop", "medium"), ("org.gnome.eog.desktop", "medium"),

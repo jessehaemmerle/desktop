@@ -164,11 +164,13 @@ def _delete_tree(gfile):
 
 
 def confirm_delete(parent, count, permanent):
-    if permanent:
-        text = ngettext("Are you sure you want to permanently delete this item?",
-                        "Are you sure you want to permanently delete these %d items?", count) % count
-    else:
+    if not permanent:
         return True
+    if count == 1:
+        text = _("Are you sure you want to permanently delete this item?")
+    else:
+        text = ngettext("Are you sure you want to permanently delete %d item?",
+                        "Are you sure you want to permanently delete these %d items?", count) % count
     dialog = Gtk.MessageDialog(transient_for=parent, modal=True, message_type=Gtk.MessageType.WARNING,
                                buttons=Gtk.ButtonsType.YES_NO, text=text)
     dialog.set_title(_("Delete File") if count == 1 else _("Delete Multiple Items"))

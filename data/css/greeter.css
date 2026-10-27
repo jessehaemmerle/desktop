@@ -1,0 +1,24 @@
+/* Tenwin LightDM greeter */
+window.tw-greeter { background-color: #003f8c; }
+.tw-greeter label { color: #ffffff; }
+.tw-greeter-time { font-size: 112px; font-weight: 300; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.tw-greeter-date { font-size: 36px; font-weight: 400; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.tw-greeter-name { font-size: 36px; font-weight: 300; }
+.tw-greeter-message { font-size: 16px; }
+.tw-greeter-field { background-color: rgba(255,255,255,0.9); border: 2px solid rgba(255,255,255,0.6); min-height: 32px; }
+entry.tw-greeter-password { padding: 0 8px; background: transparent; color: #000000; border: none; box-shadow: none; border-radius: 0; min-height: 28px; font-size: 15px; caret-color: #000000; }
+entry.tw-greeter-password image { color: #333333; }
+button.tw-greeter-go { background-color: rgba(0,0,0,0.12); border: none; border-radius: 0; box-shadow: none; min-width: 32px; min-height: 28px; }
+button.tw-greeter-go:hover { background-color: $accent; }
+button.tw-greeter-go image { color: #222222; }
+button.tw-greeter-go:hover image { color: #ffffff; }
+button.tw-greeter-ok { background-color: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.5); border-radius: 0; color: #ffffff; min-width: 108px; min-height: 28px; box-shadow: none; }
+button.tw-greeter-ok:hover { border-color: #ffffff; }
+button.tw-greeter-ok label { color: #ffffff; }
+button.tw-greeter-user { background: none; border: none; border-radius: 0; box-shadow: none; padding: 6px 12px 6px 6px; min-width: 240px; }
+button.tw-greeter-user:hover { background-color: rgba(255,255,255,0.15); }
+button.tw-greeter-user.selected { background-color: rgba(255,255,255,0.25); }
+button.tw-greeter-user label { font-size: 15px; }
+button.tw-greeter-corner { background: none; border: none; border-radius: 0; box-shadow: none; min-width: 44px; min-height: 44px; }
+button.tw-greeter-corner:hover { background-color: rgba(255,255,255,0.15); }
+button.tw-greeter-corner image { color: #ffffff; }

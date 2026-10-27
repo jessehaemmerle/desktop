@@ -40,6 +40,7 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-$TEST_HOME/runtime}"
 mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR"
 export PATH="$ROOT/bin:$ROOT/build/helpers:$PATH"
 export XDG_CURRENT_DESKTOP=Tenwin:wlroots
+export TENWIN_NESTED=1
 export WLR_BACKENDS=headless WLR_RENDERER=pixman WLR_LIBINPUT_NO_DEVICES=1
 export WLR_HEADLESS_OUTPUTS=1
 export GDK_BACKEND=wayland

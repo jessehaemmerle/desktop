@@ -7,12 +7,12 @@ from gi.repository import Gdk, Gio, GLib, Gtk, GtkLayerShell, Pango
 from tenwin import settings_index
 from tenwin.config import get_settings
 from tenwin.gtkutil import add_class, clear_children, flat_button, icon_image, set_class
-from tenwin.i18n import _
+from tenwin.i18n import N_, _
 from tenwin.search_providers import FileIndex, search_apps
 from tenwin.shell.layer import Edge, Popup, taskbar_edge, taskbar_height
 
-TABS = [("all", "All"), ("apps", "Apps"), ("documents", "Documents"), ("settings", "Settings"),
-        ("folders", "Folders")]
+TABS = [("all", N_("All")), ("apps", N_("Apps")), ("documents", N_("Documents")), ("settings", N_("Settings")),
+        ("folders", N_("Folders"))]
 
 
 class Result:
