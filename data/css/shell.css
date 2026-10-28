@@ -49,6 +49,10 @@ button.tw-app.attention { background-color: #ca5010; }
 button.tw-app.running .tw-app-indicator { background-color: $accent_light2; min-width: 38px; }
 button.tw-app.active .tw-app-indicator { margin: 0; min-width: 48px; }
 button.tw-app.stacked { box-shadow: inset -2px 0 alpha($sh_fg, 0.25); }
+button.tw-app.labelled { min-width: 168px; padding: 0 8px; }
+.tw-taskbar.small button.tw-app.labelled { min-width: 140px; }
+button.tw-app.labelled label { font-size: 12px; }
+button.tw-app.labelled.running .tw-app-indicator { min-width: 0; margin: 0; }
 
 button.tw-tray-item { min-width: 24px; padding: 0 4px; }
 button.tw-tray-item:hover { background-color: $sh_hover; }
@@ -102,6 +106,10 @@ button.tw-tile label { color: $accent_fg; font-size: 12px; }
 button.tw-tile image { color: $accent_fg; }
 button.tw-tile .tw-tile-big { font-size: 34px; font-weight: 300; }
 button.tw-tile.drop-target { border-color: $sh_fg; }
+.tw-tile-group.drop-target { background-color: alpha($sh_fg, 0.06); }
+button.tw-new-group { min-height: 48px; border: 1px dashed alpha($sh_fg, 0.35); margin: 12px 0; }
+button.tw-new-group:hover, button.tw-new-group.drop-target { background-color: $sh_hover; border-color: $sh_fg; }
+button.tw-new-group label { font-size: 12px; color: $sh_fg_dim; }
 
 /* ---------------------------------------------------------------- search */
 .tw-search-tabs button { padding: 10px 12px 8px 12px; border-bottom: 2px solid transparent; }

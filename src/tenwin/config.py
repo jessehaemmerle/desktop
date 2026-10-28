@@ -31,7 +31,7 @@ DEFAULTS = {
     "appearance.shell_mode": "dark",      # Windows-Modus: dark | light
     "appearance.app_mode": "light",       # App-Modus: dark | light
     "appearance.accent": "#0078D7",
-    "appearance.accent_auto": False,
+    "appearance.accent_mode": "manual",   # manual | wallpaper | dark
     "appearance.accent_on_surfaces": False,  # Start, Taskleiste, Info-Center
     "appearance.accent_on_titlebars": False,  # Titelleisten und Fensterrahmen
     "appearance.transparency": True,
@@ -51,6 +51,8 @@ DEFAULTS = {
     "taskbar.search": "box",              # box | icon | hidden
     "taskbar.show_taskview": True,
     "taskbar.tray_show_all": False,
+    "taskbar.combine": "always",          # always | never (show window titles)
+    "taskbar.show_desktop_button": True,
     "taskbar.pinned": [
         "org.tenwin.Explorer.desktop",
         "firefox_firefox.desktop",
@@ -61,7 +63,9 @@ DEFAULTS = {
     "start.show_most_used": True,
     "start.show_recently_added": True,
     "start.folders": ["documents", "pictures", "settings"],
-    "start.tiles": None,                  # None -> default layout
+    "start.tiles": None,                  # None -> default layout (see tenwin.tiles)
+    "start.width": 0,                     # 0 -> natural width
+    "start.height": 0,                    # 0 -> default height
     # Desktop
     "desktop.show_icons": True,
     "desktop.icon_size": "medium",        # large | medium | small

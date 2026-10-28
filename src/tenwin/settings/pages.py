@@ -8,10 +8,11 @@ import subprocess
 
 from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango
 
-from tenwin import __version__, paths
+from tenwin import __version__, paths, tiles
+from tenwin.apps import get_registry
 from tenwin.config import ACCENT_COLORS, DEFAULTS, get_settings
 from tenwin.gtkutil import add_class, clear_children, flat_button, human_size, icon_image, set_class
-from tenwin.i18n import N_, _
+from tenwin.i18n import N_, _, pgettext
 from tenwin.services import system
 from tenwin.services.audio import Audio
 from tenwin.services.bluetooth import Bluetooth
@@ -538,8 +539,22 @@ def page_colors(win):
                  "appearance.app_mode")
     p.toggle(_("Transparency effects"), "appearance.transparency")
     p.section(_("Choose your accent color"))
-    p.add(color_grid(ACCENT_COLORS, s["appearance.accent"],
-                     lambda c: (s.set("appearance.accent", c), win.show_page("colors"))), 4)
+
+    def set_accent_mode(value):
+        s.set("appearance.accent_mode", value)
+        win.show_page("colors")
+
+    p.radios(None, [("manual", _("Pick a color myself")),
+                    ("wallpaper", _("Automatically pick an accent color from my background")),
+                    ("dark", _("Dark (neutral, no color)"))],
+             getter=lambda: s["appearance.accent_mode"], setter=set_accent_mode)
+
+    def pick(color):
+        # Picking a swatch switches back to a manually chosen colour, as on Windows.
+        s.update({"appearance.accent": color, "appearance.accent_mode": "manual"})
+        win.show_page("colors")
+
+    p.add(color_grid(ACCENT_COLORS, s["appearance.accent"], pick), 4)
 
     def custom_color():
         dialog = Gtk.ColorChooserDialog(title=_("Choose a custom accent color"), transient_for=win)
@@ -548,8 +563,9 @@ def page_colors(win):
         dialog.set_rgba(rgba)
         if dialog.run() == Gtk.ResponseType.OK:
             c = dialog.get_rgba()
-            s.set("appearance.accent", "#%02X%02X%02X" % (round(c.red * 255), round(c.green * 255),
-                                                          round(c.blue * 255)))
+            pick("#%02X%02X%02X" % (round(c.red * 255), round(c.green * 255), round(c.blue * 255)))
+            dialog.destroy()
+            return
         dialog.destroy()
         win.show_page("colors")
 
@@ -596,7 +612,15 @@ def page_start(win):
             s.set("start.folders", folders)
         p.check(label, getter=lambda k=key: k in s["start.folders"], setter=setter)
     p.section(_("Tiles"))
+    p.text(_("Right-click an app or a folder to pin it to a group, drag tiles between groups, "
+             "and drag the edge of Start to resize it."))
+
+    def sort_tiles():
+        tiles.save(tiles.group_by_category(tiles.load(), get_registry()))
+
+    p.button(_("Sort all tiles into categories"), sort_tiles)
     p.button(_("Reset tiles to the default layout"), lambda: s.set("start.tiles", None))
+    p.button(_("Reset the size of Start"), lambda: s.update({"start.width": 0, "start.height": 0}))
     return p
 
 
@@ -604,9 +628,12 @@ def page_taskbar(win):
     p = Page(_("Taskbar"))
     p.toggle(_("Use small taskbar buttons"), "taskbar.small_icons")
     p.combo(_("Taskbar location on screen"), [("bottom", _("Bottom")), ("top", _("Top"))], "taskbar.position")
-    p.combo(_("Search"), [("box", _("Show search box")), ("icon", _("Show search icon")), ("hidden", _("Hidden"))],
+    p.combo(_("Search"), [("box", _("Show search box")), ("icon", _("Show search icon")), ("hidden", pgettext("taskbar", "Hidden"))],
             "taskbar.search")
     p.toggle(_("Show Task View button"), "taskbar.show_taskview")
+    p.toggle(_("Show the \"Show desktop\" button at the end of the taskbar"), "taskbar.show_desktop_button")
+    p.combo(_("Combine taskbar buttons"), [("always", _("Always, hide labels")),
+                                           ("never", _("Never"))], "taskbar.combine")
     p.section(_("Notification area"))
     p.toggle(_("Always show all icons in the notification area"), "taskbar.tray_show_all")
     p.toggle(_("Show seconds in the clock"), "region.clock_seconds")

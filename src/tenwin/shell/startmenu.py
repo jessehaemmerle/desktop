@@ -10,82 +10,23 @@ from tenwin.apps import first_letter
 from tenwin.config import get_settings
 from tenwin.gtkutil import (add_class, clear_children, flat_button, icon_image, menu_item,
                             popup_menu, set_class)
-from tenwin.i18n import N_, _
+from tenwin import fileops, tilemenu, tiles
+from tenwin.i18n import _
 from tenwin.services import system
 from tenwin.shell.layer import Edge, Popup, taskbar_edge
 
-CELL = 48
-GAP = 4
-COLUMNS = 6  # small-tile columns per group (= 3 medium tiles)
-SIZES = {"small": (1, 1), "medium": (2, 2), "wide": (4, 2), "large": (4, 4)}
-
-DEFAULT_GROUPS = [
-    (N_("Productivity"), [
-        ("org.gnome.Calendar.desktop", "medium"),
-        ("thunderbird.desktop", "wide"), ("thunderbird_thunderbird.desktop", "wide"),
-        ("org.gnome.Evolution.desktop", "wide"),
-        ("firefox_firefox.desktop", "medium"), ("firefox.desktop", "medium"),
-        ("libreoffice-writer.desktop", "small"), ("libreoffice-calc.desktop", "small"),
-        ("libreoffice-impress.desktop", "small"), ("org.tenwin.Explorer.desktop", "small"),
-        ("org.gnome.TextEditor.desktop", "medium"), ("org.gnome.gedit.desktop", "medium"),
-    ]),
-    (N_("Explore"), [
-        ("snap-store_snap-store.desktop", "wide"), ("org.gnome.Software.desktop", "wide"),
-        ("org.gnome.Weather.desktop", "medium"), ("org.gnome.Calculator.desktop", "medium"),
-        ("org.gnome.Loupe.desktop", "medium"), ("org.gnome.eog.desktop", "medium"),
-        ("org.gnome.Totem.desktop", "medium"), ("rhythmbox.desktop", "medium"),
-        ("org.tenwin.Settings.desktop", "medium"), ("org.gnome.Terminal.desktop", "small"),
-        ("gnome-system-monitor.desktop", "small"), ("org.gnome.SystemMonitor.desktop", "small"),
-    ]),
-]
+CELL = tiles.CELL
+GAP = tiles.GAP
 
 CALENDAR_APPS = {"org.gnome.Calendar.desktop", "gnome-calendar.desktop"}
+MIN_WIDTH = 48 + 272 + tiles.GROUP_WIDTH + 40
+MIN_HEIGHT = 400
+DEFAULT_HEIGHT = 640
+GRIP = 6
 
-
-def default_tiles(apps):
-    groups = []
-    for name, candidates in DEFAULT_GROUPS:
-        tiles, seen = [], set()
-        for desktop_id, size in candidates:
-            info = apps.get(desktop_id)
-            if info is None or not info.should_show():
-                continue
-            # Skip alternatives of the same program (snap vs. deb).
-            base = desktop_id.split("_")[0].split(".desktop")[0].rsplit(".", 1)[-1].lower()
-            if base in seen:
-                continue
-            seen.add(base)
-            tiles.append({"app": info.get_id(), "size": size})
-            if len(tiles) >= 6:
-                break
-        if tiles:
-            groups.append({"name": _(name), "tiles": tiles})
-    return groups
-
-
-def layout_tiles(tiles, columns=COLUMNS):
-    """First-fit placement. Returns [(tile, col, row, w, h)] and the row count."""
-    occupied = set()
-    placed = []
-    rows = 0
-    for tile in tiles:
-        w, h = SIZES.get(tile.get("size"), SIZES["medium"])
-        w = min(w, columns)
-        row = 0
-        while True:
-            spot = None
-            for col in range(0, columns - w + 1):
-                cells = {(col + dx, row + dy) for dx in range(w) for dy in range(h)}
-                if not cells & occupied:
-                    spot = col
-                    break
-            if spot is not None:
-                occupied |= {(spot + dx, row + dy) for dx in range(w) for dy in range(h)}
-                placed.append((tile, spot, row, w, h))
-                rows = max(rows, row + h)
-                break
-            row += 1
-    return placed, rows
+# Kept for callers and tests that import them from here.
+layout_tiles = tiles.layout_tiles
+COLUMNS = tiles.COLUMNS
 
 
 class StartMenu(Popup):
@@ -103,8 +44,11 @@ class StartMenu(Popup):
     # -- construction ------------------------------------------------------
 
     def _build(self):
+        outer = Gtk.Overlay()
+        self.add(outer)
         frame = add_class(Gtk.Box(), "tw-panel", "tw-start")
-        self.add(frame)
+        outer.add(frame)
+        self._add_grips(outer)
         overlay = Gtk.Overlay()
         frame.pack_start(overlay, True, True, 0)
 
@@ -255,7 +199,7 @@ class StartMenu(Popup):
         button.set_tooltip_text(info.get_description() or info.get_display_name())
         button.connect("clicked", lambda *_: self.launch(info))
         button.connect("button-release-event", lambda _w, e: self._app_menu(info, e) if e.button == 3 else False)
-        self._make_drag_source(button, info.get_id())
+        self._make_drag_source(button, tiles.app_key(info.get_id()))
         return button
 
     def _show_letters(self):
@@ -275,36 +219,63 @@ class StartMenu(Popup):
     # -- tiles -------------------------------------------------------------
 
     def tile_groups(self):
-        groups = self.settings["start.tiles"]
-        if groups is None:
-            groups = default_tiles(self.shell.apps)
-        return groups
+        return tiles.load(self.shell.apps)
 
     def save_groups(self, groups):
-        self.settings.set("start.tiles", groups)
+        tiles.save(groups)
 
-    def _populate_tiles(self):
+    def _tile_columns(self):
+        width = self.get_allocated_width() if self.get_realized() else 0
+        requested = self.settings["start.width"]
+        width = requested or width
+        if not width:
+            return 2
+        return tiles.group_columns_for_width(width - 48 - 272 - 28)
+
+    def _populate_tiles(self, columns_count=None):
         clear_children(self.tile_area)
-        groups = [g for g in self.tile_groups() if g.get("tiles")]
-        columns = [Gtk.Box(orientation=Gtk.Orientation.VERTICAL), Gtk.Box(orientation=Gtk.Orientation.VERTICAL)]
-        for col in columns:
-            col.set_size_request(COLUMNS * CELL + (COLUMNS - 1) * GAP, -1)
+        groups = self.tile_groups()
+        count = columns_count or self._tile_columns()
+        count = max(1, min(count, len(groups) or 1))
+        self._shown_columns = count
+        columns = []
+        for _i in range(count):
+            col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            col.set_size_request(tiles.GROUP_WIDTH, -1)
             self.tile_area.pack_start(col, False, False, 0)
-        if not groups:
+            columns.append(col)
+        if not any(g["tiles"] for g in groups):
             hint = add_class(Gtk.Label(label=_("Right-click an app and choose \"Pin to Start\"."),
                                        xalign=0, wrap=True), "tw-dim-text")
             hint.set_max_width_chars(30)
             hint.set_margin_top(16)
             columns[0].pack_start(hint, False, False, 0)
         for index, group in enumerate(groups):
-            target = columns[index % 2] if len(groups) > 1 else columns[0]
-            target.pack_start(self._group_widget(group, index), False, False, 0)
-        if len(groups) <= 1:
-            columns[1].destroy()
+            columns[index % count].pack_start(self._group_widget(group, index), False, False, 0)
+        columns[len(groups) % count].pack_start(self._new_group_target(len(groups)), False, False, 0)
         self.tile_area.show_all()
 
+    def _new_group_target(self, index):
+        """Drop zone and button that start a new group (category)."""
+        button = flat_button(css="tw-new-group")
+        row = Gtk.Box(spacing=8)
+        row.pack_start(icon_image("tenwin-new-folder", 16, symbolic=True), False, False, 0)
+        row.pack_start(Gtk.Label(label=_("New group"), xalign=0), True, True, 0)
+        button.add(row)
+        button.set_tooltip_text(_("Drag a tile or an app here to create a new group"))
+        button.connect("clicked", lambda *_: self._ask_new_group())
+        self._make_drop_target(button, index, None)
+        return button
+
+    def _ask_new_group(self):
+        name = tilemenu.ask_group_name()
+        if name is not None:
+            groups = self.tile_groups()
+            groups.append({"name": name, "tiles": []})
+            self.save_groups(groups)
+
     def _group_widget(self, group, group_index):
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        box = add_class(Gtk.Box(orientation=Gtk.Orientation.VERTICAL), "tw-tile-group")
         title_stack = Gtk.Stack()
         title_button = flat_button(css="tw-tile-group-title")
         title_label = Gtk.Label(label=group.get("name") or _("Name group"), xalign=0)
@@ -319,36 +290,71 @@ class StartMenu(Popup):
 
         def finish_edit(*_args):
             groups = self.tile_groups()
-            if group_index < len(groups):
-                groups[group_index]["name"] = entry.get_text().strip()
-                self.save_groups(groups)
+            tiles.rename_group(groups, group_index, entry.get_text())
+            self.save_groups(groups)
 
         title_button.connect("clicked", start_edit)
+        title_button.connect("button-release-event",
+                             lambda _w, e: self._group_menu(group_index, e, start_edit) if e.button == 3 else False)
         entry.connect("activate", finish_edit)
+        entry.connect("focus-out-event", lambda *_: finish_edit() or False)
         box.pack_start(title_stack, False, False, 0)
 
         grid = Gtk.Fixed()
-        placed, rows = layout_tiles(group["tiles"])
+        placed, rows = tiles.layout_tiles(group["tiles"])
         for tile, col, row, w, h in placed:
             widget = self._tile_widget(tile, group_index, w, h)
             if widget is not None:
                 grid.put(widget, col * (CELL + GAP), row * (CELL + GAP))
-        grid.set_size_request(COLUMNS * CELL + (COLUMNS - 1) * GAP, max(0, rows * (CELL + GAP) - GAP))
-        box.pack_start(grid, False, False, 0)
-        box.set_margin_bottom(12)
+        # Leave one empty row as drop zone at the end of the group.
+        grid.set_size_request(tiles.GROUP_WIDTH, rows * (CELL + GAP) + CELL // 2)
+        events = Gtk.EventBox()
+        events.add(grid)
+        self._make_drop_target(events, group_index, None)
+        box.pack_start(events, False, False, 0)
+        box.set_margin_bottom(8)
         return box
 
-    def _tile_widget(self, tile, group_index, w, h):
-        info = self.shell.apps.get(tile.get("app"))
-        if info is None:
+    def _tile_target(self, tile):
+        """(title, icon, open callback, desktop app info or None) for a tile."""
+        if tile.get("app"):
+            info = self.shell.apps.get(tile["app"])
+            if info is None:
+                return None
+            return info.get_display_name(), info.get_icon(), lambda: self.launch(info), info
+        path = tile.get("path")
+        if not path or not os.path.exists(path):
             return None
+        gfile = Gio.File.new_for_path(path)
+        icon = "folder" if os.path.isdir(path) else "text-x-generic"
+        try:
+            icon = gfile.query_info("standard::icon", Gio.FileQueryInfoFlags.NONE, None).get_icon()
+        except GLib.Error:
+            pass
+        name = os.path.basename(path.rstrip("/")) or path
+        if os.path.isdir(path):
+            return name, icon, lambda: self._run_ctl("explorer", path), None
+        if path.endswith(".desktop"):
+            # Same trust check as on the desktop: never run an untrusted launcher silently.
+            app = Gio.DesktopAppInfo.new_from_filename(path)
+            if app is not None:
+                name, icon = app.get_display_name(), app.get_icon() or icon
+            return name, icon, lambda: (self.close_popup(), fileops.launch_desktop_file(path)), None
+        return name, icon, lambda: (self.close_popup(), self.shell.open_uri(gfile.get_uri())), None
+
+    def _tile_widget(self, tile, group_index, w, h):
+        target = self._tile_target(tile)
+        if target is None:
+            return None
+        title, icon, open_cb, info = target
+        key = tiles.tile_key(tile)
         width, height = w * CELL + (w - 1) * GAP, h * CELL + (h - 1) * GAP
         button = flat_button(css="tw-tile")
         button.set_size_request(width, height)
         overlay = Gtk.Overlay()
         size = tile.get("size", "medium")
         icon_px = {"small": 24, "medium": 32, "wide": 32, "large": 64}[size]
-        if info.get_id() in CALENDAR_APPS and size != "small":
+        if info is not None and info.get_id() in CALENDAR_APPS and size != "small":
             now = GLib.DateTime.new_now_local()
             center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             center.set_valign(Gtk.Align.CENTER)
@@ -357,9 +363,9 @@ class StartMenu(Popup):
                               False, False, 0)
             overlay.add(center)
         else:
-            overlay.add(icon_image(info.get_icon(), icon_px))
+            overlay.add(icon_image(icon, icon_px))
         if size != "small":
-            name = Gtk.Label(label=info.get_display_name(), xalign=0)
+            name = Gtk.Label(label=title, xalign=0)
             name.set_ellipsize(Pango.EllipsizeMode.END)
             name.set_halign(Gtk.Align.START)
             name.set_valign(Gtk.Align.END)
@@ -368,71 +374,65 @@ class StartMenu(Popup):
             name.set_max_width_chars(12 if size == "medium" else 26)
             overlay.add_overlay(name)
         button.add(overlay)
-        button.set_tooltip_text(info.get_display_name())
-        button.connect("clicked", lambda *_: self.launch(info))
+        button.set_tooltip_text(title)
+        button.connect("clicked", lambda *_: open_cb())
         button.connect("button-release-event",
-                       lambda _w, e: self._tile_menu(tile, group_index, info, e) if e.button == 3 else False)
-        self._make_drag_source(button, info.get_id())
-        self._make_drop_target(button, group_index, tile)
+                       lambda _w, e: self._tile_menu(tile, info, e) if e.button == 3 else False)
+        self._make_drag_source(button, key)
+        self._make_drop_target(button, group_index, key)
         return button
 
     # -- drag and drop ------------------------------------------------------
 
-    TARGETS = [Gtk.TargetEntry.new("application/x-tenwin-app", Gtk.TargetFlags.SAME_APP, 0)]
+    TARGETS = [Gtk.TargetEntry.new("application/x-tenwin-tile", Gtk.TargetFlags.SAME_APP, 0)]
 
-    def _make_drag_source(self, widget, desktop_id):
+    def _make_drag_source(self, widget, key):
         widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, self.TARGETS, Gdk.DragAction.MOVE)
-        widget.connect("drag-data-get", lambda _w, _c, data, _i, _t:
-                       data.set(data.get_target(), 8, desktop_id.encode()))
+        widget.connect("drag-data-get", lambda _w, _c, data, _i, _t: data.set(data.get_target(), 8, key.encode()))
 
-    def _make_drop_target(self, widget, group_index, tile):
+    def _make_drop_target(self, widget, group_index, before_key):
         widget.drag_dest_set(Gtk.DestDefaults.ALL, self.TARGETS, Gdk.DragAction.MOVE)
         widget.connect("drag-motion", lambda *_: add_class(widget, "drop-target") and False)
         widget.connect("drag-leave", lambda *_: set_class(widget, "drop-target", False))
         widget.connect("drag-data-received",
-                       lambda _w, _c, _x, _y, data, _i, _t: self._drop(data.get_data().decode(), group_index, tile))
+                       lambda _w, _c, _x, _y, data, _i, _t: self._drop(data.get_data().decode(), group_index,
+                                                                       before_key))
 
-    def _drop(self, desktop_id, group_index, before_tile):
+    def _drop(self, key, group_index, before_key):
+        if key == before_key:
+            return
         groups = self.tile_groups()
-        moving = None
-        for group in groups:
-            for tile in list(group["tiles"]):
-                if tile["app"] == desktop_id:
-                    moving = tile
-                    group["tiles"].remove(tile)
-        if moving is None:
-            moving = {"app": desktop_id, "size": "medium"}
-        target = groups[group_index]["tiles"] if group_index < len(groups) else groups[-1]["tiles"]
-        index = len(target)
-        for i, tile in enumerate(target):
-            if tile["app"] == before_tile["app"]:
-                index = i
-                break
-        target.insert(index, moving)
-        self.save_groups([g for g in groups if g["tiles"]])
+        if group_index >= len(groups):
+            # Dropped on "New group": name it after the app's category.
+            name = tiles.suggested_group(groups, key, self.shell.apps)
+            tiles.pin(groups, key, new_group_name=name)
+        else:
+            tiles.move(groups, key, group_index, before_key)
+        self.save_groups(groups)
 
     # -- context menus -----------------------------------------------------
 
     def is_pinned_start(self, info):
-        return any(t["app"] == info.get_id() for g in self.tile_groups() for t in g["tiles"])
+        return tiles.is_pinned(self.tile_groups(), tiles.app_key(info.get_id()))
 
-    def pin_start(self, info, pinned=True):
-        groups = self.tile_groups()
+    def pin_start(self, info, pinned=True, group=None):
+        self.pin_key(tiles.app_key(info.get_id()), pinned, group)
+
+    def pin_key(self, key, pinned=True, group=None):
         if pinned:
-            if not groups:
-                groups = [{"name": "", "tiles": []}]
-            groups[-1]["tiles"].append({"app": info.get_id(), "size": "medium"})
+            tilemenu.pin([key], group=group, apps=self.shell.apps)
         else:
-            for group in groups:
-                group["tiles"] = [t for t in group["tiles"] if t["app"] != info.get_id()]
-        self.save_groups([g for g in groups if g["tiles"] or g.get("name")])
+            tilemenu.unpin([key], apps=self.shell.apps)
+
+    def pin_submenu(self, key, label=None):
+        return tilemenu.pin_submenu([key], label, self.shell.apps)
 
     def _app_menu(self, info, event):
         menu = Gtk.Menu()
+        key = tiles.app_key(info.get_id())
+        menu.append(self.pin_submenu(key, _("Move to group") if self.is_pinned_start(info) else None))
         if self.is_pinned_start(info):
             menu.append(menu_item(_("Unpin from Start"), lambda: self.pin_start(info, False), "tenwin-unpin"))
-        else:
-            menu.append(menu_item(_("Pin to Start"), lambda: self.pin_start(info, True), "tenwin-pin"))
         more = Gtk.MenuItem(label=_("More"))
         sub = Gtk.Menu()
         if self.shell.apps.is_pinned(info):
@@ -450,32 +450,142 @@ class StartMenu(Popup):
         popup_menu(menu, event=event)
         return True
 
-    def _tile_menu(self, tile, group_index, info, event):
+    def _tile_menu(self, tile, info, event):
+        key = tiles.tile_key(tile)
         menu = Gtk.Menu()
-        menu.append(menu_item(_("Unpin from Start"), lambda: self.pin_start(info, False), "tenwin-unpin"))
+        menu.append(menu_item(_("Unpin from Start"), lambda: self.pin_key(key, False), "tenwin-unpin"))
+        menu.append(self.pin_submenu(key, _("Move to group")))
         resize = Gtk.MenuItem(label=_("Resize"))
         sub = Gtk.Menu()
         for size, text in (("small", _("Small")), ("medium", _("Medium")), ("wide", _("Wide")),
                            ("large", _("Large"))):
             item = menu_item(("✓  " if tile.get("size") == size else "     ") + text,
-                             lambda s=size: self._resize(group_index, tile, s))
+                             lambda s=size: self._resize(key, s))
             sub.append(item)
         add_class(sub, "tw-menu")
         resize.set_submenu(sub)
         menu.append(resize)
-        if self.shell.apps.is_pinned(info):
-            menu.append(menu_item(_("Unpin from taskbar"), lambda: self.shell.apps.set_pinned(info, False)))
-        else:
-            menu.append(menu_item(_("Pin to taskbar"), lambda: self.shell.apps.set_pinned(info, True)))
+        if info is not None:
+            if self.shell.apps.is_pinned(info):
+                menu.append(menu_item(_("Unpin from taskbar"), lambda: self.shell.apps.set_pinned(info, False)))
+            else:
+                menu.append(menu_item(_("Pin to taskbar"), lambda: self.shell.apps.set_pinned(info, True)))
+        elif tile.get("path"):
+            menu.append(menu_item(_("Open file location"),
+                                  lambda: self._run_ctl("explorer", os.path.dirname(tile["path"].rstrip("/")))))
         popup_menu(menu, event=event)
         return True
 
-    def _resize(self, group_index, tile, size):
+    def _group_menu(self, index, event, start_edit):
         groups = self.tile_groups()
-        for t in groups[group_index]["tiles"]:
-            if t["app"] == tile["app"]:
-                t["size"] = size
+        menu = Gtk.Menu()
+        menu.append(menu_item(_("Rename group"), start_edit, "tenwin-rename"))
+        up = menu_item(_("Move group up"), lambda: self._edit_groups(tiles.move_group, index, -1))
+        up.set_sensitive(index > 0)
+        menu.append(up)
+        down = menu_item(_("Move group down"), lambda: self._edit_groups(tiles.move_group, index, 1))
+        down.set_sensitive(index < len(groups) - 1)
+        menu.append(down)
+        menu.append(Gtk.SeparatorMenuItem())
+        menu.append(menu_item(_("Sort all tiles into categories"), self.group_by_category, "tenwin-tiles"))
+        menu.append(Gtk.SeparatorMenuItem())
+        menu.append(menu_item(_("Unpin group from Start"), lambda: self._edit_groups(tiles.remove_group, index),
+                              "tenwin-unpin"))
+        popup_menu(menu, event=event)
+        return True
+
+    def _edit_groups(self, func, *args):
+        groups = self.tile_groups()
+        func(groups, *args)
         self.save_groups(groups)
+
+    def group_by_category(self):
+        self.save_groups(tiles.group_by_category(self.tile_groups(), self.shell.apps))
+
+    def _resize(self, key, size):
+        self._edit_groups(tiles.resize, key, size)
+
+    # -- resizing (drag the outer edges like on Windows 10) --------------------
+
+    def _add_grips(self, overlay):
+        top = taskbar_edge() == Edge.TOP
+        self.grips = []
+        for kind in ("side", "edge", "corner"):
+            grip = Gtk.EventBox()
+            grip.set_above_child(True)
+            grip.add_events(Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK |
+                            Gdk.EventMask.POINTER_MOTION_MASK)
+            if kind in ("side", "corner"):
+                grip.set_halign(Gtk.Align.END)
+                grip.set_size_request(GRIP if kind == "side" else GRIP * 2, -1 if kind == "side" else GRIP * 2)
+            else:
+                grip.set_halign(Gtk.Align.FILL)
+                grip.set_size_request(-1, GRIP)
+            if kind == "side":
+                grip.set_valign(Gtk.Align.FILL)
+            else:
+                grip.set_valign(Gtk.Align.END if top else Gtk.Align.START)
+            cursor = {"side": "ew-resize", "edge": "ns-resize",
+                      "corner": "nwse-resize" if top else "nesw-resize"}[kind]
+            grip.connect("realize", lambda w, c=cursor: w.get_window().set_cursor(
+                Gdk.Cursor.new_from_name(w.get_display(), c)))
+            grip.connect("button-press-event", self._grip_press, kind)
+            grip.connect("motion-notify-event", self._grip_motion, kind)
+            grip.connect("button-release-event", self._grip_release)
+            overlay.add_overlay(grip)
+            overlay.set_overlay_pass_through(grip, False)
+            self.grips.append(grip)
+        self._resizing = None
+
+    def _limits(self):
+        monitor = self.shell.current_monitor
+        if monitor is None:
+            return 1600, 900
+        geo = monitor.get_geometry()
+        from tenwin.shell.layer import taskbar_height
+        return geo.width - 8, geo.height - taskbar_height() - 8
+
+    def _grip_press(self, widget, event, kind):
+        if event.button != 1:
+            return False
+        x, y = widget.translate_coordinates(self, int(event.x), int(event.y))
+        self._resizing = {"kind": kind, "dx": self.get_allocated_width() - x, "dy": y}
+        return True
+
+    def _grip_motion(self, widget, event, kind):
+        if not self._resizing:
+            return False
+        x, y = widget.translate_coordinates(self, int(event.x), int(event.y))
+        max_w, max_h = self._limits()
+        width = self.get_allocated_width()
+        height = self.get_allocated_height()
+        if kind in ("side", "corner"):
+            width = max(MIN_WIDTH, min(max_w, x + self._resizing["dx"]))
+        if kind in ("edge", "corner"):
+            if taskbar_edge() == Edge.TOP:
+                height = y + GRIP
+            else:
+                # The surface grows upwards: its top edge follows the pointer.
+                height = self.get_allocated_height() - (y - self._resizing["dy"])
+            height = max(MIN_HEIGHT, min(max_h, height))
+        self._resizing["size"] = (int(width), int(height))
+        self.set_size_request(int(width), int(height))
+        columns = tiles.group_columns_for_width(int(width) - 48 - 272 - 28)
+        if columns != getattr(self, "_shown_columns", None):
+            self._populate_tiles(columns)
+        return True
+
+    def _grip_release(self, _widget, event):
+        if not self._resizing or event.button != 1:
+            return False
+        size = self._resizing.get("size")
+        self._resizing = None
+        if size:
+            self.settings.update({"start.width": size[0], "start.height": size[1]})
+        return True
+
+    def reset_size(self):
+        self.settings.update({"start.width": 0, "start.height": 0})
 
     def _uninstall(self, info):
         self.close_popup()
@@ -524,6 +634,8 @@ class StartMenu(Popup):
     def _on_settings(self, _settings, keys):
         if keys & {"start.tiles", "start.show_most_used", "start.show_recently_added"}:
             self.populate()
+        if keys & {"start.width", "start.height"} and not self._resizing and self.is_open():
+            self._apply_size()
         if "start.folders" in keys:
             old = self.rail
             parent = old.get_parent()
@@ -535,17 +647,22 @@ class StartMenu(Popup):
 
     # -- Popup hooks ---------------------------------------------------------
 
+    def _apply_size(self):
+        max_w, max_h = self._limits()
+        width = self.settings["start.width"]
+        height = self.settings["start.height"] or DEFAULT_HEIGHT
+        width = max(MIN_WIDTH, min(max_w, width)) if width else -1
+        height = max(MIN_HEIGHT, min(max_h, height))
+        self.set_size_request(width, height)
+        if width == -1:
+            self.resize(1, height)  # shrink back to the natural width
+        self._populate_tiles(tiles.group_columns_for_width(width - 48 - 272 - 28) if width > 0 else 2)
+
     def on_open(self):
         self.toggle_rail(False)
         self.list_stack.set_visible_child_name("list")
-        monitor = self.shell.current_monitor
-        height = 640
-        if monitor is not None:
-            geo = monitor.get_geometry()
-            height = min(height, geo.height - 60)
-        self.set_size_request(-1, height)
         self.list_scroll.get_vadjustment().set_value(0)
-        self._populate_tiles()  # refresh the live calendar tile
+        self._apply_size()  # also refreshes the live calendar tile
 
     def after_show(self):
         self.shell.set_start_open(True)

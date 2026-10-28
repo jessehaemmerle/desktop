@@ -6,7 +6,7 @@ import zipfile
 
 from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango
 
-from tenwin import fileops
+from tenwin import fileops, tilemenu
 from tenwin.config import get_settings
 from tenwin.gtkutil import add_class, clear_children, flat_button, icon_image, menu_item, popup_menu
 from tenwin.i18n import _, ngettext
@@ -948,6 +948,10 @@ class ExplorerWindow(Gtk.ApplicationWindow):
                 menu.append(item)
             if any(zipfile.is_zipfile(f.get_path()) for f in files if f.get_path() and f.get_path().endswith(".zip")):
                 menu.append(menu_item(_("Extract All..."), self.extract, "tenwin-zip"))
+        local = [f.get_path() for f in files if f.get_path()]
+        if local and len(local) == len(files):
+            for item in tilemenu.path_items(local, parent=self):
+                menu.append(item)
         menu.append(Gtk.SeparatorMenuItem())
         send = Gtk.MenuItem(label=_("Send to"))
         sub = Gtk.Menu()

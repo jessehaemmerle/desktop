@@ -12,7 +12,7 @@ gi.require_version("Gdk", "3.0")
 gi.require_version("GtkLayerShell", "0.1")
 from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk, GtkLayerShell, Pango
 
-from tenwin import fileops, paths, theme
+from tenwin import fileops, paths, theme, tilemenu
 from tenwin.config import get_settings
 from tenwin.gtkutil import add_class, clear_children, icon_image, menu_item, popup_menu, run_detached, set_class
 from tenwin.i18n import _
@@ -425,6 +425,8 @@ class DesktopView(Gtk.Overlay):
         if any(i.key == "trash" for i in items):
             menu.append(menu_item(_("Empty Recycle Bin"), self._empty_trash))
         if files:
+            for item in tilemenu.path_items(files):
+                menu.append(item)
             menu.append(Gtk.SeparatorMenuItem())
             menu.append(menu_item(_("Cut"), lambda: self.copy_selected(True)))
             menu.append(menu_item(_("Copy"), lambda: self.copy_selected(False)))

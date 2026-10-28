@@ -26,7 +26,7 @@ def test_sanitize_markup_handles_broken_markup():
 
 def test_german_catalog_complete():
     po = (ROOT / "po" / "de.po").read_text(encoding="utf-8")
-    empty = re.findall(r'\nmsgid "(.+)"\nmsgstr ""\n', po)
+    empty = re.findall(r'\nmsgid "(.+)"\nmsgstr ""\n(?!")', po)  # a continuation line is not empty
     assert empty == []
     result = subprocess.run(["msgfmt", "--check", "-o", "/dev/null", str(ROOT / "po" / "de.po")],
                             capture_output=True, text=True)

@@ -208,6 +208,14 @@ class AppRegistry(GObject.Object):
     def is_pinned(self, info):
         return info is not None and info.get_id() in get_settings()["taskbar.pinned"]
 
+    def move_pinned(self, desktop_id, before_id=None):
+        """Pin ``desktop_id`` (if needed) and place it before ``before_id``."""
+        settings = get_settings()
+        current = [p for p in settings["taskbar.pinned"] if p != desktop_id and self.get(p) is not None]
+        index = current.index(before_id) if before_id in current else len(current)
+        current.insert(index, desktop_id)
+        settings.set("taskbar.pinned", current)
+
     def set_pinned(self, info, pinned):
         settings = get_settings()
         current = [p for p in settings["taskbar.pinned"] if self.get(p) is not None or p == info.get_id()]

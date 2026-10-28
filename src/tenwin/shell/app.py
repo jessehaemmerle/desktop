@@ -49,7 +49,8 @@ SHELL_XML = """
 # Settings that change the taskbar layout.
 TASKBAR_KEYS = {"taskbar.position", "taskbar.small_icons", "taskbar.search", "taskbar.show_taskview",
                 "taskbar.tray_show_all", "input.keyboard_layouts", "region.clock_24h",
-                "region.clock_seconds"}
+                "region.clock_seconds", "taskbar.combine", "taskbar.show_desktop_button"}
+ACCENT_KEYS = {"appearance.accent_mode", "background.type", "background.picture", "background.color"}
 
 
 class Shell:
@@ -101,6 +102,8 @@ class Shell:
             service.connect("changed", lambda *_: self._update_status())
         self.settings.connect("changed", self._on_settings)
         self.nightlight.set(self.settings["nightlight.enabled"], self.settings["nightlight.temperature"])
+        self._accent_job = 0
+        self.update_accent()
 
         Gio.bus_own_name(Gio.BusType.SESSION, "org.tenwin.Shell", Gio.BusNameOwnerFlags.REPLACE,
                          self._on_bus, None, lambda *_: log.error("cannot own org.tenwin.Shell"))
@@ -147,7 +150,31 @@ class Shell:
         for taskbar in self.taskbars.values():
             taskbar.set_start_open(is_open)
 
+    def update_accent(self):
+        """Derive the accent from the background (or use the dark accent)."""
+        if self.settings["appearance.accent_mode"] == "manual":
+            return
+        import threading
+        from tenwin import accent
+
+        self._accent_job += 1
+        job = self._accent_job
+
+        def work():
+            color = accent.for_settings(self.settings)
+            GLib.idle_add(apply, color)
+
+        def apply(color):
+            # Ignore results of outdated runs (background changed meanwhile).
+            if job == self._accent_job and color and self.settings["appearance.accent_mode"] != "manual":
+                self.settings.set("appearance.accent", color)
+            return GLib.SOURCE_REMOVE
+
+        threading.Thread(target=work, daemon=True).start()
+
     def _on_settings(self, _settings, keys):
+        if keys & ACCENT_KEYS:
+            self.update_accent()
         if keys & TASKBAR_KEYS:
             # Popups anchored to the taskbar edge must follow it.
             from tenwin.shell.layer import Edge, taskbar_edge

@@ -21,7 +21,7 @@ window, window.csd, window.csd decoration, decoration, .titlebar, headerbar, but
 entry, combobox, menu, menubar, popover, popover.background, .popup, notebook,
 notebook > header tab, frame > border, list, row, scale trough, progressbar trough,
 progressbar progress, spinbutton, tooltip, tooltip.background, switch, switch slider,
-check, radio:not(:checked), infobar, .osd, messagedialog, scrollbar slider {
+check, infobar, .osd, messagedialog, scrollbar slider {
   border-radius: 0;
 }
 radio { border-radius: 100%; }

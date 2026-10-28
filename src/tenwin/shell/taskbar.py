@@ -4,17 +4,18 @@ from gi.repository import Gdk, GLib, Gtk, Pango
 
 from tenwin.config import get_settings
 from tenwin.gtkutil import add_class, flat_button, icon_image, menu_item, popup_menu, set_class, set_icon
-from tenwin.i18n import _
+from tenwin.i18n import _, pgettext
 from tenwin.shell.layer import Edge, Layer, LayerWindow, taskbar_edge, taskbar_height
 
 
 class AppGroup:
     """Windows of one application (or a pinned app without windows)."""
 
-    def __init__(self, key, info):
+    def __init__(self, key, info, single_window=False):
         self.key = key
         self.info = info
         self.windows = []
+        self.single_window = single_window  # "never combine": one button per window
 
     @property
     def name(self):
@@ -46,7 +47,22 @@ def group_windows(shell):
             groups.append(group)
             by_key[key] = group
         group.windows.append(window)
+    if get_settings()["taskbar.combine"] == "never":
+        split = []
+        for group in groups:
+            if not group.windows:
+                split.append(group)
+                continue
+            for window in group.windows:
+                single = AppGroup("win:%d" % window.id, group.info, single_window=True)
+                single.windows = [window]
+                split.append(single)
+        groups = split
     return groups
+
+
+DND_TASKBAR = "application/x-tenwin-taskbar"
+DND_TILE = "application/x-tenwin-tile"
 
 
 class AppButton(Gtk.EventBox):
@@ -62,10 +78,24 @@ class AppButton(Gtk.EventBox):
         self.image = icon_image(group.icon, size)
         self.image.set_halign(Gtk.Align.CENTER)
         self.image.set_valign(Gtk.Align.CENTER)
-        overlay.add(self.image)
         self.indicator = add_class(Gtk.Box(), "tw-app-indicator")
         self.indicator.set_valign(Gtk.Align.END)
         self.indicator.set_halign(Gtk.Align.CENTER)
+        self.title = None
+        if group.single_window:
+            # "Never combine": icon plus window title, like Windows 10.
+            row = Gtk.Box(spacing=8)
+            row.pack_start(self.image, False, False, 0)
+            self.title = Gtk.Label(xalign=0)
+            self.title.set_ellipsize(Pango.EllipsizeMode.END)
+            self.title.set_width_chars(14)
+            self.title.set_max_width_chars(14)
+            row.pack_start(self.title, True, True, 0)
+            overlay.add(row)
+            add_class(self.button, "labelled")
+            self.indicator.set_halign(Gtk.Align.FILL)
+        else:
+            overlay.add(self.image)
         overlay.add_overlay(self.indicator)
         self.button.add(overlay)
         self.button.set_size_request(-1, taskbar_height())
@@ -73,6 +103,7 @@ class AppButton(Gtk.EventBox):
         self.button.connect("button-release-event", self._on_release)
         self.button.connect("query-tooltip", self._on_tooltip)
         self.button.set_has_tooltip(True)
+        self._setup_dnd()
         self.update()
 
     def update(self):
@@ -80,6 +111,30 @@ class AppButton(Gtk.EventBox):
         set_class(self.button, "running", bool(windows))
         set_class(self.button, "active", any(w.activated and not w.minimized for w in windows))
         set_class(self.button, "stacked", len(windows) > 1)
+        if self.title is not None and windows:
+            self.title.set_text(windows[0].title or self.group.name)
+
+    # Drag pinned apps to reorder them; drop Start menu apps to pin them.
+    def _setup_dnd(self):
+        targets = [Gtk.TargetEntry.new(DND_TASKBAR, Gtk.TargetFlags.SAME_APP, 0),
+                   Gtk.TargetEntry.new(DND_TILE, Gtk.TargetFlags.SAME_APP, 1)]
+        if self.group.info is not None:
+            self.button.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, targets[:1], Gdk.DragAction.MOVE)
+            self.button.drag_source_set_icon_gicon(self.group.icon) if self.group.icon else None
+            self.button.connect("drag-data-get", lambda _w, _c, data, _i, _t: data.set(
+                data.get_target(), 8, self.group.info.get_id().encode()))
+        self.button.drag_dest_set(Gtk.DestDefaults.ALL, targets, Gdk.DragAction.MOVE)
+        self.button.connect("drag-data-received", self._on_drop)
+
+    def _on_drop(self, _widget, _context, _x, _y, data, info_type, _time):
+        raw = data.get_data().decode()
+        desktop_id = raw[4:] if info_type == 1 and raw.startswith("app:") else (raw if info_type == 0 else None)
+        if not desktop_id:
+            return
+        before = self.group.info.get_id() if self.group.info is not None else None
+        if before == desktop_id:
+            return
+        self.shell.apps.move_pinned(desktop_id, before)
 
     def _on_tooltip(self, _widget, _x, _y, _keyboard, tooltip):
         if self.group.windows:
@@ -310,9 +365,10 @@ class Taskbar(LayerWindow):
         ac.connect("clicked", lambda *_: self.shell.toggle_popup(self.shell.action_center, self.monitor))
         right.pack_start(ac, False, False, 0)
 
-        show_desktop = flat_button(css="tw-show-desktop", tooltip=_("Show desktop"))
-        show_desktop.connect("clicked", lambda *_: self.shell.command("show-desktop"))
-        right.pack_start(show_desktop, False, False, 0)
+        if settings["taskbar.show_desktop_button"]:
+            show_desktop = flat_button(css="tw-show-desktop", tooltip=_("Show desktop"))
+            show_desktop.connect("clicked", lambda *_: self.shell.command("show-desktop"))
+            right.pack_start(show_desktop, False, False, 0)
 
         self.refresh_apps()
         self.update_status()
@@ -382,9 +438,40 @@ class Taskbar(LayerWindow):
         if event.button != 3:
             return False
         self.shell.close_popups()
+        settings = get_settings()
+
+        def choice(text, key, value):
+            mark = "•  " if settings[key] == value else "     "
+            return menu_item(mark + text, lambda: settings.set(key, value))
+
+        def toggle(text, key):
+            mark = "✓  " if settings[key] else "     "
+            return menu_item(mark + text, lambda: settings.set(key, not settings[key]))
+
         menu = Gtk.Menu()
-        menu.append(menu_item(_("Task Manager"), lambda: self.shell.command("task-manager")))
+        search = Gtk.MenuItem(label=_("Search"))
+        sub = add_class(Gtk.Menu(), "tw-menu")
+        sub.append(choice(pgettext("taskbar", "Hidden"), "taskbar.search", "hidden"))
+        sub.append(choice(_("Show search icon"), "taskbar.search", "icon"))
+        sub.append(choice(_("Show search box"), "taskbar.search", "box"))
+        search.set_submenu(sub)
+        menu.append(search)
+        menu.append(toggle(_("Show Task View button"), "taskbar.show_taskview"))
+        menu.append(toggle(_("Show the \"Show desktop\" button"), "taskbar.show_desktop_button"))
         menu.append(Gtk.SeparatorMenuItem())
+        menu.append(toggle(_("Use small taskbar buttons"), "taskbar.small_icons"))
+        never = settings["taskbar.combine"] == "never"
+        menu.append(menu_item(("✓  " if never else "     ") + _("Show window titles (never combine)"),
+                              lambda: settings.set("taskbar.combine", "always" if never else "never")))
+        menu.append(toggle(_("Always show all icons in the notification area"), "taskbar.tray_show_all"))
+        position = Gtk.MenuItem(label=_("Taskbar location on screen"))
+        sub = add_class(Gtk.Menu(), "tw-menu")
+        sub.append(choice(_("Bottom"), "taskbar.position", "bottom"))
+        sub.append(choice(_("Top"), "taskbar.position", "top"))
+        position.set_submenu(sub)
+        menu.append(position)
+        menu.append(Gtk.SeparatorMenuItem())
+        menu.append(menu_item(_("Task Manager"), lambda: self.shell.command("task-manager")))
         menu.append(menu_item(_("Show the desktop"), lambda: self.shell.command("show-desktop")))
         menu.append(Gtk.SeparatorMenuItem())
         menu.append(menu_item(_("Taskbar settings"), lambda: self.shell.open_settings("taskbar"),
