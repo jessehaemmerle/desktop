@@ -1,5 +1,7 @@
 # Tenwin
 
+**Deutsch** | [English](README.en.md)
+
 Ein Desktop-Environment für Ubuntu-basierte Linux-Distributionen, das aussieht und sich bedient wie der Desktop von **Windows 10**, auf Basis von Wayland und dem Compositor [labwc](https://labwc.github.io/).
 
 ![Tenwin](docs/screenshots/01-desktop.png)
