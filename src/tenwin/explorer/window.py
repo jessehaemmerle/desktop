@@ -616,16 +616,10 @@ class ExplorerWindow(Gtk.ApplicationWindow):
         if permanent:
             if not fileops.confirm_delete(self, len(files), True):
                 return
-            for gfile in files:
-                if self.folder.is_trash:
-                    try:
-                        gfile.delete(None)
-                    except GLib.Error as exc:
-                        self._error(_("Delete File"), exc.message)
-                else:
-                    fileops.delete_permanently([gfile.get_path()])
+            errors = fileops.delete_permanently(files)
+            fileops.show_errors(self, _("Some items could not be deleted."), errors)
         else:
-            fileops.trash([f.get_path() for f in files if f.get_path()], parent=self)
+            fileops.trash(files, parent=self)
 
     def rename(self):
         paths = self.selected_paths()

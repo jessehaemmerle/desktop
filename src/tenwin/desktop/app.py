@@ -182,7 +182,7 @@ class DesktopIcon(Gtk.EventBox):
         if not uris:
             return
         if self.item.key == "trash":
-            fileops.trash([Gio.File.new_for_uri(u).get_path() for u in uris])
+            fileops.trash([Gio.File.new_for_uri(u) for u in uris])
         else:
             fileops.FileOperation([Gio.File.new_for_uri(u) for u in uris], self.item.path, move=True).start()
 
@@ -254,7 +254,9 @@ class DesktopView(Gtk.Overlay):
                 is_dir = info.get_file_type() == Gio.FileType.DIRECTORY
                 icon = info.get_icon()
                 name = info.get_display_name()
-                if info.get_name().endswith(".desktop"):
+                if info.get_name().endswith(".desktop") and fileops.launcher_trusted(gfile.get_path()):
+                    # Only trusted launchers may present their own name and icon;
+                    # otherwise "Invoice.pdf.desktop" could pose as a document.
                     app = Gio.DesktopAppInfo.new_from_filename(gfile.get_path())
                     if app is not None:
                         icon = app.get_icon() or icon
@@ -339,9 +341,7 @@ class DesktopView(Gtk.Overlay):
             if item.key in ("this-pc", "trash") or item.is_dir:
                 run_detached([paths.binary("tenwin-explorer"), item.uri])
             elif item.path and item.path.endswith(".desktop"):
-                app = Gio.DesktopAppInfo.new_from_filename(item.path)
-                if app is not None:
-                    app.launch([], None)
+                fileops.launch_desktop_file(item.path, self.window)
             elif item.uri:
                 try:
                     Gio.AppInfo.launch_default_for_uri(item.uri, None)
@@ -360,9 +360,9 @@ class DesktopView(Gtk.Overlay):
             return
         if permanent:
             if fileops.confirm_delete(None, len(files), True):
-                fileops.delete_permanently(files)
+                fileops.show_errors(None, _("Some items could not be deleted."), fileops.delete_permanently(files))
         else:
-            fileops.trash(files)
+            fileops.trash(files, parent=self.window)
 
     def rename_selected(self):
         if len(self.selected) != 1 or not self.selected[0].item.key.startswith("file:"):

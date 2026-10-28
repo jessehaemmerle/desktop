@@ -194,6 +194,8 @@ class NotificationServer(GObject.Object):
             offset += toast.get_preferred_height()[1] + 8
 
     def toast_finished(self, toast, reason):
+        if self.toasts.get(toast.note.id) is not toast:
+            return  # already replaced or removed
         self.toasts.pop(toast.note.id, None)
         self._layout_toasts()
         if reason != REASON_EXPIRED or toast.note.transient:
@@ -307,7 +309,14 @@ class Toast(LayerWindow):
         self.add(events)
         self._timer = 0
         self._paused = False
+        self._finished = False
+        self.connect("destroy", lambda *_: self._stop_timer())
         self._start_timer()
+
+    def _stop_timer(self):
+        if self._timer:
+            GLib.source_remove(self._timer)
+            self._timer = 0
 
     def set_offset(self, offset):
         if self.edge == Edge.TOP:
@@ -344,12 +353,13 @@ class Toast(LayerWindow):
         return True
 
     def _invoke(self, key):
-        self.server.invoke(self.note, key)
         self.dismiss(expired=True)
+        self.server.invoke(self.note, key)
 
     def dismiss(self, expired=False):
-        if self._timer:
-            GLib.source_remove(self._timer)
-            self._timer = 0
+        if self._finished:
+            return
+        self._finished = True
+        self._stop_timer()
         self.server.toast_finished(self, REASON_EXPIRED if expired else REASON_DISMISSED)
         self.destroy()

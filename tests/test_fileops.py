@@ -92,3 +92,39 @@ def test_delete_permanently(tmp_path):
     (tree / "a" / "b" / "c.txt").write_text("x")
     fileops.delete_permanently([str(tree)])
     assert not tree.exists()
+
+
+def test_copy_continues_after_a_failing_item(tmp_path):
+    good = tmp_path / "good.txt"
+    good.write_text("ok")
+    missing = tmp_path / "missing.txt"  # does not exist -> GLib.Error
+    dest = tmp_path / "dest"
+    dest.mkdir()
+    op = _op([missing, good], dest, move=False, policy="skip")
+    import tenwin.fileops as fo
+    finished = []
+    original = fo.GLib.idle_add
+    fo.GLib.idle_add = lambda func, *a: finished.append(func)
+    try:
+        op._run()
+    finally:
+        fo.GLib.idle_add = original
+    assert (dest / "good.txt").read_text() == "ok"
+    assert len(op.errors) == 1 and "missing.txt" in op.errors[0]
+    assert not op.succeeded
+
+
+def test_delete_permanently_reports_errors(tmp_path):
+    errors = fileops.delete_permanently([str(tmp_path / "does-not-exist")])
+    assert errors and "does-not-exist" in errors[0]
+
+
+def test_untrusted_launchers_are_not_trusted(tmp_path):
+    launcher = tmp_path / "Invoice.pdf.desktop"
+    launcher.write_text("[Desktop Entry]\nType=Application\nName=Invoice.pdf\nExec=true\n")
+    assert not fileops.launcher_trusted(str(launcher))       # not executable, not trusted
+    launcher.chmod(0o755)
+    assert not fileops.launcher_trusted(str(launcher))       # executable but not marked trusted
+    link = tmp_path / "link.desktop"
+    link.symlink_to(launcher)
+    assert not fileops.launcher_trusted(str(link))

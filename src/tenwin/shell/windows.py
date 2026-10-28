@@ -78,16 +78,20 @@ class WindowManager(GObject.Object):
 
     def _on_line(self, stream, result, _data):
         try:
-            line, _length = stream.read_line_finish_utf8(result)
+            # Raw bytes: window titles are not guaranteed to be valid UTF-8.
+            raw, _length = stream.read_line_finish(result)
         except GLib.Error as exc:
             log.warning("toplevel helper: %s", exc)
+            return  # the stream is broken; _on_exit restarts the helper
+        if raw is None:
             return
-        if line is None:
-            return
+        line = bytes(raw).decode("utf-8", errors="replace")
         try:
-            self._handle(json.loads(line))
-        except ValueError:
-            log.warning("bad helper line: %r", line)
+            message = json.loads(line)
+            if isinstance(message, dict):
+                self._handle(message)
+        except Exception:  # never stop reading because of one bad line
+            log.exception("bad helper line: %r", line)
         self._read_next(stream)
 
     def _on_exit(self, proc, result):

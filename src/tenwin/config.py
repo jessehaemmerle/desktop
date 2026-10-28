@@ -117,7 +117,13 @@ def _coerce(key, value):
     if default is None or value is None:
         return value
     if isinstance(default, bool):
-        return bool(value)
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)) and value in (0, 1):
+            return bool(value)
+        if isinstance(value, str) and value.lower() in ("true", "false", "1", "0", "yes", "no"):
+            return value.lower() in ("true", "1", "yes")
+        return default
     if isinstance(default, int) and not isinstance(default, bool):
         try:
             return int(value)
@@ -261,21 +267,48 @@ def get_settings():
 
 
 class State:
-    """Small persistent store for non-setting data (usage counts, known apps)."""
+    """Small persistent store for non-setting data (usage counts, known apps).
+
+    Several processes (shell, settings) share the file, so every change is a
+    read-modify-write of a single key via :meth:`modify`.
+    """
 
     def __init__(self, path=None):
         self._path = str(path or paths.STATE_FILE)
+        self.data = self._read()
+
+    def _read(self):
         try:
             with open(self._path, encoding="utf-8") as fh:
-                self.data = json.load(fh)
-            if not isinstance(self.data, dict):
-                self.data = {}
+                data = json.load(fh)
+            return data if isinstance(data, dict) else {}
         except (OSError, ValueError):
-            self.data = {}
+            return {}
 
-    def save(self):
-        os.makedirs(os.path.dirname(self._path), exist_ok=True)
-        tmp = self._path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as fh:
-            json.dump(self.data, fh, ensure_ascii=False)
-        os.replace(tmp, self._path)
+    def get(self, key, default=None):
+        return self.data.get(key, default)
+
+    def modify(self, key, func, default=None):
+        """Re-read the file, set ``key`` to ``func(old value)`` and save."""
+        self.data = self._read()
+        self.data[key] = func(self.data.get(key, default))
+        try:
+            self._write()
+        except OSError as exc:
+            log.warning("cannot save %s: %s", self._path, exc)
+        return self.data[key]
+
+    def _write(self):
+        directory = os.path.dirname(self._path)
+        os.makedirs(directory, exist_ok=True)
+        fd, tmp = tempfile.mkstemp(dir=directory, prefix=".state-")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+                json.dump(self.data, fh, ensure_ascii=False)
+            os.replace(tmp, self._path)
+        except BaseException:
+            try:
+                os.unlink(tmp)
+            except OSError:
+                pass
+            raise

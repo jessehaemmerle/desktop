@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tenwin 0.1.0\n"
 "Report-Msgid-Bugs-To: jesse@haemmerle.at\n"
-"POT-Creation-Date: 2026-10-27 23:46+0000\n"
+"POT-Creation-Date: 2026-10-28 00:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,67 +30,73 @@ msgid "Recycle Bin"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:349 src/tenwin/explorer/window.py:530
-#: src/tenwin/explorer/window.py:540
+#: src/tenwin/explorer/window.py:540 src/tenwin/fileops.py:238
+#: src/tenwin/fileops.py:257 src/tenwin/fileops.py:262
 msgid "Can't open this file"
 msgstr ""
 
+#: src/tenwin/desktop/app.py:363 src/tenwin/explorer/window.py:620
+#: src/tenwin/fileops.py:163
+msgid "Some items could not be deleted."
+msgstr ""
+
 #: src/tenwin/desktop/app.py:385 src/tenwin/desktop/app.py:433
-#: src/tenwin/explorer/ribbon.py:107 src/tenwin/explorer/window.py:657
-#: src/tenwin/explorer/window.py:972
+#: src/tenwin/explorer/ribbon.py:107 src/tenwin/explorer/window.py:651
+#: src/tenwin/explorer/window.py:966
 msgid "Rename"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:423 src/tenwin/explorer/ribbon.py:111
-#: src/tenwin/explorer/ribbon.py:113 src/tenwin/explorer/window.py:933
-#: src/tenwin/explorer/window.py:1023 src/tenwin/explorer/window.py:1032
+#: src/tenwin/explorer/ribbon.py:113 src/tenwin/explorer/window.py:927
+#: src/tenwin/explorer/window.py:1017 src/tenwin/explorer/window.py:1026
 #: src/tenwin/shell/flyouts.py:272 src/tenwin/shell/search.py:248
-#: src/tenwin/shell/winx.py:132
+#: src/tenwin/shell/winx.py:131
 msgid "Open"
 msgstr ""
 
-#: src/tenwin/desktop/app.py:426 src/tenwin/explorer/window.py:999
+#: src/tenwin/desktop/app.py:426 src/tenwin/explorer/window.py:993
 msgid "Empty Recycle Bin"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:429 src/tenwin/explorer/ribbon.py:101
-#: src/tenwin/explorer/window.py:926 src/tenwin/explorer/window.py:967
+#: src/tenwin/explorer/window.py:920 src/tenwin/explorer/window.py:961
 msgid "Cut"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:430 src/tenwin/explorer/ribbon.py:99
-#: src/tenwin/explorer/window.py:968 src/tenwin/settings/pages.py:270
+#: src/tenwin/explorer/window.py:962 src/tenwin/settings/pages.py:270
 msgid "Copy"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:432 src/tenwin/explorer/ribbon.py:106
-#: src/tenwin/explorer/window.py:928 src/tenwin/explorer/window.py:971
+#: src/tenwin/explorer/window.py:922 src/tenwin/explorer/window.py:965
 msgid "Delete"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:435 src/tenwin/desktop/app.py:438
-#: src/tenwin/explorer/ribbon.py:112 src/tenwin/explorer/window.py:930
-#: src/tenwin/explorer/window.py:974 src/tenwin/explorer/window.py:1015
-#: src/tenwin/explorer/window.py:1028 src/tenwin/explorer/window.py:1037
+#: src/tenwin/explorer/ribbon.py:112 src/tenwin/explorer/window.py:924
+#: src/tenwin/explorer/window.py:968 src/tenwin/explorer/window.py:1009
+#: src/tenwin/explorer/window.py:1022 src/tenwin/explorer/window.py:1031
 msgid "Properties"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:446 src/tenwin/explorer/ribbon.py:74
-#: src/tenwin/explorer/window.py:979
+#: src/tenwin/explorer/window.py:973
 msgid "View"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:448 src/tenwin/explorer/ribbon.py:141
-#: src/tenwin/explorer/window.py:982 src/tenwin/settings/pages.py:622
+#: src/tenwin/explorer/window.py:976 src/tenwin/settings/pages.py:622
 msgid "Large icons"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:448 src/tenwin/explorer/ribbon.py:141
-#: src/tenwin/explorer/window.py:982 src/tenwin/settings/pages.py:622
+#: src/tenwin/explorer/window.py:976 src/tenwin/settings/pages.py:622
 msgid "Medium icons"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:448 src/tenwin/explorer/ribbon.py:142
-#: src/tenwin/explorer/window.py:983 src/tenwin/settings/pages.py:622
+#: src/tenwin/explorer/window.py:977 src/tenwin/settings/pages.py:622
 msgid "Small icons"
 msgstr ""
 
@@ -98,18 +104,18 @@ msgstr ""
 msgid "Show desktop icons"
 msgstr ""
 
-#: src/tenwin/desktop/app.py:458 src/tenwin/explorer/window.py:988
+#: src/tenwin/desktop/app.py:458 src/tenwin/explorer/window.py:982
 msgid "Sort by"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:460 src/tenwin/explorer/window.py:146
-#: src/tenwin/explorer/window.py:875 src/tenwin/explorer/window.py:991
-#: src/tenwin/fileops.py:444
+#: src/tenwin/explorer/window.py:869 src/tenwin/explorer/window.py:985
+#: src/tenwin/fileops.py:532
 msgid "Name"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:460 src/tenwin/explorer/window.py:163
-#: src/tenwin/explorer/window.py:876 src/tenwin/explorer/window.py:992
+#: src/tenwin/explorer/window.py:870 src/tenwin/explorer/window.py:986
 #: src/tenwin/session.py:189
 msgid "Size"
 msgstr ""
@@ -119,32 +125,32 @@ msgid "Item type"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:461 src/tenwin/explorer/window.py:161
-#: src/tenwin/explorer/window.py:308 src/tenwin/explorer/window.py:875
-#: src/tenwin/explorer/window.py:991
+#: src/tenwin/explorer/window.py:308 src/tenwin/explorer/window.py:869
+#: src/tenwin/explorer/window.py:985
 msgid "Date modified"
 msgstr ""
 
-#: src/tenwin/desktop/app.py:466 src/tenwin/explorer/window.py:996
+#: src/tenwin/desktop/app.py:466 src/tenwin/explorer/window.py:990
 msgid "Refresh"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:468 src/tenwin/explorer/ribbon.py:100
-#: src/tenwin/explorer/window.py:1001
+#: src/tenwin/explorer/window.py:995
 msgid "Paste"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:473 src/tenwin/explorer/ribbon.py:108
-#: src/tenwin/explorer/window.py:1007
+#: src/tenwin/explorer/window.py:1001
 msgid "New"
 msgstr ""
 
 #: src/tenwin/desktop/app.py:475 src/tenwin/explorer/window.py:164
-#: src/tenwin/explorer/window.py:307 src/tenwin/explorer/window.py:849
-#: src/tenwin/explorer/window.py:1010
+#: src/tenwin/explorer/window.py:307 src/tenwin/explorer/window.py:843
+#: src/tenwin/explorer/window.py:1004
 msgid "Folder"
 msgstr ""
 
-#: src/tenwin/desktop/app.py:476 src/tenwin/explorer/window.py:1011
+#: src/tenwin/desktop/app.py:476 src/tenwin/explorer/window.py:1005
 msgid "Text Document"
 msgstr ""
 
@@ -174,13 +180,13 @@ msgstr ""
 msgid "File Explorer"
 msgstr ""
 
-#: src/tenwin/explorer/app.py:54 src/tenwin/explorer/window.py:773
+#: src/tenwin/explorer/app.py:54 src/tenwin/explorer/window.py:767
 msgid ""
 "Are you sure you want to permanently delete all items in the Recycle Bin?"
 msgstr ""
 
-#: src/tenwin/explorer/app.py:56 src/tenwin/explorer/window.py:774
-#: src/tenwin/fileops.py:176
+#: src/tenwin/explorer/app.py:56 src/tenwin/explorer/window.py:768
+#: src/tenwin/fileops.py:198
 msgid "Delete Multiple Items"
 msgstr ""
 
@@ -264,15 +270,15 @@ msgid "Apply"
 msgstr ""
 
 #: src/tenwin/explorer/properties.py:58 src/tenwin/explorer/window.py:591
-#: src/tenwin/fileops.py:373 src/tenwin/fileops.py:428
-#: src/tenwin/settings/pages.py:284 src/tenwin/settings/pages.py:509
-#: src/tenwin/settings/pages.py:777 src/tenwin/shell/winx.py:112
-#: src/tenwin/shell/winx.py:132
+#: src/tenwin/fileops.py:247 src/tenwin/fileops.py:465
+#: src/tenwin/fileops.py:516 src/tenwin/settings/pages.py:284
+#: src/tenwin/settings/pages.py:509 src/tenwin/settings/pages.py:777
+#: src/tenwin/shell/winx.py:111 src/tenwin/shell/winx.py:131
 msgid "Cancel"
 msgstr ""
 
-#: src/tenwin/explorer/properties.py:58 src/tenwin/greeter/app.py:343
-#: src/tenwin/shell/winx.py:113
+#: src/tenwin/explorer/properties.py:58 src/tenwin/greeter/app.py:344
+#: src/tenwin/shell/winx.py:112
 msgid "OK"
 msgstr ""
 
@@ -457,8 +463,8 @@ msgstr ""
 msgid "New item"
 msgstr ""
 
-#: src/tenwin/explorer/ribbon.py:114 src/tenwin/explorer/window.py:888
-#: src/tenwin/explorer/window.py:939 src/tenwin/explorer/window.py:1006
+#: src/tenwin/explorer/ribbon.py:114 src/tenwin/explorer/window.py:882
+#: src/tenwin/explorer/window.py:933 src/tenwin/explorer/window.py:1000
 msgid "Open in Terminal"
 msgstr ""
 
@@ -510,15 +516,15 @@ msgid ""
 "pane"
 msgstr ""
 
-#: src/tenwin/explorer/ribbon.py:141 src/tenwin/explorer/window.py:982
+#: src/tenwin/explorer/ribbon.py:141 src/tenwin/explorer/window.py:976
 msgid "Extra large icons"
 msgstr ""
 
-#: src/tenwin/explorer/ribbon.py:142 src/tenwin/explorer/window.py:983
+#: src/tenwin/explorer/ribbon.py:142 src/tenwin/explorer/window.py:977
 msgid "List"
 msgstr ""
 
-#: src/tenwin/explorer/ribbon.py:142 src/tenwin/explorer/window.py:983
+#: src/tenwin/explorer/ribbon.py:142 src/tenwin/explorer/window.py:977
 msgid "Details"
 msgstr ""
 
@@ -590,8 +596,8 @@ msgstr ""
 msgid "Refresh (F5)"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:162 src/tenwin/explorer/window.py:875
-#: src/tenwin/explorer/window.py:991
+#: src/tenwin/explorer/window.py:162 src/tenwin/explorer/window.py:869
+#: src/tenwin/explorer/window.py:985
 msgid "Type"
 msgstr ""
 
@@ -656,120 +662,116 @@ msgstr ""
 msgid "Copy Items"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:624 src/tenwin/fileops.py:176
-msgid "Delete File"
-msgstr ""
-
-#: src/tenwin/explorer/window.py:667
+#: src/tenwin/explorer/window.py:661
 msgid "Can't create the folder"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:678
+#: src/tenwin/explorer/window.py:672
 msgid "Can't create the file"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:713
+#: src/tenwin/explorer/window.py:707
 msgid "No email app is installed."
 msgstr ""
 
-#: src/tenwin/explorer/window.py:738 src/tenwin/explorer/window.py:763
+#: src/tenwin/explorer/window.py:732 src/tenwin/explorer/window.py:757
 msgid "Compressed (zipped) Folders Error"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:759
+#: src/tenwin/explorer/window.py:753
 #, python-format
 msgid "The archive contains unsafe paths: %s"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:797 src/tenwin/explorer/window.py:924
+#: src/tenwin/explorer/window.py:791 src/tenwin/explorer/window.py:918
 #: src/tenwin/session.py:187
 msgid "Restore"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:816
+#: src/tenwin/explorer/window.py:810
 msgid "Searching…"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:850
+#: src/tenwin/explorer/window.py:844
 #, python-format
 msgid "Search Results in %s"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:880
+#: src/tenwin/explorer/window.py:874
 msgid "Ascending"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:881
+#: src/tenwin/explorer/window.py:875
 msgid "Descending"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:886
+#: src/tenwin/explorer/window.py:880
 msgid "Open new window"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:890
+#: src/tenwin/explorer/window.py:884
 msgid "Change folder and search options"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:892 src/tenwin/session.py:201
+#: src/tenwin/explorer/window.py:886 src/tenwin/session.py:201
 #: src/tenwin/shell/switcher.py:138
 msgid "Close"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:937 src/tenwin/explorer/window.py:1024
+#: src/tenwin/explorer/window.py:931 src/tenwin/explorer/window.py:1018
 msgid "Open in new window"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:938
+#: src/tenwin/explorer/window.py:932
 msgid "Pin to Quick access"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:945
+#: src/tenwin/explorer/window.py:939
 msgid "Open with"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:952
+#: src/tenwin/explorer/window.py:946
 msgid "Choose another app"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:956
+#: src/tenwin/explorer/window.py:950
 msgid "Extract All..."
 msgstr ""
 
-#: src/tenwin/explorer/window.py:958
+#: src/tenwin/explorer/window.py:952
 msgid "Send to"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:961
+#: src/tenwin/explorer/window.py:955
 msgid "Compressed (zipped) folder"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:962
+#: src/tenwin/explorer/window.py:956
 msgid "Desktop (create shortcut)"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:963
+#: src/tenwin/explorer/window.py:957
 msgid "Mail recipient"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:970 src/tenwin/explorer/window.py:1075
-#: src/tenwin/explorer/window.py:1086
+#: src/tenwin/explorer/window.py:964 src/tenwin/explorer/window.py:1069
+#: src/tenwin/explorer/window.py:1080
 msgid "Create shortcut"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:1026
+#: src/tenwin/explorer/window.py:1020
 msgid "Unpin from Quick access"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:1034
+#: src/tenwin/explorer/window.py:1028
 msgid "Eject"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:1047
+#: src/tenwin/explorer/window.py:1041
 msgid "Problem Ejecting Device"
 msgstr ""
 
-#: src/tenwin/explorer/window.py:1071 src/tenwin/explorer/window.py:1082
+#: src/tenwin/explorer/window.py:1065 src/tenwin/explorer/window.py:1076
 #, python-format
 msgid "%s - Shortcut"
 msgstr ""
@@ -790,70 +792,95 @@ msgstr ""
 msgid "There is already a file with the same name in this location."
 msgstr ""
 
-#: src/tenwin/fileops.py:140
+#: src/tenwin/fileops.py:157
 msgid "These items can't be moved to the Recycle Bin."
 msgstr ""
 
-#: src/tenwin/fileops.py:141
+#: src/tenwin/fileops.py:158
 msgid "Do you want to permanently delete them?"
 msgstr ""
 
-#: src/tenwin/fileops.py:170
+#: src/tenwin/fileops.py:192
 msgid "Are you sure you want to permanently delete this item?"
 msgstr ""
 
-#: src/tenwin/fileops.py:172
+#: src/tenwin/fileops.py:194
 #, python-format
 msgid "Are you sure you want to permanently delete %d item?"
 msgid_plural "Are you sure you want to permanently delete these %d items?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/tenwin/fileops.py:233
+#: src/tenwin/fileops.py:198
+msgid "Delete File"
+msgstr ""
+
+#: src/tenwin/fileops.py:242
+msgid "Untrusted application launcher"
+msgstr ""
+
+#: src/tenwin/fileops.py:244
+#, python-format
+msgid ""
+"\"%s\" is a program launcher that you have not marked as trusted. Only start "
+"it if you know where it comes from.\n"
+"\n"
+"Command: %s"
+msgstr ""
+
+#: src/tenwin/fileops.py:248
+msgid "Trust and launch"
+msgstr ""
+
+#: src/tenwin/fileops.py:317
 msgid "The destination folder is a subfolder of the source folder."
 msgstr ""
 
-#: src/tenwin/fileops.py:357
+#: src/tenwin/fileops.py:449
 msgid "Replace or Skip Files"
 msgstr ""
 
-#: src/tenwin/fileops.py:366
+#: src/tenwin/fileops.py:458
 #, python-format
 msgid "The destination already has a file named \"%s\""
 msgstr ""
 
-#: src/tenwin/fileops.py:369
+#: src/tenwin/fileops.py:461
 msgid "Do this for all conflicts"
 msgstr ""
 
-#: src/tenwin/fileops.py:371
+#: src/tenwin/fileops.py:463
 msgid "Skip this file"
 msgstr ""
 
-#: src/tenwin/fileops.py:372
+#: src/tenwin/fileops.py:464
 msgid "Replace the file in the destination"
 msgstr ""
 
-#: src/tenwin/fileops.py:389
+#: src/tenwin/fileops.py:479
+msgid "Some items could not be moved."
+msgstr ""
+
+#: src/tenwin/fileops.py:480
 msgid "Some items could not be copied."
 msgstr ""
 
-#: src/tenwin/fileops.py:400
+#: src/tenwin/fileops.py:488
 msgid "Moving"
 msgstr ""
 
-#: src/tenwin/fileops.py:400
+#: src/tenwin/fileops.py:488
 msgid "Copying"
 msgstr ""
 
-#: src/tenwin/fileops.py:413
+#: src/tenwin/fileops.py:501
 #, python-format
 msgid "Moving %d item to"
 msgid_plural "Moving %d items to"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/tenwin/fileops.py:414
+#: src/tenwin/fileops.py:502
 #, python-format
 msgid "Copying %d item to"
 msgid_plural "Copying %d items to"
@@ -864,50 +891,51 @@ msgstr[1] ""
 msgid "Guest"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:326 src/tenwin/settings/pages.py:810
+#: src/tenwin/greeter/app.py:326 src/tenwin/greeter/app.py:486
+#: src/tenwin/settings/pages.py:810
 msgid "Password"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:331
+#: src/tenwin/greeter/app.py:332
 msgid "Submit"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:336
+#: src/tenwin/greeter/app.py:337
 msgid "Welcome"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:339 src/tenwin/greeter/app.py:465
+#: src/tenwin/greeter/app.py:340 src/tenwin/greeter/app.py:467
 msgid "The password is incorrect. Try again."
 msgstr ""
 
-#: src/tenwin/greeter/app.py:368
+#: src/tenwin/greeter/app.py:369
 msgid "Session"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:371 src/tenwin/shell/startmenu.py:188
+#: src/tenwin/greeter/app.py:372 src/tenwin/shell/startmenu.py:188
 msgid "Power"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:399
+#: src/tenwin/greeter/app.py:400
 msgid "Other user"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:423 src/tenwin/settings/pages.py:201
+#: src/tenwin/greeter/app.py:424 src/tenwin/settings/pages.py:201
 #: src/tenwin/shell/startmenu.py:496 src/tenwin/shell/winx.py:58
 msgid "Sleep"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:423 src/tenwin/shell/startmenu.py:497
+#: src/tenwin/greeter/app.py:424 src/tenwin/shell/startmenu.py:497
 #: src/tenwin/shell/winx.py:59
 msgid "Shut down"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:424 src/tenwin/shell/startmenu.py:498
+#: src/tenwin/greeter/app.py:425 src/tenwin/shell/startmenu.py:498
 #: src/tenwin/shell/winx.py:60
 msgid "Restart"
 msgstr ""
 
-#: src/tenwin/greeter/app.py:462
+#: src/tenwin/greeter/app.py:464
 msgid "The session could not be started."
 msgstr ""
 
@@ -1480,7 +1508,7 @@ msgid "Choose your picture"
 msgstr ""
 
 #: src/tenwin/settings/pages.py:463 src/tenwin/settings/pages.py:577
-#: src/tenwin/shell/winx.py:132
+#: src/tenwin/shell/winx.py:131
 msgid "Browse"
 msgstr ""
 
@@ -2480,7 +2508,7 @@ msgstr ""
 msgid "Terminal"
 msgstr ""
 
-#: src/tenwin/shell/winx.py:42 src/tenwin/shell/winx.py:84
+#: src/tenwin/shell/winx.py:42 src/tenwin/shell/winx.py:83
 msgid "Run"
 msgstr ""
 
@@ -2488,21 +2516,21 @@ msgstr ""
 msgid "Shut down or sign out"
 msgstr ""
 
-#: src/tenwin/shell/winx.py:96
+#: src/tenwin/shell/winx.py:95
 msgid ""
 "Type the name of a program, folder, document, or Internet resource, and "
 "Tenwin will open it for you."
 msgstr ""
 
-#: src/tenwin/shell/winx.py:100
+#: src/tenwin/shell/winx.py:99
 msgid "Open:"
 msgstr ""
 
-#: src/tenwin/shell/winx.py:112
+#: src/tenwin/shell/winx.py:111
 msgid "Browse..."
 msgstr ""
 
-#: src/tenwin/shell/winx.py:150
+#: src/tenwin/shell/winx.py:145
 #, python-format
 msgid ""
 "Tenwin cannot find '%s'. Make sure you typed the name correctly, and then "

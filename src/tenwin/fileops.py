@@ -126,41 +126,63 @@ def rename(path, new_name):
     return target
 
 
-def trash(paths, parent=None):
-    """Move to the recycle bin; returns paths that could not be trashed."""
+def _as_gfile(item):
+    if isinstance(item, Gio.File):
+        return item
+    return Gio.File.new_for_uri(item) if "://" in item else Gio.File.new_for_path(item)
+
+
+def show_errors(parent, title, errors):
+    if not errors:
+        return
+    dialog = Gtk.MessageDialog(transient_for=parent, modal=True, message_type=Gtk.MessageType.ERROR,
+                               buttons=Gtk.ButtonsType.OK, text=title)
+    dialog.format_secondary_text("\n".join(errors[:6]) + ("\n…" if len(errors) > 6 else ""))
+    dialog.run()
+    dialog.destroy()
+
+
+def trash(items, parent=None):
+    """Move paths/URIs/Gio.Files to the recycle bin; returns those that are left."""
     failed = []
-    for path in paths:
+    for item in items:
+        gfile = _as_gfile(item)
         try:
-            Gio.File.new_for_path(path).trash(None)
+            gfile.trash(None)
         except GLib.Error:
-            failed.append(path)
+            failed.append(gfile)
     if failed and parent is not None:
         dialog = Gtk.MessageDialog(transient_for=parent, modal=True, message_type=Gtk.MessageType.WARNING,
                                    buttons=Gtk.ButtonsType.YES_NO,
                                    text=_("These items can't be moved to the Recycle Bin."))
         dialog.format_secondary_text(_("Do you want to permanently delete them?"))
-        if dialog.run() == Gtk.ResponseType.YES:
-            delete_permanently(failed)
-            failed = []
+        answer = dialog.run()
         dialog.destroy()
+        if answer == Gtk.ResponseType.YES:
+            errors = delete_permanently(failed)
+            show_errors(parent, _("Some items could not be deleted."), errors)
+            failed = [f for f in failed if f.query_exists(None)]
     return failed
 
 
-def delete_permanently(paths):
-    for path in paths:
-        _delete_tree(Gio.File.new_for_path(path))
+def delete_permanently(items):
+    """Delete recursively; returns a list of error messages (empty on success)."""
+    errors = []
+    for item in items:
+        _delete_tree(_as_gfile(item), errors)
+    return errors
 
 
-def _delete_tree(gfile):
+def _delete_tree(gfile, errors):
     try:
         info = gfile.query_info("standard::type", Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, None)
         if info.get_file_type() == Gio.FileType.DIRECTORY:
             for child in gfile.enumerate_children("standard::name", Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
                                                   None):
-                _delete_tree(gfile.get_child(child.get_name()))
+                _delete_tree(gfile.get_child(child.get_name()), errors)
         gfile.delete(None)
-    except GLib.Error:
-        pass
+    except GLib.Error as exc:
+        errors.append("%s: %s" % (gfile.get_parse_name(), exc.message))
 
 
 def confirm_delete(parent, count, permanent):
@@ -177,6 +199,69 @@ def confirm_delete(parent, count, permanent):
     result = dialog.run() == Gtk.ResponseType.YES
     dialog.destroy()
     return result
+
+
+# ------------------------------------------------------------------ launchers
+
+def launcher_trusted(path):
+    """A .desktop launcher may run without asking only if it is the user's own
+    executable file and was explicitly trusted (GNOME's ``metadata::trusted``)."""
+    real = os.path.realpath(path)
+    try:
+        st = os.stat(real)
+    except OSError:
+        return False
+    if st.st_uid != os.getuid() or not os.access(real, os.X_OK):
+        return False
+    try:
+        info = Gio.File.new_for_path(real).query_info("metadata::trusted", Gio.FileQueryInfoFlags.NONE, None)
+    except GLib.Error:
+        return False
+    return (info.get_attribute_as_string("metadata::trusted") or "").lower() in ("true", "yes")
+
+
+def trust_launcher(path):
+    real = os.path.realpath(path)
+    mode = os.stat(real).st_mode
+    os.chmod(real, mode | 0o100)
+    try:
+        Gio.File.new_for_path(real).set_attribute_string("metadata::trusted", "true",
+                                                         Gio.FileQueryInfoFlags.NONE, None)
+    except GLib.Error:
+        pass  # without gvfs metadata the user is asked again next time
+
+
+def launch_desktop_file(path, parent=None):
+    """Start a .desktop launcher, asking first unless it is trusted."""
+    app = Gio.DesktopAppInfo.new_from_filename(path)
+    if app is None:
+        show_errors(parent, _("Can't open this file"), [os.path.basename(path)])
+        return False
+    if not launcher_trusted(path):
+        dialog = Gtk.MessageDialog(transient_for=parent, modal=True, message_type=Gtk.MessageType.WARNING,
+                                   text=_("Untrusted application launcher"))
+        dialog.format_secondary_text(
+            _("\"%s\" is a program launcher that you have not marked as trusted. "
+              "Only start it if you know where it comes from.\n\nCommand: %s")
+            % (os.path.basename(path), app.get_commandline() or "?"))
+        dialog.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
+        dialog.add_button(_("Trust and launch"), Gtk.ResponseType.ACCEPT)
+        dialog.set_default_response(Gtk.ResponseType.CANCEL)
+        answer = dialog.run()
+        dialog.destroy()
+        if answer != Gtk.ResponseType.ACCEPT:
+            return False
+        try:
+            trust_launcher(path)
+        except OSError as exc:
+            show_errors(parent, _("Can't open this file"), [str(exc)])
+            return False
+    try:
+        app.launch([], None)
+    except GLib.Error as exc:
+        show_errors(parent, _("Can't open this file"), [exc.message])
+        return False
+    return True
 
 
 # ------------------------------------------------------------------ copy / move
@@ -217,27 +302,34 @@ class FileOperation:
     # -- worker thread ---------------------------------------------------
 
     def _run(self):
-        try:
-            for src in self.sources:
-                self.total_bytes += self._size(src)
-            dest_dir = Gio.File.new_for_path(self.destination)
-            for src in self.sources:
-                if self.cancellable.is_cancelled():
-                    raise Cancelled()
-                target = dest_dir.get_child(src.get_basename())
-                if src.equal(target):
-                    if self.move:
-                        continue
-                    target = dest_dir.get_child(unique_name(self.destination, src.get_basename()))
-                elif target.has_prefix(src):
-                    self.errors.append(_("The destination folder is a subfolder of the source folder."))
+        for src in self.sources:
+            self.total_bytes += self._size(src)
+        dest_dir = Gio.File.new_for_path(self.destination)
+        for src in self.sources:
+            if self.cancellable.is_cancelled():
+                break
+            target = dest_dir.get_child(src.get_basename())
+            if src.equal(target):
+                if self.move:
                     continue
+                target = dest_dir.get_child(unique_name(self.destination, src.get_basename()))
+            elif target.has_prefix(src):
+                self.errors.append(_("The destination folder is a subfolder of the source folder."))
+                continue
+            try:
                 self._transfer(src, target)
-        except Cancelled:
-            pass
-        except GLib.Error as exc:
-            self.errors.append(exc.message)
+            except Cancelled:
+                break
+            except GLib.Error as exc:
+                if self.cancellable.is_cancelled():
+                    break
+                # Report the problem and carry on with the remaining items.
+                self.errors.append("%s: %s" % (src.get_basename(), exc.message))
         GLib.idle_add(self._finish)
+
+    @property
+    def succeeded(self):
+        return not self.errors and not self.cancellable.is_cancelled()
 
     def _size(self, gfile):
         try:
@@ -384,14 +476,10 @@ class FileOperation:
             self.dialog.destroy()
             self.dialog = None
         if self.errors:
-            dialog = Gtk.MessageDialog(transient_for=self.parent, modal=True,
-                                       message_type=Gtk.MessageType.ERROR, buttons=Gtk.ButtonsType.OK,
-                                       text=_("Some items could not be copied."))
-            dialog.format_secondary_text("\n".join(self.errors[:5]))
-            dialog.run()
-            dialog.destroy()
+            show_errors(self.parent, _("Some items could not be moved.") if self.move
+                        else _("Some items could not be copied."), self.errors)
         if self.on_done:
-            self.on_done()
+            self.on_done(self)
         return GLib.SOURCE_REMOVE
 
 
@@ -452,9 +540,15 @@ def paste_into(directory, parent=None, on_done=None):
         sources = [Gio.File.new_for_uri(u) for u in uris if u]
         if not sources:
             return
-        FileOperation(sources, directory, move=cut, parent=parent, on_done=on_done).start()
-        if cut:
-            _clip_store["uris"] = []
-            Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).clear()
+
+        def finished(op):
+            # Like Windows: a cut stays on the clipboard until the move succeeded.
+            if cut and op.succeeded:
+                _clip_store["uris"] = []
+                Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).clear()
+            if on_done:
+                on_done(op)
+
+        FileOperation(sources, directory, move=cut, parent=parent, on_done=finished).start()
 
     clipboard_get(got)

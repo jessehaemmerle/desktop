@@ -77,19 +77,20 @@ class AppRegistry(GObject.Object):
         self._update_known()
 
     def _update_known(self):
-        known = self.state.data.setdefault("known_apps", {})
+        ids = [a.get_id() for a in self.apps]
+        known = self.state.get("known_apps") or {}
+        if all(i in known for i in ids):
+            return
         now = int(time.time())
-        first_run = not known
-        changed = False
-        for app in self.apps:
-            if app.get_id() not in known:
-                known[app.get_id()] = 0 if first_run else now
-                changed = True
-        if changed:
-            try:
-                self.state.save()
-            except OSError as exc:
-                log.warning("cannot save state: %s", exc)
+
+        def add(current):
+            current = dict(current or {})
+            first_run = not current
+            for app_id in ids:
+                current.setdefault(app_id, 0 if first_run else now)
+            return current
+
+        self.state.modify("known_apps", add)
 
     # -- lookup ----------------------------------------------------------
 
@@ -148,7 +149,7 @@ class AppRegistry(GObject.Object):
     # -- usage -------------------------------------------------------------
 
     def recently_added(self, limit=3):
-        known = self.state.data.get("known_apps", {})
+        known = self.state.get("known_apps") or {}
         now = time.time()
         recent = [(known.get(a.get_id(), 0), a) for a in self.apps]
         recent = [(t, a) for t, a in recent if t and now - t < RECENT_SECONDS]
@@ -156,17 +157,19 @@ class AppRegistry(GObject.Object):
         return [a for _t, a in recent[:limit]]
 
     def most_used(self, limit=6):
-        usage = self.state.data.get("usage", {})
+        usage = self.state.get("usage") or {}
         ranked = sorted(((n, i) for i, n in usage.items() if i in self._by_id), reverse=True)
         return [self._by_id[i] for _n, i in ranked[:limit]]
 
     def record_use(self, info):
-        usage = self.state.data.setdefault("usage", {})
-        usage[info.get_id()] = usage.get(info.get_id(), 0) + 1
-        try:
-            self.state.save()
-        except OSError:
-            pass
+        app_id = info.get_id()
+
+        def bump(usage):
+            usage = dict(usage or {})
+            usage[app_id] = usage.get(app_id, 0) + 1
+            return usage
+
+        self.state.modify("usage", bump)
 
     def launch(self, info, uris=None, action=None):
         if info is None:

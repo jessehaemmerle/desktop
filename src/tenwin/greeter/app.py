@@ -326,10 +326,11 @@ class GreeterWindow(Gtk.Window):
         self.password = add_class(Gtk.Entry(visibility=False, placeholder_text=_("Password")), "tw-greeter-password")
         self.password.set_input_purpose(Gtk.InputPurpose.PASSWORD)
         self.password.set_width_chars(28)
-        self.password.connect("activate", lambda *_: self.submit())
+        self.password.connect("activate", lambda *_: self._on_activate())
+        self.extra_prompt = False
         field.pack_start(self.password, True, True, 0)
         go = flat_button(icon_image("tenwin-arrow-right", 16, symbolic=True), "tw-greeter-go", _("Submit"))
-        go.connect("clicked", lambda *_: self.submit())
+        go.connect("clicked", lambda *_: self._on_activate())
         field.pack_start(go, False, False, 0)
         field.set_halign(Gtk.Align.CENTER)
         self.form.add_named(field, "password")
@@ -435,13 +436,13 @@ class GreeterWindow(Gtk.Window):
         self.corner_left.show()
         self.corner_right.show()
         self.form.set_visible_child_name("password")
-        self.password.set_text("")
+        self._reset_entry()
         self.password.grab_focus()
         self.area.queue_draw()
 
     def show_curtain(self):
         self.state = "curtain"
-        self.password.set_text("")
+        self._reset_entry()
         self.login_box.hide()
         self.corner_left.hide()
         self.corner_right.hide()
@@ -457,6 +458,7 @@ class GreeterWindow(Gtk.Window):
         self.backend.login(self.user, password)
 
     def on_auth_result(self, ok):
+        self._reset_entry()
         if ok:
             if not self.backend.start_session(self.session_key):
                 self.error_label.set_text(_("The session could not be started."))
@@ -470,17 +472,27 @@ class GreeterWindow(Gtk.Window):
         self.error_label.set_text(text)
 
     def show_extra_prompt(self, text, secret):
+        """A further PAM prompt (one-time code, new password, …)."""
+        self.extra_prompt = True
         self.password.set_placeholder_text(text)
         self.password.set_visibility(not secret)
         self.form.set_visible_child_name("password")
         self.password.grab_focus()
-        self.password.disconnect_by_func(self._extra_respond) if getattr(self, "_extra", False) else None
-        self._extra = True
-        self.password.connect("activate", self._extra_respond)
 
-    def _extra_respond(self, entry):
-        self.backend.respond(entry.get_text())
-        entry.set_text("")
+    def _reset_entry(self):
+        self.extra_prompt = False
+        self.password.set_text("")
+        self.password.set_visibility(False)
+        self.password.set_placeholder_text(_("Password"))
+
+    def _on_activate(self):
+        if self.extra_prompt:
+            text = self.password.get_text()
+            self._reset_entry()
+            self.form.set_visible_child_name("welcome")
+            self.backend.respond(text)
+        else:
+            self.submit()
 
     # -- input --------------------------------------------------------------
 

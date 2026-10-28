@@ -54,3 +54,25 @@ def test_settings_update_reports_changes(tmp_path):
 def test_accent_palette_has_48_colors():
     assert len(config.ACCENT_COLORS) == 48
     assert len(set(config.ACCENT_COLORS)) == 48
+
+
+def test_bool_strings_are_parsed(tmp_path):
+    path = tmp_path / "settings.json"
+    path.write_text(json.dumps({"power.lock_on_suspend": "false", "notifications.enabled": "0",
+                                "desktop.show_this_pc": "yes", "taskbar.small_icons": "maybe"}))
+    data = config.load_file(path)
+    assert data["power.lock_on_suspend"] is False
+    assert data["notifications.enabled"] is False
+    assert data["desktop.show_this_pc"] is True
+    assert data["taskbar.small_icons"] is config.DEFAULTS["taskbar.small_icons"]
+
+
+def test_state_modify_does_not_lose_other_writers(tmp_path):
+    path = tmp_path / "state.json"
+    a = config.State(path)
+    b = config.State(path)  # e.g. another process with an old snapshot
+    a.modify("usage", lambda u: {**(u or {}), "x.desktop": 1})
+    b.modify("run_history", lambda h: ["firefox"])
+    fresh = config.State(path)
+    assert fresh.get("usage") == {"x.desktop": 1}
+    assert fresh.get("run_history") == ["firefox"]

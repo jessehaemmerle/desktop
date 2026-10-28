@@ -73,7 +73,6 @@ class RunDialog(Popup):
     def __init__(self, shell):
         super().__init__("tenwin-run", anchors=(taskbar_edge(), Edge.LEFT), css="tw-surface", catch_clicks=False)
         self.shell = shell
-        self.state = State()
         self.set_margins(left=12, bottom=12, top=12)
         frame = add_class(Gtk.Box(orientation=Gtk.Orientation.VERTICAL), "tw-run")
         frame.set_size_request(400, -1)
@@ -118,9 +117,9 @@ class RunDialog(Popup):
 
     def on_open(self):
         self.combo.remove_all()
-        for item in self.state.data.get("run_history", []):
+        history = State().get("run_history") or []
+        for item in history:
             self.combo.append_text(item)
-        history = self.state.data.get("run_history", [])
         self.entry.set_text(history[0] if history else "")
         self.error.hide()
 
@@ -139,12 +138,8 @@ class RunDialog(Popup):
         if not text:
             return
         if self._launch(text):
-            history = [h for h in self.state.data.get("run_history", []) if h != text]
-            self.state.data["run_history"] = [text] + history[: self.HISTORY - 1]
-            try:
-                self.state.save()
-            except OSError:
-                pass
+            State().modify("run_history",
+                           lambda old: [text] + [h for h in (old or []) if h != text][: self.HISTORY - 1])
             self.close_popup()
         else:
             self.error.set_text(_("Tenwin cannot find '%s'. Make sure you typed the name correctly, "
