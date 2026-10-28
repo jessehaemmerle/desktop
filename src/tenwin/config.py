@@ -38,6 +38,9 @@ DEFAULTS = {
     "appearance.animations": True,
     "appearance.text_scale": 1.0,
     "appearance.cursor_size": 24,
+    "appearance.cursor_theme": "DMZ-White",
+    "appearance.contrast": "",            # "" | contrast-black | contrast-white | contrast-1 | contrast-2
+    "appearance.themes": [],              # saved themes (Personalisierung > Designs)
     # Background
     "background.type": "picture",         # picture | color
     "background.picture": "",             # empty -> default wallpaper
@@ -51,8 +54,11 @@ DEFAULTS = {
     "taskbar.search": "box",              # box | icon | hidden
     "taskbar.show_taskview": True,
     "taskbar.tray_show_all": False,
-    "taskbar.combine": "always",          # always | never (show window titles)
+    "taskbar.combine": "always",          # always | when_full | never (show window titles)
     "taskbar.show_desktop_button": True,
+    "taskbar.peek": False,                # Aero Peek on the "Show desktop" button
+    "taskbar.all_displays": True,
+    "taskbar.multi_buttons": "all",       # all | main_and_own | own (multiple displays)
     "taskbar.pinned": [
         "org.tenwin.Explorer.desktop",
         "firefox_firefox.desktop",
@@ -66,6 +72,14 @@ DEFAULTS = {
     "start.tiles": None,                  # None -> default layout (see tenwin.tiles)
     "start.width": 0,                     # 0 -> natural width
     "start.height": 0,                    # 0 -> default height
+    "start.live_tiles": True,
+    # Task Manager
+    "taskmgr.more_details": False,
+    # Windows
+    "snap.assist": True,                  # Snap Assist after Win+Left/Right
+    # Tablet mode / touch
+    "tablet.mode": False,
+    "osk.show_button": False,             # touch keyboard button in the notification area
     # Desktop
     "desktop.show_icons": True,
     "desktop.icon_size": "medium",        # large | medium | small
@@ -81,6 +95,9 @@ DEFAULTS = {
     "explorer.nav_pane": True,
     "explorer.quick_access": [],
     "explorer.open_this_pc": False,       # False -> open Schnellzugriff
+    "explorer.preview_pane": False,
+    "explorer.details_pane": False,
+    "explorer.network_drives": [],        # [{"name", "uri"}] (Map network drive)
     # Notifications & quick actions
     "notifications.enabled": True,
     "notifications.sounds": True,
@@ -102,6 +119,21 @@ DEFAULTS = {
     "input.tap_to_click": True,
     "input.left_handed": False,
     "input.numlock": True,
+    # Privacy (apps that ask through xdg-desktop-portal)
+    "privacy.camera": True,
+    "privacy.microphone": True,
+    "privacy.location": True,
+    # Gaming
+    "gaming.game_bar": True,              # Win+G
+    "gaming.captures_dir": "",            # empty -> ~/Videos/Captures
+    "gaming.game_mode": True,             # run games with gamemoderun when available
+    # Ease of Access
+    "ease.magnifier_zoom": 200,           # percent
+    "ease.narrator": False,
+    # Integration of other toolkits
+    "integration.qt": True,               # qt5ct/qt6ct colour schemes
+    "integration.mozilla": False,         # userChrome.css for Firefox/Thunderbird
+    "integration.flatpak": False,         # GTK theme for Flatpak apps
     # Region
     "region.language": "auto",            # auto | de | en
     "region.clock_24h": True,

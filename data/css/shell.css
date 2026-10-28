@@ -107,6 +107,12 @@ button.tw-tile image { color: $accent_fg; }
 button.tw-tile .tw-tile-big { font-size: 34px; font-weight: 300; }
 button.tw-tile.drop-target { border-color: $sh_fg; }
 .tw-tile-group.drop-target { background-color: alpha($sh_fg, 0.06); }
+button.tw-tile.drop-folder { border-color: $sh_fg; background-color: $accent_light1; }
+button.tw-tile.open { border-color: alpha($sh_fg, 0.6); }
+.tw-tile-folder-open { background-color: alpha($sh_fg, 0.08); padding: 4px 0 6px 0; margin-top: 4px; }
+entry.tw-tile-folder-name { background: transparent; border: none; box-shadow: none; color: $sh_fg; font-size: 12px; }
+button.tw-tile-folder-close { min-width: 24px; min-height: 24px; }
+.tw-tile-line { font-size: 11px; color: $accent_fg; }
 button.tw-new-group { min-height: 48px; border: 1px dashed alpha($sh_fg, 0.35); margin: 12px 0; }
 button.tw-new-group:hover, button.tw-new-group.drop-target { background-color: $sh_hover; border-color: $sh_fg; }
 button.tw-new-group label { font-size: 12px; color: $sh_fg_dim; }
@@ -239,3 +245,36 @@ button.tw-switch-card:hover { border-color: rgba(255,255,255,0.5); }
 .tw-run button.tw-run-close:hover { background: #e81123; }
 .tw-run button.tw-run-close:hover image { color: #ffffff; }
 .tw-run image { color: $app_fg; }
+
+/* ---------------------------------------------------------------- touch keyboard */
+.tw-osk { background-color: $panel_solid; }
+.tw-osk label, .tw-osk image { color: $sh_fg; }
+button.tw-osk-key { background-color: alpha($sh_fg, 0.10); border-radius: 0; padding: 0; }
+button.tw-osk-key label { font-size: 18px; }
+button.tw-osk-key:hover { background-color: alpha($sh_fg, 0.18); }
+button.tw-osk-key:active { background-color: $accent; }
+button.tw-osk-key.mod { background-color: alpha($sh_fg, 0.05); }
+button.tw-osk-key.mod label { font-size: 14px; }
+button.tw-osk-key.on, button.tw-osk-key.accent { background-color: $accent; }
+
+/* ---------------------------------------------------------------- tablet mode */
+.tw-taskbar.tablet button.tw-app { min-width: 56px; }
+.tw-taskbar.tablet button.tw-tb-button { min-width: 56px; }
+.tw-taskbar.tablet button.tw-tray-item { min-width: 40px; }
+
+/* ---------------------------------------------------------------- snap assist */
+.tw-snapassist-dim { background-color: rgba(20,20,20,0.55); }
+.tw-snapassist label { color: #ffffff; }
+
+/* ---------------------------------------------------------------- game bar */
+.tw-gamebar-dim { background-color: rgba(0,0,0,0.45); }
+.tw-gamebar label, .tw-gamebar image, .tw-capture-status label { color: #ffffff; }
+.tw-gamebar-widget { background-color: rgba(31,31,31,0.94); padding: 12px 14px; border: 1px solid rgba(255,255,255,0.10); }
+.tw-gamebar-top { padding: 6px 10px; }
+.tw-gamebar-title { font-size: 13px; font-weight: 600; }
+.tw-gamebar-clock { font-size: 13px; }
+.tw-gamebar-big { font-size: 18px; font-weight: 300; }
+button.tw-gamebar-button { min-width: 40px; min-height: 40px; background-color: rgba(255,255,255,0.08); }
+button.tw-gamebar-button:hover { background-color: rgba(255,255,255,0.18); }
+.tw-recording-dot { color: #e81123; font-size: 14px; }
+.tw-gamebar .tw-dim { color: rgba(255,255,255,0.7); }

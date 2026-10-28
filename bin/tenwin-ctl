@@ -19,6 +19,6 @@ case "$1" in
     explorer) exec tenwin-explorer ;;
     settings) exec tenwin-settings ;;
     lock) exec tenwin-lock ;;
-    task-manager) exec gnome-system-monitor ;;
+    task-manager) exec tenwin-taskmgr ;;
     *) exit 1 ;;
 esac

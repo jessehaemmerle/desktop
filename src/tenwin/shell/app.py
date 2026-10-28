@@ -23,12 +23,16 @@ from tenwin.services.bluetooth import Bluetooth
 from tenwin.services.display import Brightness, NightLight
 from tenwin.services.network import Network
 from tenwin.services.power import Power
+from tenwin.shell.access import Magnifier, Narrator
 from tenwin.shell.actioncenter import ActionCenter
+from tenwin.shell.gamebar import GameBar
 from tenwin.shell.flyouts import BatteryFlyout, CalendarFlyout, NetworkFlyout, VolumeFlyout, WindowListPopup
 from tenwin.shell.layer import ClickCatcher, Popup
 from tenwin.shell.notifications import NotificationServer
 from tenwin.shell.osd import OSD
+from tenwin.shell.osk import TouchKeyboard
 from tenwin.shell.search import SearchPopup
+from tenwin.shell.snap import Snapper
 from tenwin.shell.startmenu import StartMenu
 from tenwin.shell.switcher import AltTab, SuperKey, TaskView
 from tenwin.shell.taskbar import Taskbar
@@ -47,7 +51,7 @@ SHELL_XML = """
 """
 
 # Settings that change the taskbar layout.
-TASKBAR_KEYS = {"taskbar.position", "taskbar.small_icons", "taskbar.search", "taskbar.show_taskview",
+TASKBAR_KEYS = {"taskbar.position", "taskbar.small_icons", "tablet.mode", "osk.show_button", "taskbar.search", "taskbar.show_taskview",
                 "taskbar.tray_show_all", "input.keyboard_layouts", "region.clock_24h",
                 "region.clock_seconds", "taskbar.combine", "taskbar.show_desktop_button"}
 ACCENT_KEYS = {"appearance.accent_mode", "background.type", "background.picture", "background.color"}
@@ -86,7 +90,12 @@ class Shell:
         self.task_view = TaskView(self)
         self.super_key = SuperKey(self)
         self.osd = OSD(self)
+        self.snapper = Snapper(self)
+        self.osk = TouchKeyboard(self)
+        self.game_bar = GameBar(self)
+        self.magnifier = Magnifier(self)
         self.catcher = ClickCatcher(self.close_popups)
+        self.narrator = Narrator(self)
 
         display = Gdk.Display.get_default()
         display.connect("monitor-added", lambda _d, m: self._add_taskbar(m))
@@ -97,6 +106,7 @@ class Shell:
 
         for signal_name in ("window-added", "window-changed", "window-removed", "active-changed"):
             self.wm.connect(signal_name, self._on_windows_changed)
+        self.wm.connect("window-added", self._on_window_added)
         self.apps.connect("changed", self._on_windows_changed)
         for service in (self.audio, self.network, self.power):
             service.connect("changed", lambda *_: self._update_status())
@@ -113,9 +123,26 @@ class Shell:
     # -- monitors / taskbars ---------------------------------------------
 
     def _add_taskbar(self, monitor):
-        if monitor in self.taskbars:
+        if monitor in self.taskbars or not self._wants_taskbar(monitor):
             return
         self.taskbars[monitor] = Taskbar(self, monitor)
+        self._on_windows_changed()
+
+    def _wants_taskbar(self, monitor):
+        if self.settings["taskbar.all_displays"]:
+            return True
+        display = Gdk.Display.get_default()
+        primary = display.get_primary_monitor() or display.get_monitor(0)
+        return monitor is primary
+
+    def _sync_taskbars(self):
+        display = Gdk.Display.get_default()
+        monitors = [display.get_monitor(i) for i in range(display.get_n_monitors())]
+        for monitor in list(self.taskbars):
+            if monitor not in monitors or not self._wants_taskbar(monitor):
+                self.taskbars.pop(monitor).destroy()
+        for monitor in monitors:
+            self._add_taskbar(monitor)
 
     def _remove_taskbar(self, monitor):
         taskbar = self.taskbars.pop(monitor, None)
@@ -188,20 +215,25 @@ class Shell:
                 popup.set_anchors(anchors)
             for taskbar in self.taskbars.values():
                 taskbar.rebuild()
-        if "taskbar.pinned" in keys:
+        if "tablet.mode" in keys:
+            self._apply_tablet_mode()
+        if "taskbar.all_displays" in keys:
+            self._sync_taskbars()
+        if keys & {"taskbar.pinned", "taskbar.multi_buttons"}:
             self._on_windows_changed()
         if keys & {"nightlight.enabled", "nightlight.temperature"}:
             self.nightlight.set(self.settings["nightlight.enabled"], self.settings["nightlight.temperature"])
         if "notifications.focus_assist" in keys:
             self.update_notification_badge()
-        if any(k.startswith(("appearance.", "input.", "desktops.", "region.language")) for k in keys):
+        if any(k.startswith(("appearance.", "input.", "desktops.", "region.language", "integration.",
+                             "ease.narrator", "privacy.location")) for k in keys):
             # labwc theme, keyboard and desktops are part of the generated config.
             GLib.idle_add(self._apply_session)
 
     def _apply_session(self):
         from tenwin import session
         try:
-            session.apply()
+            session.apply(background=True)
         except Exception as exc:  # never let config generation kill the shell
             log.error("applying session settings failed: %s", exc)
         return GLib.SOURCE_REMOVE
@@ -319,6 +351,52 @@ class Shell:
 
     def cmd_restore_or_minimize(self):
         self.wm.restore_or_minimize_active()
+
+    # -- tablet mode / touch keyboard ---------------------------------------------
+
+    def _on_window_added(self, _wm, window):
+        if self.settings["tablet.mode"] and not window.parent:
+            # Wait for the first configure so the window keeps its maximised size.
+            GLib.timeout_add(150, lambda: self.wm.send("maximize", window) and False)
+
+    def _apply_tablet_mode(self):
+        if self.settings["tablet.mode"]:
+            for window in self.wm.list():
+                if not window.parent and not window.maximized:
+                    self.wm.send("maximize", window)
+        self.start_menu.reset_size_constraints()
+
+    def cmd_game_bar(self):
+        self.game_bar.toggle()
+
+    def cmd_record(self):
+        self.game_bar.toggle_recording()
+
+    def cmd_game_screenshot(self):
+        self.game_bar.screenshot()
+
+    def cmd_magnifier(self, action="in"):
+        {"in": self.magnifier.zoom_in, "out": self.magnifier.zoom_out}.get(action, self.magnifier.stop)()
+
+    def cmd_narrator(self):
+        self.narrator.toggle()
+
+    def cmd_osk(self):
+        self.osk.toggle()
+
+    def cmd_tablet_mode(self):
+        self.settings.set("tablet.mode", not self.settings["tablet.mode"])
+
+    def cmd_snap(self, direction):
+        self.close_popups()
+        self.snapper.snap(direction)
+
+    def cmd_snapped(self, side):
+        self.snapper.snapped(side)
+
+    def cmd_arrange(self, kind):
+        self.close_popups()
+        self.snapper.arrange(kind)
 
     def cmd_explorer(self, *uris):
         self.close_popups()

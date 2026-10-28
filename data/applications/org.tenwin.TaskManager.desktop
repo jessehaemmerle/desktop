@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Task Manager
+Name[de]=Task-Manager
+Comment=See running apps and processes, system performance and startup apps
+Comment[de]=Laufende Apps und Prozesse, Leistung und Autostart anzeigen
+Exec=tenwin-taskmgr
+Icon=org.tenwin.TaskManager
+Terminal=false
+Categories=System;Monitor;GTK;
+StartupWMClass=org.tenwin.TaskManager
+StartupNotify=true
+OnlyShowIn=Tenwin;
+Keywords=task;process;cpu;memory;kill;prozess;speicher;leistung;

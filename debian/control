@@ -51,22 +51,29 @@ Recommends: brightnessctl,
             gir1.2-dbusmenu-gtk3-0.4,
             gir1.2-nm-1.0,
             gnome-keyring,
-            gnome-system-monitor,
+            gvfs-backends,
             network-manager-gnome,
+            orca,
             power-profiles-daemon,
             qt5-gtk-platformtheme,
+            qt5ct,
             tenwin-greeter,
+            udisks2,
             upower,
+            wf-recorder,
             xdg-utils,
             yaru-theme-icon,
             gnome-terminal | x-terminal-emulator
-Suggests: baobab, blueman, gnome-disks, pavucontrol, system-config-printer, wdisplays
+Suggests: baobab, blueman, brasero, flatpak, gamemode, gnome-disks, gnome-system-monitor, pavucontrol,
+          system-config-printer, wdisplays
 Description: Windows 10 style desktop environment (Wayland)
  Tenwin is a desktop environment for Ubuntu that looks and works like the
- Windows 10 desktop: taskbar with Start menu, live tiles and search, Action
- Center with notifications and quick actions, Alt+Tab and Task View, Aero
- Snap and the familiar Win key shortcuts, desktop icons, a File Explorer with
- ribbon, a Settings app and a lock screen.
+ Windows 10 desktop: taskbar with Start menu, live tiles, tile folders and
+ search, Action Center with notifications and quick actions, Alt+Tab and Task
+ View, Aero Snap with Snap Assist and quarter snapping, the familiar Win key
+ shortcuts, desktop icons, a File Explorer with ribbon, preview pane and
+ network drives, a Task Manager, a Settings app, tablet mode with a touch
+ keyboard, Game Bar, magnifier, high contrast themes and a lock screen.
  .
  It is built on the labwc Wayland compositor. Light and dark mode and German
  and English translations are included.

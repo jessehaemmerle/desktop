@@ -8,7 +8,7 @@ import subprocess
 
 from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango
 
-from tenwin import __version__, paths, tiles
+from tenwin import __version__, autostart, paths, tiles
 from tenwin.apps import get_registry
 from tenwin.config import ACCENT_COLORS, DEFAULTS, get_settings
 from tenwin.gtkutil import add_class, clear_children, flat_button, human_size, icon_image, set_class
@@ -19,6 +19,7 @@ from tenwin.services.bluetooth import Bluetooth
 from tenwin.services.display import Brightness, apply_output, list_outputs
 from tenwin.services.network import Network
 from tenwin.services.power import Power
+from tenwin.settings.pages_extra import PAGE_BUILDERS as EXTRA_PAGES
 from tenwin.settings.widgets import Page
 
 _services = {}
@@ -573,6 +574,12 @@ def page_colors(win):
     p.section(_("Show accent color on the following surfaces"))
     p.check(_("Start, taskbar, and action center"), "appearance.accent_on_surfaces")
     p.check(_("Title bars and window borders"), "appearance.accent_on_titlebars")
+    p.section(_("Colors in other apps"))
+    qt = shutil.which("qt5ct") is not None
+    p.check(_("Qt and KDE apps") + ("" if qt else "  " + _("(install qt5ct for accent colors)")), "integration.qt")
+    p.check(_("Firefox and Thunderbird (square tabs, accent color, red close button)"), "integration.mozilla")
+    p.check(_("Flatpak apps (GTK 3)"), "integration.flatpak")
+    p.text(_("Qt and Flatpak apps pick up changes when they are started again."))
     return p
 
 
@@ -621,6 +628,9 @@ def page_start(win):
     p.button(_("Sort all tiles into categories"), sort_tiles)
     p.button(_("Reset tiles to the default layout"), lambda: s.set("start.tiles", None))
     p.button(_("Reset the size of Start"), lambda: s.update({"start.width": 0, "start.height": 0}))
+    p.toggle(_("Show live tiles"), "start.live_tiles",
+             description=_("The calendar, photo and File Explorer tiles show live content. Drop a tile on "
+                           "another one to make a tile folder."))
     return p
 
 
@@ -632,11 +642,21 @@ def page_taskbar(win):
             "taskbar.search")
     p.toggle(_("Show Task View button"), "taskbar.show_taskview")
     p.toggle(_("Show the \"Show desktop\" button at the end of the taskbar"), "taskbar.show_desktop_button")
+    p.toggle(_("Use Peek to preview the desktop when you move your mouse to the Show desktop button at the end "
+               "of the taskbar"), "taskbar.peek")
     p.combo(_("Combine taskbar buttons"), [("always", _("Always, hide labels")),
+                                           ("when_full", _("When taskbar is full")),
                                            ("never", _("Never"))], "taskbar.combine")
     p.section(_("Notification area"))
     p.toggle(_("Always show all icons in the notification area"), "taskbar.tray_show_all")
     p.toggle(_("Show seconds in the clock"), "region.clock_seconds")
+    p.toggle(_("Show the touch keyboard button"), "osk.show_button")
+    p.section(_("Multiple displays"))
+    p.toggle(_("Show taskbar on all displays"), "taskbar.all_displays")
+    p.combo(_("Show taskbar buttons on"), [("all", _("All taskbars")),
+                                           ("main_and_own", _("Main taskbar and taskbar where window is open")),
+                                           ("own", _("Taskbar where window is open"))], "taskbar.multi_buttons",
+            width=380)
     return p
 
 
@@ -727,39 +747,12 @@ def page_default_apps(win):
     return p
 
 
-def autostart_entries():
-    from tenwin.autostart import collect_entries
-    result = []
-    for name, path in collect_entries().items():
-        keyfile = GLib.KeyFile()
-        try:
-            keyfile.load_from_file(path, GLib.KeyFileFlags.KEEP_TRANSLATIONS)
-            title = keyfile.get_locale_string("Desktop Entry", "Name", None)
-        except GLib.Error:
-            continue
-        try:
-            hidden = keyfile.get_boolean("Desktop Entry", "Hidden")
-        except GLib.Error:
-            hidden = False
-        result.append((name, path, title, not hidden))
-    return sorted(result, key=lambda e: e[2].casefold())
-
-
-def set_autostart(name, path, enabled):
-    user_dir = os.path.join(GLib.get_user_config_dir(), "autostart")
-    os.makedirs(user_dir, exist_ok=True)
-    target = os.path.join(user_dir, name)
-    keyfile = GLib.KeyFile()
-    keyfile.load_from_file(path, GLib.KeyFileFlags.KEEP_COMMENTS | GLib.KeyFileFlags.KEEP_TRANSLATIONS)
-    keyfile.set_boolean("Desktop Entry", "Hidden", not enabled)
-    keyfile.save_to_file(target)
-
-
 def page_startup(win):
     p = Page(_("Startup"))
     p.text(_("Apps can be configured to start when you sign in."))
-    for name, path, title, enabled in autostart_entries():
-        p.toggle(title, getter=lambda e=enabled: e, setter=lambda on, n=name, pth=path: set_autostart(n, pth, on))
+    for name, path, title, enabled in autostart.entries():
+        p.toggle(title, getter=lambda e=enabled: e,
+                 setter=lambda on, n=name, pth=path: autostart.set_enabled(n, pth, on))
     return p
 
 
@@ -999,3 +992,4 @@ PAGE_BUILDERS = {
     "startup": page_startup, "your-info": page_your_info, "sign-in": page_sign_in, "datetime": page_datetime,
     "region": page_region, "ease-display": page_ease_display, "windows-update": page_windows_update,
 }
+PAGE_BUILDERS.update(EXTRA_PAGES)

@@ -1,0 +1,15 @@
+/* Task Manager (tenwin-taskmgr); a template filled from tenwin.theme.palette(). */
+.tw-taskmgr { background-color: $app_bg; color: $app_fg; }
+.tw-taskmgr-tabs > header { background-color: $app_bg; border-bottom: 1px solid $app_border; }
+.tw-taskmgr-tabs > header tab { padding: 6px 12px; border: none; color: $app_fg; }
+.tw-taskmgr-tabs > header tab:checked { border-bottom: 2px solid $accent; }
+treeview.tw-taskmgr-list.view { background-color: $app_bg; color: $app_fg; }
+treeview.tw-taskmgr-list.view:selected { background-color: $app_select; color: $app_fg; }
+treeview.tw-taskmgr-list header button { background: $app_bg; color: $app_fg; border: none;
+    border-right: 1px solid $app_border; border-bottom: 1px solid $app_border; padding: 2px 8px; }
+.tw-taskmgr-bar { padding: 8px 12px; border-top: 1px solid $app_border; }
+.tw-taskmgr-perf-list { background-color: $app_bg; border-right: 1px solid $app_border; }
+.tw-taskmgr-perf-list row:selected { background-color: $app_select; }
+.tw-taskmgr-perf-name { font-size: 14px; color: $app_fg; }
+.tw-taskmgr-perf-title { font-size: 26px; font-weight: 300; color: $app_fg; }
+.tw-taskmgr-stat { font-size: 16px; color: $app_fg; }

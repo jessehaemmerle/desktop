@@ -42,7 +42,10 @@ entry.tw-address-entry:focus, entry.tw-search:focus { border-color: $accent; }
 .tw-navpane treeview.view { background-color: $app_nav_bg; color: $app_fg; padding: 3px 0; }
 .tw-navpane treeview.view:hover { background-color: $app_hover; }
 .tw-navpane treeview.view:selected { background-color: $app_select; color: $app_fg; }
-.tw-explorer paned > separator { background-color: $app_border; min-width: 1px; }
+.tw-explorer paned > separator { background-color: $app_border; background-image: none; min-width: 1px; min-height: 1px; margin: 0; padding: 0; }
+.tw-side-pane { background-color: $app_bg; }
+.tw-details-title { font-size: 15px; color: $app_fg; }
+.tw-preview-text { font-size: 11px; padding: 8px; }
 
 /* Views */
 treeview.tw-details.view { background-color: $app_bg; color: $app_fg; }

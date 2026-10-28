@@ -107,7 +107,9 @@ class Ribbon(Gtk.Box):
                              big_button("tenwin-rename", _("Rename"), w.rename)), False, False, 0)
         box.pack_start(group(_("New"),
                              big_button("tenwin-new-folder", _("New\nfolder"), w.new_folder),
-                             [small_button("tenwin-new-item", _("New item"), w.new_text_file)]), False, False, 0)
+                             [small_button("tenwin-new-item", _("New item"), w.new_text_file),
+                              small_button("tenwin-network", _("Map network drive"), w.map_network_drive)]),
+                       False, False, 0)
         box.pack_start(group(_("Open"),
                              big_button("tenwin-properties", _("Properties"), w.properties),
                              [small_button("tenwin-open", _("Open"), w.open_selected),
@@ -136,7 +138,11 @@ class Ribbon(Gtk.Box):
         box = Gtk.Box()
         box.pack_start(group(_("Panes"),
                              big_button("tenwin-view-list", _("Navigation\npane"),
-                                        lambda: s.set("explorer.nav_pane", not s["explorer.nav_pane"]))),
+                                        lambda: s.set("explorer.nav_pane", not s["explorer.nav_pane"])),
+                             [small_button("tenwin-view-icons", _("Preview pane"),
+                                           lambda: w.toggle_pane("preview")),
+                              small_button("tenwin-properties", _("Details pane"),
+                                           lambda: w.toggle_pane("details"))]),
                        False, False, 0)
         layouts = [("xl", _("Extra large icons")), ("large", _("Large icons")), ("medium", _("Medium icons")),
                    ("small", _("Small icons")), ("list", _("List")), ("details", _("Details"))]

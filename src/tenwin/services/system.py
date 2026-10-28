@@ -133,7 +133,10 @@ def first_available(*commands):
 
 
 def task_manager():
-    cmd = first_available(["gnome-system-monitor"], ["plasma-systemmonitor"], ["lxtask"], ["htop"])
+    from tenwin import paths
+    own = paths.binary("tenwin-taskmgr")
+    cmd = [own] if own and os.path.exists(own) else \
+        first_available(["gnome-system-monitor"], ["plasma-systemmonitor"], ["lxtask"], ["htop"])
     if cmd and cmd[0] == "htop":
         term = terminal_command()
         cmd = [term, "-e", "htop"] if term else None

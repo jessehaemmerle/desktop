@@ -52,7 +52,7 @@ def pin_submenu(keys, label=None, apps=None, parent=None):
     item = Gtk.MenuItem(label=label or _("Pin to Start"))
     sub = add_class(Gtk.Menu(), "tw-menu")
     groups = tiles.load(apps)
-    current = {tiles.find(groups, key)[0] for key in keys}
+    current = {tiles.find_any(groups, key)[0] for key in keys}
     for index, group in enumerate(groups):
         name = group["name"] or _("Unnamed group")
         mark = "✓  " if current == {index} else "     "

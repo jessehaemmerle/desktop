@@ -19,7 +19,7 @@ LANGS := $(basename $(notdir $(wildcard po/*.po)))
 PY_SOURCES := $(shell find src -name '*.py')
 
 LAUNCHERS := tenwin-session tenwin-ctl tenwin-python tenwin-shell tenwin-desktop tenwin-explorer \
-	tenwin-settings tenwin-idle tenwin-xdg-autostart
+	tenwin-settings tenwin-idle tenwin-xdg-autostart tenwin-taskmgr
 
 all: helpers locale
 
@@ -50,6 +50,7 @@ install-desktop: all
 	for f in $(filter-out tenwin-greeter,$(LAUNCHERS)); do install -m 755 bin/$$f $(BINDIR)/$$f; done
 	install -m 755 $(BUILD)/helpers/tenwin-lock $(BINDIR)/tenwin-lock
 	install -m 755 $(BUILD)/helpers/tenwin-toplevel $(LIBEXEC)/tenwin-toplevel
+	install -m 755 $(BUILD)/helpers/tenwin-vkbd $(LIBEXEC)/tenwin-vkbd
 	cd src && find tenwin -name '*.py' -not -path '*/greeter/*' -exec install -D -m 644 {} $(SHARE)/tenwin/lib/{} \;
 	install -m 644 data/css/*.css $(SHARE)/tenwin/css/
 	install -d $(SHARE)/backgrounds/tenwin
@@ -58,6 +59,11 @@ install-desktop: all
 		install -d $(SHARE)/themes/$$t/openbox-3 $(SHARE)/themes/$$t/gtk-3.0; \
 		install -m 644 data/themes/$$t/index.theme $(SHARE)/themes/$$t/; \
 		install -m 644 data/themes/$$t/openbox-3/* $(SHARE)/themes/$$t/openbox-3/; \
+		install -m 644 data/themes/$$t/gtk-3.0/* $(SHARE)/themes/$$t/gtk-3.0/; \
+	done
+	for t in Tenwin-Contrast Tenwin-Contrast-White; do \
+		install -d $(SHARE)/themes/$$t/gtk-3.0; \
+		install -m 644 data/themes/$$t/index.theme $(SHARE)/themes/$$t/; \
 		install -m 644 data/themes/$$t/gtk-3.0/* $(SHARE)/themes/$$t/gtk-3.0/; \
 	done
 	install -d $(SHARE)/icons/hicolor/scalable/actions $(SHARE)/icons/hicolor/scalable/apps

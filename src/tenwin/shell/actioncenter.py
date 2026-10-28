@@ -77,6 +77,9 @@ class ActionCenter(Popup):
                         available=lambda: "power-saver" in s.power.available_profiles()),
             QuickAction("vpn", _("VPN"), "tenwin-shield", activate=lambda: s.open_settings("vpn"),
                         available=lambda: s.network.available),
+            QuickAction("tablet", _("Tablet mode"), "tenwin-tablet",
+                        toggle=lambda: self.settings.set("tablet.mode", not self.settings["tablet.mode"]),
+                        is_on=lambda: self.settings["tablet.mode"]),
             QuickAction("lock", _("Lock"), "tenwin-lock", activate=lambda: s.command("lock")),
         ]
 

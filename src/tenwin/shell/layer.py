@@ -134,7 +134,10 @@ class Popup(LayerWindow):
 
 
 def taskbar_height():
-    return 30 if get_settings()["taskbar.small_icons"] else 40
+    settings = get_settings()
+    if settings["tablet.mode"]:
+        return 48  # bigger touch targets
+    return 30 if settings["taskbar.small_icons"] else 40
 
 
 def taskbar_edge():

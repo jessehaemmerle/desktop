@@ -76,6 +76,35 @@ def should_start(name, keyfile):
     return True
 
 
+def entries():
+    """[(file name, path, display name, enabled)] for the Startup pages."""
+    result = []
+    for name, path in collect_entries().items():
+        keyfile = GLib.KeyFile()
+        try:
+            keyfile.load_from_file(path, GLib.KeyFileFlags.KEEP_TRANSLATIONS)
+            title = keyfile.get_locale_string("Desktop Entry", "Name", None)
+        except GLib.Error:
+            continue
+        try:
+            hidden = keyfile.get_boolean("Desktop Entry", "Hidden")
+        except GLib.Error:
+            hidden = False
+        result.append((name, path, title, not hidden))
+    return sorted(result, key=lambda e: e[2].casefold())
+
+
+def set_enabled(name, path, enabled):
+    """Enable/disable an entry through a copy in ~/.config/autostart (Hidden=)."""
+    user_dir = os.path.join(GLib.get_user_config_dir(), "autostart")
+    os.makedirs(user_dir, exist_ok=True)
+    target = os.path.join(user_dir, name)
+    keyfile = GLib.KeyFile()
+    keyfile.load_from_file(path, GLib.KeyFileFlags.KEEP_COMMENTS | GLib.KeyFileFlags.KEEP_TRANSLATIONS)
+    keyfile.set_boolean("Desktop Entry", "Hidden", not enabled)
+    keyfile.save_to_file(target)
+
+
 def main():
     logging.basicConfig(level=logging.INFO, format="%(name)s: %(message)s")
     for name, path in collect_entries().items():

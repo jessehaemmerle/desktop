@@ -1,6 +1,8 @@
 """Start menu tiles: groups ("categories"), placement and pinning.
 
-A tile is ``{"app": desktop_id, "size": …}`` or ``{"path": "/folder/or/file", "size": …}``.
+A tile is ``{"app": desktop_id, "size": …}``, ``{"path": "/folder/or/file", "size": …}``
+or a tile folder ``{"folder": id, "name": str, "size": …, "tiles": [tile, …]}``.
+Tiles may also carry ``"color"`` (an entry of TILE_COLORS) and ``"live": False``.
 Groups are ``{"name": str, "tiles": [tile, …]}`` and are stored in the
 ``start.tiles`` setting (``None`` means the default layout). The functions here
 work on plain lists so the shell, the Explorer and the desktop share them.
@@ -50,6 +52,8 @@ CATEGORY_GROUPS = [
     ("Settings", N_("System")), ("System", N_("System")),
     ("Utility", N_("Accessories")),
 ]
+TILE_COLORS = ["#0078D7", "#0063B1", "#00B294", "#10893E", "#CA5010", "#E81123",
+               "#C30052", "#881798", "#744DA9", "#2D7D9A", "#515C6B", "#4C4A48"]
 OTHER_GROUP = N_("Other")
 FOLDERS_GROUP = N_("Folders and files")
 
@@ -57,6 +61,8 @@ FOLDERS_GROUP = N_("Folders and files")
 # -- keys -------------------------------------------------------------------
 
 def tile_key(tile):
+    if tile.get("folder"):
+        return "folder:" + tile["folder"]
     if tile.get("app"):
         return "app:" + tile["app"]
     if tile.get("path"):
@@ -115,16 +121,33 @@ def save(groups):
     get_settings().set("start.tiles", sanitize(groups))
 
 
+def _clean_tile(tile, nested=False):
+    if not isinstance(tile, dict) or not tile_key(tile):
+        return None
+    if tile.get("size") not in SIZES:
+        tile["size"] = "medium"
+    if tile.get("color") not in TILE_COLORS:
+        tile.pop("color", None)
+    if tile.get("folder"):
+        if nested:
+            return None  # no folders inside folders
+        inner = [c for c in (_clean_tile(x, True) for x in tile.get("tiles", [])) if c]
+        if not inner:
+            return None
+        if len(inner) == 1:
+            return inner[0]  # a folder with one tile is just that tile
+        tile["tiles"] = inner
+        tile["name"] = str(tile.get("name") or "")
+    return tile
+
+
 def sanitize(groups):
     """Drop malformed entries (the settings file is user-editable)."""
     result = []
     for group in groups if isinstance(groups, list) else []:
         if not isinstance(group, dict):
             continue
-        tiles = [t for t in group.get("tiles", []) if isinstance(t, dict) and tile_key(t)]
-        for tile in tiles:
-            if tile.get("size") not in SIZES:
-                tile["size"] = "medium"
+        tiles = [c for c in (_clean_tile(t) for t in group.get("tiles", [])) if c]
         result.append({"name": str(group.get("name") or ""), "tiles": tiles})
     return result
 
@@ -164,7 +187,7 @@ def group_columns_for_width(tile_area_width, spacing=24):
 # -- editing --------------------------------------------------------------------
 
 def find(groups, key):
-    """(group index, tile index) of ``key`` or (None, None)."""
+    """(group index, tile index) of a top-level tile ``key`` or (None, None)."""
     for gi, group in enumerate(groups):
         for ti, tile in enumerate(group["tiles"]):
             if tile_key(tile) == key:
@@ -172,19 +195,106 @@ def find(groups, key):
     return None, None
 
 
+def find_any(groups, key):
+    """(group index, tile index, index inside the folder or None), also inside folders."""
+    for gi, group in enumerate(groups):
+        for ti, tile in enumerate(group["tiles"]):
+            if tile_key(tile) == key:
+                return gi, ti, None
+            for fi, inner in enumerate(tile.get("tiles", []) if tile.get("folder") else []):
+                if tile_key(inner) == key:
+                    return gi, ti, fi
+    return None, None, None
+
+
+def get(groups, key):
+    gi, ti, fi = find_any(groups, key)
+    if gi is None:
+        return None
+    tile = groups[gi]["tiles"][ti]
+    return tile if fi is None else tile["tiles"][fi]
+
+
 def is_pinned(groups, key):
-    return find(groups, key)[0] is not None
+    return find_any(groups, key)[0] is not None
 
 
 def remove(groups, key):
-    """Remove a tile; empty unnamed groups disappear. Returns the removed tile."""
-    gi, ti = find(groups, key)
+    """Remove a tile (also from a folder); empty unnamed groups disappear and a
+    folder left with one tile turns back into that tile. Returns the removed tile."""
+    gi, ti, fi = find_any(groups, key)
     if gi is None:
         return None
-    tile = groups[gi]["tiles"].pop(ti)
-    if not groups[gi]["tiles"] and not groups[gi]["name"]:
+    group = groups[gi]
+    if fi is not None:
+        folder = group["tiles"][ti]
+        tile = folder["tiles"].pop(fi)
+        if len(folder["tiles"]) == 1:
+            group["tiles"][ti] = folder["tiles"][0]
+        return tile
+    tile = group["tiles"].pop(ti)
+    if not group["tiles"] and not group["name"]:
         groups.pop(gi)
     return tile
+
+
+def _new_folder_id(groups):
+    used = {tile_key(t) for g in groups for t in g["tiles"]}
+    n = 1
+    while "folder:f%d" % n in used:
+        n += 1
+    return "f%d" % n
+
+
+def combine(groups, key, target_key):
+    """Drop tile ``key`` onto ``target_key``: start a tile folder or add to one."""
+    if key == target_key or key.startswith("folder:") and target_key.startswith("folder:"):
+        return False
+    if key.startswith("folder:"):
+        return False  # folders can't go into folders
+    target = get(groups, target_key)
+    if target is None:
+        return False
+    tile = remove(groups, key) or make_tile(key, "medium")
+    gi, ti, fi = find_any(groups, target_key)
+    if gi is None:
+        return False
+    container = groups[gi]["tiles"]
+    if fi is not None:
+        container = container[ti]["tiles"]  # target is inside a folder: join that folder
+        container.insert(fi + 1, tile)
+        return True
+    target = container[ti]
+    if target.get("folder"):
+        target["tiles"].append(tile)
+    else:
+        container[ti] = {"folder": _new_folder_id(groups), "name": "", "size": target.get("size", "medium"),
+                         "tiles": [target, tile]}
+    return True
+
+
+def set_color(groups, key, color):
+    tile = get(groups, key)
+    if tile is not None:
+        if color in TILE_COLORS:
+            tile["color"] = color
+        else:
+            tile.pop("color", None)
+
+
+def set_live(groups, key, live):
+    tile = get(groups, key)
+    if tile is not None:
+        if live:
+            tile.pop("live", None)
+        else:
+            tile["live"] = False
+
+
+def rename_folder(groups, key, name):
+    tile = get(groups, key)
+    if tile is not None and tile.get("folder"):
+        tile["name"] = name.strip()
 
 
 def pin(groups, key, group=None, new_group_name=None, size="medium"):
@@ -224,9 +334,9 @@ def move(groups, key, group, before_key=None):
 
 
 def resize(groups, key, size):
-    gi, ti = find(groups, key)
-    if gi is not None and size in SIZES:
-        groups[gi]["tiles"][ti]["size"] = size
+    tile = get(groups, key)
+    if tile is not None and size in SIZES:
+        tile["size"] = size
 
 
 def rename_group(groups, index, name):
@@ -269,7 +379,10 @@ def group_by_category(groups, apps):
 
     Groups are sorted by name; "Other" and "Folders and files" come last.
     """
-    tiles = [tile for group in groups for tile in group["tiles"]]
+    tiles = []
+    for group in groups:
+        for tile in group["tiles"]:
+            tiles += tile["tiles"] if tile.get("folder") else [tile]
     order = []
     buckets = {}
     for tile in tiles:

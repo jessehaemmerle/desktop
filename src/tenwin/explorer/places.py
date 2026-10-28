@@ -278,6 +278,16 @@ class ThisPCPage(TilePage):
                 open_cb = (lambda v=obj: self._mount(v))
             flow.add(self.tile(icon, name, subtitle, open_cb, usage=(free, size) if size else None,
                                on_context=lambda e, o=obj, l=location: self.emit("context", e, (o, l))))
+        from tenwin.explorer import network
+        mounted = {d[1].get_uri() for d in devs if d[1] is not None}
+        saved = [d for d in network.saved_drives() if d["uri"] not in mounted]
+        if saved:
+            flow = self.section(_("Network locations"), len(saved))
+            for drive in saved:
+                uri = drive["uri"]
+                flow.add(self.tile("tenwin-network", drive["name"], Gio.File.new_for_uri(uri).get_parse_name(),
+                                   lambda u=uri: self.emit("navigate", u),
+                                   on_context=lambda e, u=uri: self.emit("context", e, ("network-drive", u))))
         self.show_all()
 
     def _mount(self, volume):

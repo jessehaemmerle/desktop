@@ -28,7 +28,31 @@ class AppGroup:
         return self.info.get_icon() if self.info is not None else None
 
 
-def group_windows(shell):
+LABELLED_WIDTH = {False: 168, True: 140}  # see button.tw-app.labelled in shell.css
+ICON_WIDTH = {False: 48, True: 40}
+
+
+def shows_window(shell, taskbar, window):
+    """Whether ``taskbar`` lists ``window`` ("Show taskbar buttons on")."""
+    mode = get_settings()["taskbar.multi_buttons"]
+    if taskbar is None or mode == "all" or len(shell.taskbars) < 2:
+        return True
+    if mode == "main_and_own" and taskbar is shell.primary_taskbar():
+        return True
+    output = shell.wm.output_name(taskbar.monitor)
+    if output is None or not window.outputs:
+        return taskbar is shell.primary_taskbar()
+    return output in window.outputs
+
+
+def should_split(groups, available, small):
+    """"Combine when taskbar is full": labelled buttons while they fit."""
+    windows = sum(len(g.windows) for g in groups)
+    pinned_only = sum(1 for g in groups if not g.windows)
+    return windows * LABELLED_WIDTH[small] + pinned_only * ICON_WIDTH[small] <= available
+
+
+def group_windows(shell, taskbar=None, available=None):
     """Pinned apps first, then other running apps in order of appearance."""
     groups = []
     by_key = {}
@@ -39,6 +63,8 @@ def group_windows(shell):
     for window in shell.wm.list():
         if window.parent:
             continue  # dialogs are grouped with their parent window
+        if not shows_window(shell, taskbar, window):
+            continue
         info = shell.apps.for_window(window.app_id)
         key = info.get_id() if info is not None else "window:" + (window.app_id or str(window.id))
         group = by_key.get(key)
@@ -47,7 +73,11 @@ def group_windows(shell):
             groups.append(group)
             by_key[key] = group
         group.windows.append(window)
-    if get_settings()["taskbar.combine"] == "never":
+    settings = get_settings()
+    combine = settings["taskbar.combine"]
+    if combine == "when_full":
+        combine = "never" if should_split(groups, available or 0, settings["taskbar.small_icons"]) else "always"
+    if combine == "never":
         split = []
         for group in groups:
             if not group.windows:
@@ -284,7 +314,8 @@ class Taskbar(LayerWindow):
 
     def _build(self):
         settings = get_settings()
-        set_class(self, "small", settings["taskbar.small_icons"])
+        set_class(self, "small", settings["taskbar.small_icons"] and not settings["tablet.mode"])
+        set_class(self, "tablet", settings["tablet.mode"])
         height = taskbar_height()
         self.set_size_request(-1, height)
         root = Gtk.Box()
@@ -325,6 +356,9 @@ class Taskbar(LayerWindow):
         right = Gtk.Box()
         root.pack_end(right, False, False, 0)
         right.pack_start(self.shell.tray.create_widget(self), False, False, 0)
+        if settings["osk.show_button"] or settings["tablet.mode"]:
+            right.pack_start(StatusIcon("tenwin-keyboard", self.shell.osk.toggle,
+                                        lambda: _("Touch keyboard")), False, False, 0)
 
         self.network_icon = StatusIcon(self.shell.network.icon_name(),
                                        lambda: self.shell.toggle_popup(self.shell.network_flyout, self.monitor),
@@ -368,7 +402,10 @@ class Taskbar(LayerWindow):
         if settings["taskbar.show_desktop_button"]:
             show_desktop = flat_button(css="tw-show-desktop", tooltip=_("Show desktop"))
             show_desktop.connect("clicked", lambda *_: self.shell.command("show-desktop"))
+            show_desktop.connect("enter-notify-event", self._peek_enter)
+            show_desktop.connect("leave-notify-event", self._peek_leave)
             right.pack_start(show_desktop, False, False, 0)
+        self._peek_id = 0
 
         self.refresh_apps()
         self.update_status()
@@ -385,8 +422,22 @@ class Taskbar(LayerWindow):
 
     # -- updates -----------------------------------------------------------
 
+    def available_width(self):
+        """Room for app buttons: the monitor minus everything else on the taskbar."""
+        width = self.monitor.get_geometry().width if self.monitor is not None else 1280
+        used = sum(child.get_allocated_width() for child in self._fixed_parts())
+        return max(0, width - used - 8)
+
+    def _fixed_parts(self):
+        left = self.app_box.get_parent()
+        parts = [c for c in left.get_children() if c is not self.app_box] if left else []
+        root = left.get_parent() if left else None
+        if root is not None:
+            parts += [c for c in root.get_children() if c is not left]
+        return parts
+
     def refresh_apps(self):
-        groups = group_windows(self.shell)
+        groups = group_windows(self.shell, self, self.available_width())
         keys = [g.key for g in groups]
         if keys != list(self.app_buttons):
             for button in self.app_buttons.values():
@@ -426,6 +477,23 @@ class Taskbar(LayerWindow):
 
     # -- events ------------------------------------------------------------
 
+    def _peek_enter(self, *_args):
+        if get_settings()["taskbar.peek"] and not self._peek_id:
+            self._peek_id = GLib.timeout_add(500, self._peek_start)
+        return False
+
+    def _peek_start(self):
+        self._peek_id = 0
+        self.shell.wm.peek(True)
+        return GLib.SOURCE_REMOVE
+
+    def _peek_leave(self, *_args):
+        if self._peek_id:
+            GLib.source_remove(self._peek_id)
+            self._peek_id = 0
+        self.shell.wm.peek(False)
+        return False
+
     def _on_start_click(self, _widget, event):
         if event.button == 3:
             self.shell.close_popups()
@@ -460,9 +528,16 @@ class Taskbar(LayerWindow):
         menu.append(toggle(_("Show the \"Show desktop\" button"), "taskbar.show_desktop_button"))
         menu.append(Gtk.SeparatorMenuItem())
         menu.append(toggle(_("Use small taskbar buttons"), "taskbar.small_icons"))
-        never = settings["taskbar.combine"] == "never"
-        menu.append(menu_item(("✓  " if never else "     ") + _("Show window titles (never combine)"),
-                              lambda: settings.set("taskbar.combine", "always" if never else "never")))
+        combine = Gtk.MenuItem(label=_("Combine taskbar buttons"))
+        sub = add_class(Gtk.Menu(), "tw-menu")
+        for value, text in (("always", _("Always, hide labels")), ("when_full", _("When taskbar is full")),
+                            ("never", _("Never"))):
+            sub.append(menu_item(("•  " if settings["taskbar.combine"] == value else "     ") + text,
+                                 lambda v=value: settings.set("taskbar.combine", v)))
+        combine.set_submenu(sub)
+        menu.append(combine)
+        if settings["taskbar.show_desktop_button"]:
+            menu.append(toggle(_("Peek at desktop"), "taskbar.peek"))
         menu.append(toggle(_("Always show all icons in the notification area"), "taskbar.tray_show_all"))
         position = Gtk.MenuItem(label=_("Taskbar location on screen"))
         sub = add_class(Gtk.Menu(), "tw-menu")
@@ -471,8 +546,16 @@ class Taskbar(LayerWindow):
         position.set_submenu(sub)
         menu.append(position)
         menu.append(Gtk.SeparatorMenuItem())
-        menu.append(menu_item(_("Task Manager"), lambda: self.shell.command("task-manager")))
+        has_windows = any(not w.minimized for w in self.shell.wm.list())
+        menu.append(menu_item(_("Cascade windows"), lambda: self.shell.command("arrange cascade"),
+                              sensitive=has_windows))
+        menu.append(menu_item(_("Show windows stacked"), lambda: self.shell.command("arrange stack"),
+                              sensitive=has_windows))
+        menu.append(menu_item(_("Show windows side by side"), lambda: self.shell.command("arrange side"),
+                              sensitive=has_windows))
         menu.append(menu_item(_("Show the desktop"), lambda: self.shell.command("show-desktop")))
+        menu.append(Gtk.SeparatorMenuItem())
+        menu.append(menu_item(_("Task Manager"), lambda: self.shell.command("task-manager")))
         menu.append(Gtk.SeparatorMenuItem())
         menu.append(menu_item(_("Taskbar settings"), lambda: self.shell.open_settings("taskbar"),
                               "tenwin-settings"))

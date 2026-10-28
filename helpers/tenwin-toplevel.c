@@ -7,6 +7,8 @@
  *    "minimized":false,"activated":true,"fullscreen":false,"parent":0,
  *    "outputs":["HDMI-A-1"]}
  *   {"ev":"closed","id":3}
+ *   {"ev":"output","name":"HDMI-A-1","x":0,"y":0,"width":1920,"height":1080}
+ *                         logical geometry of an output (xdg-output)
  *   {"ev":"ready"}        after the initial window list was sent
  *   {"ev":"finished"}     the compositor stopped the protocol
  *
@@ -29,14 +31,17 @@
 #include <wayland-client.h>
 
 #include "wlr-foreign-toplevel-management-unstable-v1-client-protocol.h"
+#include "xdg-output-unstable-v1-client-protocol.h"
 
 #define MAX_OUTPUTS 16
 
 struct output {
 	struct wl_list link;
 	struct wl_output *wl_output;
+	struct zxdg_output_v1 *xdg_output;
 	uint32_t global_name;
 	char *name;
+	int32_t x, y, width, height;
 };
 
 struct toplevel {
@@ -54,6 +59,7 @@ struct toplevel {
 static struct wl_display *display;
 static struct wl_seat *seat;
 static struct zwlr_foreign_toplevel_manager_v1 *manager;
+static struct zxdg_output_manager_v1 *xdg_output_manager;
 static struct wl_list toplevels;
 static struct wl_list outputs;
 static uint32_t next_id = 1;
@@ -255,12 +261,20 @@ static const struct zwlr_foreign_toplevel_manager_v1_listener manager_listener =
 
 /* --- outputs ------------------------------------------------------------- */
 
+static void print_output(struct output *out);
+
 static void output_geometry(void *data, struct wl_output *o, int32_t x, int32_t y, int32_t pw,
 			    int32_t ph, int32_t subpixel, const char *make, const char *model,
 			    int32_t transform) {}
 static void output_mode(void *data, struct wl_output *o, uint32_t flags, int32_t w, int32_t h,
 			int32_t refresh) {}
-static void output_done(void *data, struct wl_output *o) {}
+static void output_done(void *data, struct wl_output *o)
+{
+	/* xdg-output v3 sends its geometry before wl_output.done */
+	struct output *out = data;
+	if (out->xdg_output && zxdg_output_v1_get_version(out->xdg_output) >= 3)
+		print_output(out);
+}
 static void output_scale(void *data, struct wl_output *o, int32_t factor) {}
 
 static void output_name_ev(void *data, struct wl_output *o, const char *name)
@@ -271,6 +285,60 @@ static void output_name_ev(void *data, struct wl_output *o, const char *name)
 }
 
 static void output_description(void *data, struct wl_output *o, const char *description) {}
+
+static void print_output(struct output *out)
+{
+	if (!out->name || out->width <= 0)
+		return;
+	printf("{\"ev\":\"output\",\"name\":");
+	print_json_string(out->name);
+	printf(",\"x\":%d,\"y\":%d,\"width\":%d,\"height\":%d}\n", out->x, out->y, out->width, out->height);
+	fflush(stdout);
+}
+
+static void xdg_position(void *data, struct zxdg_output_v1 *o, int32_t x, int32_t y)
+{
+	struct output *out = data;
+	out->x = x;
+	out->y = y;
+}
+
+static void xdg_size(void *data, struct zxdg_output_v1 *o, int32_t w, int32_t h)
+{
+	struct output *out = data;
+	out->width = w;
+	out->height = h;
+}
+
+static void xdg_done(void *data, struct zxdg_output_v1 *o)
+{
+	print_output(data);
+}
+
+static void xdg_name(void *data, struct zxdg_output_v1 *o, const char *name)
+{
+	struct output *out = data;
+	if (!out->name)
+		out->name = strdup(name);
+}
+
+static void xdg_description(void *data, struct zxdg_output_v1 *o, const char *d) {}
+
+static const struct zxdg_output_v1_listener xdg_output_listener = {
+	.logical_position = xdg_position,
+	.logical_size = xdg_size,
+	.done = xdg_done,
+	.name = xdg_name,
+	.description = xdg_description,
+};
+
+static void watch_xdg_output(struct output *out)
+{
+	if (!xdg_output_manager || out->xdg_output)
+		return;
+	out->xdg_output = zxdg_output_manager_v1_get_xdg_output(xdg_output_manager, out->wl_output);
+	zxdg_output_v1_add_listener(out->xdg_output, &xdg_output_listener, out);
+}
 
 static const struct wl_output_listener output_listener = {
 	.geometry = output_geometry,
@@ -301,6 +369,13 @@ static void registry_global(void *data, struct wl_registry *registry, uint32_t n
 						  version < 4 ? version : 4);
 		wl_output_add_listener(out->wl_output, &output_listener, out);
 		wl_list_insert(&outputs, &out->link);
+		watch_xdg_output(out);
+	} else if (strcmp(interface, zxdg_output_manager_v1_interface.name) == 0) {
+		xdg_output_manager = wl_registry_bind(registry, name, &zxdg_output_manager_v1_interface,
+						      version < 3 ? version : 3);
+		struct output *out;
+		wl_list_for_each(out, &outputs, link)
+			watch_xdg_output(out);
 	}
 }
 
@@ -310,6 +385,8 @@ static void registry_global_remove(void *data, struct wl_registry *registry, uin
 	wl_list_for_each_safe(out, tmp, &outputs, link) {
 		if (out->global_name == name) {
 			wl_list_remove(&out->link);
+			if (out->xdg_output)
+				zxdg_output_v1_destroy(out->xdg_output);
 			if (wl_output_get_version(out->wl_output) >= 3)
 				wl_output_release(out->wl_output);
 			else

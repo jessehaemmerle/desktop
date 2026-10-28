@@ -13,12 +13,14 @@ from tenwin.gtkutil import (add_class, clear_children, flat_button, icon_image, 
 from tenwin import fileops, tilemenu, tiles
 from tenwin.i18n import _
 from tenwin.services import system
+from tenwin.shell import livetiles
 from tenwin.shell.layer import Edge, Popup, taskbar_edge
 
 CELL = tiles.CELL
 GAP = tiles.GAP
 
-CALENDAR_APPS = {"org.gnome.Calendar.desktop", "gnome-calendar.desktop"}
+CALENDAR_APPS = livetiles.CALENDAR_APPS
+LIVE_INTERVAL = 8  # seconds between photo tile changes
 MIN_WIDTH = 48 + 272 + tiles.GROUP_WIDTH + 40
 MIN_HEIGHT = 400
 DEFAULT_HEIGHT = 640
@@ -36,6 +38,10 @@ class StartMenu(Popup):
         self.settings = get_settings()
         self.letter_rows = {}
         self.rail_expanded = False
+        self.open_folder = None   # key of the expanded tile folder
+        self.live_photos = []
+        self._pictures = None
+        self._live_id = 0
         self._build()
         self.connect("key-press-event", self._on_key_typing)
         shell.apps.connect("changed", lambda *_: self.populate())
@@ -234,6 +240,7 @@ class StartMenu(Popup):
 
     def _populate_tiles(self, columns_count=None):
         clear_children(self.tile_area)
+        self.live_photos = []
         groups = self.tile_groups()
         count = columns_count or self._tile_columns()
         count = max(1, min(count, len(groups) or 1))
@@ -300,23 +307,63 @@ class StartMenu(Popup):
         entry.connect("focus-out-event", lambda *_: finish_edit() or False)
         box.pack_start(title_stack, False, False, 0)
 
-        grid = Gtk.Fixed()
-        placed, rows = tiles.layout_tiles(group["tiles"])
-        for tile, col, row, w, h in placed:
-            widget = self._tile_widget(tile, group_index, w, h)
-            if widget is not None:
-                grid.put(widget, col * (CELL + GAP), row * (CELL + GAP))
+        grid, rows = self._tile_grid(group["tiles"], group_index)
         # Leave one empty row as drop zone at the end of the group.
         grid.set_size_request(tiles.GROUP_WIDTH, rows * (CELL + GAP) + CELL // 2)
         events = Gtk.EventBox()
         events.add(grid)
         self._make_drop_target(events, group_index, None)
         box.pack_start(events, False, False, 0)
+        folder = next((t for t in group["tiles"] if tiles.tile_key(t) == self.open_folder), None)
+        if folder is not None:
+            box.pack_start(self._folder_panel(folder, group_index), False, False, 0)
         box.set_margin_bottom(8)
         return box
 
+    def _tile_grid(self, tile_list, group_index):
+        grid = Gtk.Fixed()
+        placed, rows = tiles.layout_tiles(tile_list)
+        for tile, col, row, w, h in placed:
+            widget = self._tile_widget(tile, group_index, w, h)
+            if widget is not None:
+                grid.put(widget, col * (CELL + GAP), row * (CELL + GAP))
+        return grid, rows
+
+    def _folder_panel(self, folder, group_index):
+        """The opened tile folder: its tiles below the group, like Windows 10."""
+        panel = add_class(Gtk.Box(orientation=Gtk.Orientation.VERTICAL), "tw-tile-folder-open")
+        head = Gtk.Box()
+        key = tiles.tile_key(folder)
+        entry = add_class(Gtk.Entry(text=folder.get("name", ""), placeholder_text=_("Name folder")),
+                          "tw-tile-folder-name")
+
+        def rename(*_args):
+            groups = self.tile_groups()
+            tiles.rename_folder(groups, key, entry.get_text())
+            self.save_groups(groups)
+
+        entry.connect("activate", rename)
+        entry.connect("focus-out-event", lambda *_: rename() or False)
+        head.pack_start(entry, True, True, 0)
+        collapse = flat_button(icon_image("tenwin-chevron-up", 12, symbolic=True), "tw-tile-folder-close",
+                               _("Collapse"))
+        collapse.connect("clicked", lambda *_: self.toggle_folder(key))
+        head.pack_end(collapse, False, False, 0)
+        panel.pack_start(head, False, False, 0)
+        grid, rows = self._tile_grid(folder["tiles"], group_index)
+        grid.set_size_request(tiles.GROUP_WIDTH, rows * (CELL + GAP))
+        panel.pack_start(grid, False, False, 0)
+        return panel
+
+    def toggle_folder(self, key):
+        self.open_folder = None if self.open_folder == key else key
+        self._populate_tiles(self._shown_columns if hasattr(self, "_shown_columns") else None)
+
     def _tile_target(self, tile):
         """(title, icon, open callback, desktop app info or None) for a tile."""
+        if tile.get("folder"):
+            key = tiles.tile_key(tile)
+            return tile.get("name") or "", None, lambda: self.toggle_folder(key), None
         if tile.get("app"):
             info = self.shell.apps.get(tile["app"])
             if info is None:
@@ -351,20 +398,28 @@ class StartMenu(Popup):
         width, height = w * CELL + (w - 1) * GAP, h * CELL + (h - 1) * GAP
         button = flat_button(css="tw-tile")
         button.set_size_request(width, height)
+        if tile.get("color"):
+            tint_tile(button, tile["color"])
         overlay = Gtk.Overlay()
         size = tile.get("size", "medium")
         icon_px = {"small": 24, "medium": 32, "wide": 32, "large": 64}[size]
-        if info is not None and info.get_id() in CALENDAR_APPS and size != "small":
-            now = GLib.DateTime.new_now_local()
-            center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-            center.set_valign(Gtk.Align.CENTER)
-            center.pack_start(Gtk.Label(label=now.format("%A")), False, False, 0)
-            center.pack_start(add_class(Gtk.Label(label=str(now.get_day_of_month())), "tw-tile-big"),
-                              False, False, 0)
-            overlay.add(center)
-        else:
-            overlay.add(icon_image(icon, icon_px))
-        if size != "small":
+        live = livetiles.kind_for(tile, info) if self.settings["start.live_tiles"] and size != "small" else None
+        content = None
+        if tile.get("folder"):
+            content = self._folder_preview(tile, size)
+            if key == self.open_folder:
+                add_class(button, "open")
+        elif live == "calendar":
+            content = livetiles.calendar_widget()
+        elif live == "photos":
+            photo = livetiles.PhotoTile(width - 4, height - 4, self.pictures())
+            if photo.get_pixbuf() is not None:
+                self.live_photos.append(photo)
+                content = photo
+        elif live == "recent":
+            content = livetiles.recent_widget()
+        overlay.add(content or icon_image(icon, icon_px))
+        if size != "small" and title:
             name = Gtk.Label(label=title, xalign=0)
             name.set_ellipsize(Pango.EllipsizeMode.END)
             name.set_halign(Gtk.Align.START)
@@ -382,6 +437,39 @@ class StartMenu(Popup):
         self._make_drop_target(button, group_index, key)
         return button
 
+    def _folder_preview(self, folder, size):
+        """Mini icons of the first tiles, as on a closed Windows 10 tile folder."""
+        icons = Gtk.Grid(row_spacing=2, column_spacing=2)
+        icons.set_halign(Gtk.Align.CENTER)
+        icons.set_valign(Gtk.Align.CENTER)
+        per_row = {"small": 2, "medium": 3, "wide": 4, "large": 4}[size]
+        px = {"small": 8, "medium": 16, "wide": 16, "large": 24}[size]
+        shown = 0
+        for inner in folder["tiles"]:
+            target = self._tile_target(inner)
+            if target is None:
+                continue
+            icons.attach(icon_image(target[1], px), shown % per_row, shown // per_row, 1, 1)
+            shown += 1
+            if shown >= per_row * (1 if size in ("small", "wide") else 2):
+                break
+        return icons
+
+    # -- live tiles -----------------------------------------------------------
+
+    def pictures(self):
+        if self._pictures is None:
+            self._pictures = livetiles.find_pictures()
+        return self._pictures
+
+    def _live_tick(self):
+        for photo in list(self.live_photos):
+            if photo.get_toplevel() is not self:
+                self.live_photos.remove(photo)
+            else:
+                photo.advance()
+        return GLib.SOURCE_CONTINUE
+
     # -- drag and drop ------------------------------------------------------
 
     TARGETS = [Gtk.TargetEntry.new("application/x-tenwin-tile", Gtk.TargetFlags.SAME_APP, 0)]
@@ -392,16 +480,40 @@ class StartMenu(Popup):
 
     def _make_drop_target(self, widget, group_index, before_key):
         widget.drag_dest_set(Gtk.DestDefaults.ALL, self.TARGETS, Gdk.DragAction.MOVE)
-        widget.connect("drag-motion", lambda *_: add_class(widget, "drop-target") and False)
-        widget.connect("drag-leave", lambda *_: set_class(widget, "drop-target", False))
-        widget.connect("drag-data-received",
-                       lambda _w, _c, _x, _y, data, _i, _t: self._drop(data.get_data().decode(), group_index,
-                                                                       before_key))
+        is_tile = before_key is not None and isinstance(widget, Gtk.Button)
 
-    def _drop(self, key, group_index, before_key):
+        def motion(_w, _ctx, x, y, _time):
+            into = is_tile and self._over_middle(widget, x, y)
+            set_class(widget, "drop-folder", into)
+            set_class(widget, "drop-target", not into)
+            return False
+
+        def leave(*_args):
+            set_class(widget, "drop-target", False)
+            set_class(widget, "drop-folder", False)
+
+        def received(_w, _ctx, x, y, data, _info, _time):
+            key = data.get_data().decode()
+            into = is_tile and self._over_middle(widget, x, y)
+            self._drop(key, group_index, before_key, into_folder=into)
+
+        widget.connect("drag-motion", motion)
+        widget.connect("drag-leave", leave)
+        widget.connect("drag-data-received", received)
+
+    @staticmethod
+    def _over_middle(widget, x, y):
+        """Dropping on the middle of a tile makes a folder; near its edge moves before it."""
+        w, h = widget.get_allocated_width(), widget.get_allocated_height()
+        return w * 0.25 < x < w * 0.75 and h * 0.25 < y < h * 0.75
+
+    def _drop(self, key, group_index, before_key, into_folder=False):
         if key == before_key:
             return
         groups = self.tile_groups()
+        if into_folder and before_key and tiles.combine(groups, key, before_key):
+            self.save_groups(groups)
+            return
         if group_index >= len(groups):
             # Dropped on "New group": name it after the app's category.
             name = tiles.suggested_group(groups, key, self.shell.apps)
@@ -465,6 +577,13 @@ class StartMenu(Popup):
         add_class(sub, "tw-menu")
         resize.set_submenu(sub)
         menu.append(resize)
+        menu.append(self._color_submenu(tile))
+        if livetiles.kind_for(dict(tile, live=True), info):
+            live = tile.get("live") is not False
+            menu.append(menu_item(_("Turn live tile off") if live else _("Turn live tile on"),
+                                  lambda: self._edit(tiles.set_live, key, not live)))
+        if tile.get("folder"):
+            menu.append(menu_item(_("Ungroup folder"), lambda: self._ungroup(key)))
         if info is not None:
             if self.shell.apps.is_pinned(info):
                 menu.append(menu_item(_("Unpin from taskbar"), lambda: self.shell.apps.set_pinned(info, False)))
@@ -475,6 +594,38 @@ class StartMenu(Popup):
                                   lambda: self._run_ctl("explorer", os.path.dirname(tile["path"].rstrip("/")))))
         popup_menu(menu, event=event)
         return True
+
+    def _color_submenu(self, tile):
+        item = Gtk.MenuItem(label=_("Tile color"))
+        sub = add_class(Gtk.Menu(), "tw-menu")
+        key = tiles.tile_key(tile)
+        current = tile.get("color")
+        sub.append(menu_item(("✓  " if not current else "     ") + _("Accent color"),
+                             lambda: self._edit(tiles.set_color, key, None)))
+        for color in tiles.TILE_COLORS:
+            row = menu_item(("✓  " if current == color else "     ") + color,
+                            lambda c=color: self._edit(tiles.set_color, key, c))
+            swatch = Gtk.Box()
+            swatch.set_size_request(16, 16)
+            tint_tile(swatch, color, "box")
+            row.get_child().pack_start(swatch, False, False, 0)
+            row.get_child().reorder_child(swatch, 0)
+            sub.append(row)
+        item.set_submenu(sub)
+        return item
+
+    def _edit(self, func, *args):
+        groups = self.tile_groups()
+        func(groups, *args)
+        self.save_groups(groups)
+
+    def _ungroup(self, key):
+        groups = self.tile_groups()
+        gi, ti, _fi = tiles.find_any(groups, key)
+        if gi is not None:
+            folder = groups[gi]["tiles"][ti]
+            groups[gi]["tiles"][ti:ti + 1] = folder["tiles"]
+            self.save_groups(groups)
 
     def _group_menu(self, index, event, start_edit):
         groups = self.tile_groups()
@@ -632,7 +783,7 @@ class StartMenu(Popup):
         return False
 
     def _on_settings(self, _settings, keys):
-        if keys & {"start.tiles", "start.show_most_used", "start.show_recently_added"}:
+        if keys & {"start.tiles", "start.show_most_used", "start.show_recently_added", "start.live_tiles"}:
             self.populate()
         if keys & {"start.width", "start.height"} and not self._resizing and self.is_open():
             self._apply_size()
@@ -647,12 +798,23 @@ class StartMenu(Popup):
 
     # -- Popup hooks ---------------------------------------------------------
 
+    def reset_size_constraints(self):
+        if self.is_open():
+            self._apply_size()
+
     def _apply_size(self):
         max_w, max_h = self._limits()
-        width = self.settings["start.width"]
-        height = self.settings["start.height"] or DEFAULT_HEIGHT
-        width = max(MIN_WIDTH, min(max_w, width)) if width else -1
-        height = max(MIN_HEIGHT, min(max_h, height))
+        tablet = self.settings["tablet.mode"]
+        for grip in self.grips:
+            grip.set_visible(not tablet)
+        if tablet:
+            # Tablet mode: Start fills the screen above the taskbar.
+            width, height = max_w + 8, max_h + 8
+        else:
+            width = self.settings["start.width"]
+            height = self.settings["start.height"] or DEFAULT_HEIGHT
+            width = max(MIN_WIDTH, min(max_w, width)) if width else -1
+            height = max(MIN_HEIGHT, min(max_h, height))
         self.set_size_request(width, height)
         if width == -1:
             self.resize(1, height)  # shrink back to the natural width
@@ -662,10 +824,23 @@ class StartMenu(Popup):
         self.toggle_rail(False)
         self.list_stack.set_visible_child_name("list")
         self.list_scroll.get_vadjustment().set_value(0)
-        self._apply_size()  # also refreshes the live calendar tile
+        self._pictures = None  # pick up new pictures
+        self._apply_size()  # also refreshes the live tiles
+        if not self._live_id:
+            self._live_id = GLib.timeout_add_seconds(LIVE_INTERVAL, self._live_tick)
 
     def after_show(self):
         self.shell.set_start_open(True)
 
     def on_close(self):
         self.shell.set_start_open(False)
+        if self._live_id:
+            GLib.source_remove(self._live_id)
+            self._live_id = 0
+
+
+def tint_tile(widget, color, node="button"):
+    """Give one tile (or a menu swatch) its own background colour."""
+    provider = Gtk.CssProvider()
+    provider.load_from_data(("%s { background-color: %s; }" % (node, color)).encode())
+    widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1)

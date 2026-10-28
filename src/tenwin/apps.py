@@ -3,6 +3,7 @@
 import locale
 import logging
 import os
+import shutil
 import time
 import unicodedata
 
@@ -35,6 +36,31 @@ def first_letter(name):
 
 def _strip(app_id):
     return app_id[:-8] if app_id.endswith(".desktop") else app_id
+
+
+def strip_field_codes(commandline):
+    """Remove %U, %f … from a desktop entry command line ("%%" stays a percent sign)."""
+    words = []
+    for word in commandline.split():
+        if len(word) == 2 and word.startswith("%") and word != "%%":
+            continue
+        words.append(word.replace("%%", "%"))
+    return " ".join(words)
+
+
+def game_mode_info(info):
+    """Settings > Gaming > Game Mode: run games through Feral's gamemoderun."""
+    categories = (info.get_categories() or "").split(";") if hasattr(info, "get_categories") else []
+    if "Game" not in categories or not get_settings()["gaming.game_mode"] or not shutil.which("gamemoderun"):
+        return None
+    commandline = info.get_commandline()
+    if not commandline:
+        return None
+    try:
+        return Gio.AppInfo.create_from_commandline("gamemoderun " + strip_field_codes(commandline),
+                                                   info.get_display_name(), Gio.AppInfoCreateFlags.NONE)
+    except GLib.Error:
+        return None
 
 
 class AppRegistry(GObject.Object):
@@ -181,10 +207,13 @@ class AppRegistry(GObject.Object):
         except Exception:
             ctx = None
         try:
+            game = game_mode_info(info) if not action and not uris else None
             if action:
                 info.launch_action(action, ctx)
             elif uris:
                 info.launch_uris(uris, ctx)
+            elif game is not None:
+                game.launch([], ctx)
             else:
                 info.launch([], ctx)
         except GLib.Error as exc:

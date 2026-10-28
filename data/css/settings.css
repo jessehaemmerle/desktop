@@ -50,3 +50,9 @@ button.tw-mode-card.selected { border-color: $accent; }
 .tw-mode-preview.dark .tw-mode-window { background-color: #1f1f1f; border: 1px solid #3a3a3a; }
 .tw-mode-preview.light .tw-mode-taskbar { background-color: #eeeeee; }
 .tw-mode-preview.dark .tw-mode-taskbar { background-color: #101010; }
+
+/* Fonts and themes pages */
+.tw-font-drop { border: 1px dashed $app_fg_dim; color: $app_fg_dim; padding: 12px; }
+.tw-font-card { background-color: $app_card; padding: 10px; }
+button.tw-theme-tile { padding: 4px; border: 2px solid transparent; }
+button.tw-theme-tile:hover { border-color: $app_select_border; }

@@ -12,6 +12,8 @@ from tenwin.gtkutil import add_class, clear_children, flat_button, icon_image, m
 from tenwin.i18n import _, ngettext
 from tenwin.services import system
 from tenwin.explorer import model as M
+from tenwin.explorer import network
+from tenwin.explorer.panes import SidePane
 from tenwin.explorer.places import QUICK_ACCESS, THIS_PC, TRASH, NavPane, QuickAccessPage, ThisPCPage
 from tenwin.explorer.properties import PropertiesDialog
 from tenwin.explorer.ribbon import Ribbon
@@ -65,8 +67,13 @@ class ExplorerWindow(Gtk.ApplicationWindow):
         self.nav.connect("navigate", lambda _n, uri: self.navigate(uri))
         self.paned.pack1(self.nav, False, False)
         self.content = Gtk.Stack()
-        self.paned.pack2(self.content, True, False)
+        self.content_paned = Gtk.Paned(wide_handle=False)
+        self.content_paned.pack1(self.content, True, False)
+        self.side_pane = SidePane()
+        self.content_paned.pack2(self.side_pane, False, False)
+        self.paned.pack2(self.content_paned, True, False)
         self.paned.set_position(220)
+        self.connect("size-allocate", self._place_side_pane)
         root.pack_start(self.paned, True, True, 0)
 
         self._build_views()
@@ -90,6 +97,7 @@ class ExplorerWindow(Gtk.ApplicationWindow):
         self.connect("destroy", lambda *_: self.settings.disconnect(self._settings_id))
         self.show_all()
         self.nav.set_visible(self.settings["explorer.nav_pane"])
+        self._apply_side_pane()
         start = uri or (THIS_PC if self.settings["explorer.open_this_pc"] else QUICK_ACCESS)
         self.navigate(start)
 
@@ -325,9 +333,21 @@ class ExplorerWindow(Gtk.ApplicationWindow):
         else:
             self.page = "folder"
             self._apply_view()
-            self.folder.load(gfile)
+            if network.is_remote(uri):
+                # SMB, SFTP …: mount the share first (asks for a password if needed).
+                def mounted(error, target=gfile):
+                    if self.location is not target:
+                        return
+                    if error:
+                        self._show_error(error)
+                    else:
+                        self.folder.load(target)
+                network.ensure_mounted(gfile, self, mounted)
+            else:
+                self.folder.load(gfile)
             if gfile.get_path():
                 Gtk.RecentManager.get_default()  # keep the manager alive for recent files
+        self._update_side_pane()
 
     def _parent_uri(self):
         if self.location is None:
@@ -431,7 +451,44 @@ class ExplorerWindow(Gtk.ApplicationWindow):
         self.message.set_text(_("This location can't be opened.") + "\n\n" + message)
         self.content.set_visible_child_name("message")
 
+    # ------------------------------------------------------------ side pane
+
+    def _apply_side_pane(self):
+        preview, details = self.settings["explorer.preview_pane"], self.settings["explorer.details_pane"]
+        self.side_pane.mode = "details" if details else "preview"
+        self.side_pane.set_visible(preview or details)
+        self._update_side_pane()
+
+    def _place_side_pane(self, *_args):
+        if not getattr(self, "_side_placed", False) and self.get_allocated_width() > 1:
+            self._side_placed = True
+            self.content_paned.set_position(max(300, self.content_paned.get_allocated_width() - 280))
+
+    def toggle_pane(self, which):
+        """Alt+P: preview pane, Alt+Shift+P: details pane (only one at a time)."""
+        key = "explorer.%s_pane" % which
+        other = "explorer.%s_pane" % ("details" if which == "preview" else "preview")
+        self.settings.update({key: not self.settings[key], other: False})
+
+    def _update_side_pane(self):
+        if not self.side_pane.get_visible():
+            return
+        files = []
+        for row in self.selected_rows()[:200]:
+            gfile = row[M.COL_FILE]
+            ctype = None
+            if not row[M.COL_IS_DIR]:
+                try:
+                    ctype = gfile.query_info("standard::content-type", Gio.FileQueryInfoFlags.NONE,
+                                             None).get_content_type()
+                except GLib.Error:
+                    pass
+            files.append((gfile, row[M.COL_NAME], ctype, row[M.COL_IS_DIR], row[M.COL_SIZE], row[M.COL_MTIME]))
+        count = len(self.folder.store) if self.page == "folder" else None
+        self.side_pane.show_selection(files, count)
+
     def _update_status(self):
+        self._update_side_pane()
         if self.page in ("quick", "this-pc"):
             self.status_count.set_text("")
             self.status_selection.set_text("")
@@ -948,6 +1005,13 @@ class ExplorerWindow(Gtk.ApplicationWindow):
                 menu.append(item)
             if any(zipfile.is_zipfile(f.get_path()) for f in files if f.get_path() and f.get_path().endswith(".zip")):
                 menu.append(menu_item(_("Extract All..."), self.extract, "tenwin-zip"))
+            images = [f.get_path() for f in files if network.is_disc_image(f.get_path())]
+            if len(images) == 1 and len(files) == 1:
+                if network.can_mount_images():
+                    menu.append(menu_item(_("Mount"), lambda: self.mount_image(images[0]), "tenwin-drive"))
+                tool = network.burn_tool()
+                if tool:
+                    menu.append(menu_item(_("Burn disc image"), lambda: system.run([tool, images[0]])))
         local = [f.get_path() for f in files if f.get_path()]
         if local and len(local) == len(files):
             for item in tilemenu.path_items(local, parent=self):
@@ -1024,6 +1088,10 @@ class ExplorerWindow(Gtk.ApplicationWindow):
                 menu.append(menu_item(_("Unpin from Quick access"), lambda: self.unpin_quick_access(path)))
             menu.append(Gtk.SeparatorMenuItem())
             menu.append(menu_item(_("Properties"), lambda: PropertiesDialog([target], self)))
+        elif target[0] == "network-drive":
+            uri = target[1]
+            menu.append(menu_item(_("Open"), lambda: self.navigate(uri)))
+            menu.append(menu_item(_("Disconnect"), lambda: network.remove_drive(uri)))
         else:
             obj, location = target
             if location is not None:
@@ -1034,6 +1102,22 @@ class ExplorerWindow(Gtk.ApplicationWindow):
                 menu.append(Gtk.SeparatorMenuItem())
                 menu.append(menu_item(_("Properties"), lambda: PropertiesDialog([location], self)))
         popup_menu(menu, event=event)
+
+    def map_network_drive(self):
+        result = network.map_drive_dialog(self)
+        if result:
+            name, uri = result
+            network.save_drive(name, uri)
+            self.navigate(uri)
+
+    def mount_image(self, path):
+        def done(mount_path, error):
+            if error:
+                self._error(_("Couldn't Mount File"), error)
+            elif mount_path:
+                self.navigate(Gio.File.new_for_path(mount_path).get_uri())
+
+        network.mount_image(path, done)
 
     def _eject(self, mount):
         op = Gtk.MountOperation(parent=self)
@@ -1168,6 +1252,8 @@ class ExplorerWindow(Gtk.ApplicationWindow):
             (ctrl, Gdk.KEY_e): self.search_entry.grab_focus, (ctrl, Gdk.KEY_f): self.search_entry.grab_focus,
             (0, Gdk.KEY_F3): self.search_entry.grab_focus, (ctrl, Gdk.KEY_l): self._edit_address,
             (alt, Gdk.KEY_d): self._edit_address, (0, Gdk.KEY_F4): self._edit_address,
+            (alt, Gdk.KEY_p): lambda: self.toggle_pane("preview"),
+            (alt | Gdk.ModifierType.SHIFT_MASK, Gdk.KEY_p): lambda: self.toggle_pane("details"),
             (ctrl, Gdk.KEY_F1): lambda: self.ribbon.set_expanded(not self.ribbon.revealer.get_reveal_child()),
             (ctrl | shift, Gdk.KEY_6): lambda: self.settings.set("explorer.view", "details"),
             (ctrl | shift, Gdk.KEY_2): lambda: self.settings.set("explorer.view", "large"),
@@ -1193,6 +1279,10 @@ class ExplorerWindow(Gtk.ApplicationWindow):
             self.folder.refill()
         if "explorer.nav_pane" in keys:
             self.nav.set_visible(self.settings["explorer.nav_pane"])
+        if keys & {"explorer.preview_pane", "explorer.details_pane"}:
+            self._apply_side_pane()
+        if "explorer.network_drives" in keys and self.page == "this-pc":
+            self.this_pc.refresh()
         if "explorer.quick_access" in keys and self.page == "quick":
             self.quick.refresh()
 

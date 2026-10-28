@@ -2,7 +2,7 @@
 # Run a command inside a headless labwc (pixman renderer) for screenshots and
 # smoke tests, using a throw-away home directory.
 #
-#   tools/headless.sh [-a] [-t SECONDS] [-s WIDTHxHEIGHT] 'shell commands'
+#   tools/headless.sh [-a] [-t SECONDS] [-s WIDTHxHEIGHT] [-o OUTPUTS] 'shell commands'
 #
 # -a starts the real session components (labwc autostart).
 #
@@ -13,11 +13,13 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 TIMEOUT=20
 SIZE=1366x768
 AUTOSTART=0
-while getopts "t:s:a" opt; do
+OUTPUTS=1
+while getopts "t:s:ao:" opt; do
     case $opt in
         t) TIMEOUT=$OPTARG ;;
         s) SIZE=$OPTARG ;;
         a) AUTOSTART=1 ;;
+        o) OUTPUTS=$OPTARG ;;
         *) exit 2 ;;
     esac
 done
@@ -42,7 +44,7 @@ export PATH="$ROOT/bin:$ROOT/build/helpers:$PATH"
 export XDG_CURRENT_DESKTOP=Tenwin:wlroots
 export TENWIN_NESTED=1
 export WLR_BACKENDS=headless WLR_RENDERER=pixman WLR_LIBINPUT_NO_DEVICES=1
-export WLR_HEADLESS_OUTPUTS=1
+export WLR_HEADLESS_OUTPUTS=$OUTPUTS
 export GDK_BACKEND=wayland
 export NO_AT_BRIDGE=1
 fc-cache -f "$TEST_HOME/.local/share/fonts" >/dev/null 2>&1 || true
@@ -53,7 +55,7 @@ CONFIG_DIR=$("$ROOT/bin/tenwin-python" -m tenwin.session prepare | tail -n 1)
 INNER=$(mktemp)
 cat > "$INNER" <<EOF
 #!/bin/sh
-wlr-randr --output HEADLESS-1 --custom-mode $SIZE >/dev/null 2>&1 || true
+for n in \$(seq 1 $OUTPUTS); do wlr-randr --output HEADLESS-\$n --custom-mode $SIZE >/dev/null 2>&1 || true; done
 $*
 EOF
 chmod +x "$INNER"

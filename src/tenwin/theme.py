@@ -48,6 +48,38 @@ def rgba(color, alpha):
     return "rgba(%d,%d,%d,%.3f)" % (round(r * 255), round(g * 255), round(b * 255), alpha)
 
 
+# High contrast themes (Ease of Access): (background, text, selection, selection text, links, light?)
+CONTRAST = {
+    "contrast-black": ("#000000", "#ffffff", "#1aebff", "#000000", "#ffff00", False),
+    "contrast-1": ("#000000", "#ffff00", "#00ffff", "#000000", "#8080ff", False),
+    "contrast-2": ("#000000", "#00ff00", "#0000ff", "#ffffff", "#ffff00", False),
+    "contrast-white": ("#ffffff", "#000000", "#37006e", "#ffffff", "#00009f", True),
+}
+
+
+def contrast_overrides(name):
+    """Palette entries that replace the normal colours in a high contrast theme."""
+    bg, fg, sel, sel_fg, link, _light = CONTRAST[name]
+    keys = {}
+    keys.update({"sh_fg": fg, "sh_fg_dim": fg, "sh_fg_disabled": fg, "app_fg": fg, "app_fg_dim": fg})
+    keys.update({
+        "accent": sel, "accent_fg": sel_fg, "accent_light1": sel, "accent_light2": sel, "accent_light3": sel,
+        "accent_dark1": sel, "accent_dark2": sel, "accent_dark3": sel,
+        "accent_a20": sel, "accent_a40": sel,
+        "sh_hover": sel, "sh_press": sel, "sh_border": fg, "sh_divider": fg, "sh_field": bg,
+        "sh_field_hover": bg, "sh_card": bg, "sh_card_hover": bg, "sh_qa_off": bg, "sh_qa_off_hover": sel,
+        "sh_menu_bg": bg, "sh_menu_hover": sel,
+        "taskbar_bg": bg, "panel_bg": bg, "panel_solid": bg, "toast_bg": bg, "tile_bg": bg,
+        "tile_hover_border": sel,
+        "app_bg": bg, "app_bg_alt": bg, "app_border": fg, "app_divider": fg, "app_hover": sel,
+        "app_select": sel, "app_select_hover": sel, "app_select_border": fg, "app_ribbon": bg,
+        "app_tab_active": bg, "app_field": bg, "app_field_border": fg, "app_button": bg,
+        "app_button_hover": sel, "app_button_border": fg, "app_nav_bg": bg, "app_card": bg,
+        "app_card_hover": sel, "app_link": link, "app_settings_bg": bg, "app_settings_nav": bg,
+    })
+    return keys
+
+
 def palette(settings=None):
     s = settings or get_settings()
     accent = s["appearance.accent"]
@@ -138,6 +170,9 @@ def palette(settings=None):
             "app_link": shade(accent, -0.08), "app_settings_bg": "#ffffff",
             "app_settings_nav": "#f2f2f2",
         })
+    contrast = s.get("appearance.contrast")
+    if contrast in CONTRAST:
+        p.update(contrast_overrides(contrast))
     return p
 
 

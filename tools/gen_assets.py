@@ -274,6 +274,21 @@ SYMBOLIC = {
     "tenwin-mail": sym('<rect x="1.5" y="3.5" width="13" height="9"/><path d="M1.5 3.5L8 9l6.5-5.5"/>'),
     "tenwin-more": sym('<circle cx="3" cy="8" r=".7"/><circle cx="8" cy="8" r=".7"/><circle cx="13" cy="8" r=".7"/>'),
     "tenwin-check": sym('<path d="M2.5 8.5l3.5 3.5 7.5-8"/>'),
+    "tenwin-tablet": sym('<rect x="2.5" y="1.5" width="11" height="13" rx="1"/><path d="M7 12.5h2"/>'),
+    "tenwin-game": sym('<path d="M4.5 5.5h7a3 3 0 0 1 3 3v1.5a2 2 0 0 1-3.6 1.2L10 10H6l-.9 1.2A2 2 0 0 1 1.5 10V8.5a3 3 0 0 1 3-3z"/><path d="M4.5 7v2.5M3.3 8.2h2.4"/><circle cx="11" cy="7.7" r=".5"/><circle cx="12.3" cy="9" r=".5"/>'),
+    "tenwin-magnifier": sym('<circle cx="6.5" cy="6.5" r="5"/><path d="M10 10l4.5 4.5M4.5 6.5h4M6.5 4.5v4"/>'),
+    "tenwin-font": sym('<path d="M2 14.5L6.5 2.5h1L12 14.5M3.8 10h6.4M12 9.5h3"/>'),
+    "tenwin-camera": sym('<rect x="1.5" y="4.5" width="9" height="8" rx="1"/><path d="M10.5 7.5l4-2.5v7l-4-2.5"/>'),
+    "tenwin-mic": sym('<rect x="5.5" y="1.5" width="5" height="8" rx="2.5"/><path d="M3 8a5 5 0 0 0 10 0M8 13v2"/>'),
+    "tenwin-location": sym('<path d="M8 15s-5-5.2-5-8.5a5 5 0 0 1 10 0C13 9.8 8 15 8 15z"/><circle cx="8" cy="6.5" r="1.8"/>'),
+    "tenwin-record": sym('<circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="3" fill="#bebebe"/>'),
+    "tenwin-contrast": sym('<circle cx="8" cy="8" r="6.5"/><path d="M8 1.5v13A6.5 6.5 0 0 0 8 1.5z" fill="#bebebe"/>'),
+    "tenwin-narrator": sym('<path d="M1.5 6h2.5l3.5-3v10l-3.5-3H1.5z"/><path d="M10 5.5a3.5 3.5 0 0 1 0 5M12 3.5a6 6 0 0 1 0 9"/>'),
+    "tenwin-multitasking": sym('<rect x="1.5" y="2.5" width="6" height="11"/><rect x="9.5" y="2.5" width="5" height="5"/><rect x="9.5" y="9.5" width="5" height="4"/>'),
+    "tenwin-backspace": sym('<path d="M5 3.5h9.5v9H5L1.5 8z"/><path d="M8 6l3.5 4M11.5 6L8 10"/>'),
+    "tenwin-shift": sym('<path d="M8 1.5l6 6.5h-3v6h-6v-6H2z"/>'),
+    "tenwin-enter": sym('<path d="M13.5 3v5.5H3M6 5.5l-3 3 3 3"/>'),
+    "tenwin-keyboard-hide": sym('<rect x="1" y="1.5" width="14" height="8"/><path d="M3.5 4h1M6 4h1M8.5 4h1M11 4h1.5M4.5 7h7M5 12l3 2.5 3-2.5"/>'),
     "tenwin-tiles": sym('<rect x="1.5" y="1.5" width="6" height="6"/><rect x="9.5" y="1.5" width="5" height="6"/><rect x="1.5" y="9.5" width="13" height="5"/>'),
 }
 
@@ -309,6 +324,12 @@ APP_ICONS = {
     <path d="M32 6v9M32 49v9M6 32h9M49 32h9M13.6 13.6l6.4 6.4M44 44l6.4 6.4M13.6 50.4l6.4-6.4M44 20l6.4-6.4"/>
   </g>
   <circle cx="32" cy="32" r="7" fill="#ffffff" stroke="#5d5a58" stroke-width="3"/>
+</svg>""",
+    "org.tenwin.TaskManager": """
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect x="6" y="10" width="52" height="44" fill="#ffffff" stroke="#1170c8" stroke-width="3"/>
+  <rect x="6" y="10" width="52" height="8" fill="#1170c8"/>
+  <path d="M10 46l9-10 8 6 10-16 8 9 9-11" fill="none" stroke="#4da60c" stroke-width="4" stroke-linejoin="round"/>
 </svg>""",
     "tenwin-start-logo": """
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">

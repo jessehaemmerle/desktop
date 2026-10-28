@@ -52,10 +52,14 @@ class WindowManager(GObject.Object):
         self.order = []        # stable order of appearance (taskbar)
         self.mru = []          # most recently used first (Alt+Tab)
         self.active = None
+        self.outputs = {}        # output name -> (x, y, width, height)
+        self._peek = None
         self._proc = None
         self._stdin = None
         self._restarts = 0
         self._shown_desktop = None
+        self._actions = []       # queued (window, action, done) for run_action
+        self._action_busy = False
         self.start()
 
     # -- helper process ----------------------------------------------------
@@ -148,6 +152,8 @@ class WindowManager(GObject.Object):
                 self.emit("active-changed", None)
         elif ev == "closed":
             self._remove(msg["id"])
+        elif ev == "output":
+            self.outputs[msg["name"]] = (msg["x"], msg["y"], msg["width"], msg["height"])
         elif ev == "ready":
             self._restarts = 0
 
@@ -171,6 +177,14 @@ class WindowManager(GObject.Object):
 
     def for_app(self, matcher):
         return [w for w in self.list() if matcher(w)]
+
+    def output_name(self, monitor):
+        """Compositor output name of a Gdk.Monitor (matched by position)."""
+        geo = monitor.get_geometry()
+        for name, (x, y, _w, _h) in self.outputs.items():
+            if (x, y) == (geo.x, geo.y):
+                return name
+        return None
 
     # -- actions ------------------------------------------------------------
 
@@ -212,8 +226,24 @@ class WindowManager(GObject.Object):
             if not window.minimized:
                 self.minimize(window)
 
+    def peek(self, on):
+        """Aero Peek: hide all windows while the pointer rests on "Show desktop"."""
+        if on and self._peek is None:
+            visible = [w for w in self.list(mru=True) if not w.minimized]
+            self._peek = [w.id for w in visible]
+            for window in visible:
+                self.minimize(window)
+        elif not on and self._peek is not None:
+            restore = [self.windows[i] for i in self._peek if i in self.windows]
+            self._peek = None
+            for window in reversed(restore):
+                self.activate(window)
+
     def toggle_show_desktop(self):
         """Win+D: minimise everything, a second press restores it."""
+        if self._peek is not None:
+            self._peek = None  # clicking while peeking keeps the desktop shown
+            self._shown_desktop = None
         if self._shown_desktop:
             restore = [self.windows[i] for i in self._shown_desktop if i in self.windows]
             self._shown_desktop = None
@@ -224,3 +254,80 @@ class WindowManager(GObject.Object):
         self._shown_desktop = [w.id for w in visible]
         for window in visible:
             self.minimize(window)
+
+    # -- placement via hidden labwc key bindings (see tenwin.wm) ------------
+
+    def send(self, command, window):
+        """unmaximize, maximize, unminimize … through the toplevel helper."""
+        self._send(command, window)
+
+    def run_action(self, window, action, done=None):
+        """Focus ``window`` and run a hidden labwc action ("tw-tl", "edge-left", …)."""
+        self._actions.append((window, action, done))
+        if not self._action_busy:
+            self._next_action()
+
+    def _next_action(self):
+        while self._actions:
+            window, action, done = self._actions.pop(0)
+            if window.id not in self.windows:
+                if done:
+                    done(False)
+                continue
+            self._action_busy = True
+            if self.active is window and not window.minimized:
+                self._press(window, action, done)
+            else:
+                self._wait_active(window, action, done)
+            return
+        self._action_busy = False
+
+    def _wait_active(self, window, action, done):
+        state = {"handler": 0, "timeout": 0}
+
+        def go():
+            if state["handler"]:
+                self.disconnect(state["handler"])
+                state["handler"] = 0
+            if state["timeout"]:
+                GLib.source_remove(state["timeout"])
+                state["timeout"] = 0
+            self._press(window, action, done)
+
+        def activated(_wm, active):
+            if active is window:
+                go()
+
+        def timed_out():
+            state["timeout"] = 0  # this source ends by returning False
+            go()
+            return GLib.SOURCE_REMOVE
+
+        state["handler"] = self.connect("active-changed", activated)
+        state["timeout"] = GLib.timeout_add(700, timed_out)
+        self.activate(window)
+
+    def _press(self, window, action, done):
+        from tenwin import wm
+        try:
+            proc = Gio.Subprocess.new([paths.helper("tenwin-vkbd"), "combo", wm.key_for(action)],
+                                      Gio.SubprocessFlags.STDERR_SILENCE)
+        except GLib.Error as exc:
+            log.warning("cannot run tenwin-vkbd: %s", exc)
+            self._finish_action(done, False)
+            return
+
+        def finished(proc, result):
+            try:
+                ok = proc.wait_check_finish(result)
+            except GLib.Error:
+                ok = False
+            # Give labwc a moment to apply the geometry before the next window.
+            GLib.timeout_add(40, lambda: self._finish_action(done, ok) and False)
+
+        proc.wait_async(None, finished)
+
+    def _finish_action(self, done, ok):
+        if done:
+            done(ok)
+        self._next_action()
